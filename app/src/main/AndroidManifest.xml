@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.panda.solar.activities">
+
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name="com.panda.solar.presentation.view.activities.DirectSale"></activity>
+        <activity android:name="com.panda.solar.presentation.view.activities.AddCustomer" />
+        <activity
+            android:name="com.panda.solar.presentation.view.activities.SplashScreenActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.panda.solar.presentation.view.activities.LoginActivity"
+            android:label="@string/title_activity_login"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="com.panda.solar.presentation.view.activities.HomeActivity"
+            android:label="@string/title_activity_home"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="com.panda.solar.presentation.view.activities.NewSaleActivity"
+            android:label="@string/title_activity_new_sale"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <service android:name="com.panda.solar.services.LocationUpdateService" />
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
+
+        <activity
+            android:name="com.panda.solar.presentation.view.activities.RepairActivity"
+            android:label="@string/title_activity_register_customer"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="com.panda.solar.presentation.view.activities.CustomerList"
+            android:label="@string/title_activity_register_customer"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="com.panda.solar.presentation.view.activities.CustomerDetails"
+            android:label="@string/title_activity_register_customer"
+            android:parentActivityName="com.panda.solar.presentation.view.activities.CustomerList"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="com.panda.solar.presentation.view.activities.NewEquipmentActivity"
+            android:label="@string/title_activity_new_equipment"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="com.panda.solar.presentation.view.activities.QueryCustomerActivity"
+            android:label="@string/title_activity_query_customer"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="com.panda.solar.presentation.view.activities.SaleActivity"
+            android:label="@string/title_activity_sale"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="com.panda.solar.presentation.view.activities.InstallationActivity"
+            android:label="@string/title_activity_installation"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="com.panda.solar.presentation.view.activities.StockManagementActivity"
+            android:label="@string/title_activity_stock_management"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="com.panda.solar.presentation.view.activities.CustomerActivity"
+            android:label="@string/title_activity_customer"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="com.panda.solar.presentation.view.activities.DirectAssetFinancingActivity"
+            android:label="@string/title_activity_direct_asset_financing"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="com.panda.solar.presentation.view.activities.ForgotPasswordActivity"
+            android:label="@string/title_activity_forgot_password"
+            android:theme="@style/AppTheme.NoActionBar" />
+    </application>
+
+</manifest>

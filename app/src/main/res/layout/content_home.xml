@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.panda.solar.activities.com.panda.solar.presentation.view.activities.HomeActivity">
+    <!--tools:showIn="@layout/app_bar_home"-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="@dimen/parent_container_padding"
+        android:paddingLeft="@dimen/parent_container_padding"
+        android:paddingRight="@dimen/parent_container_padding"
+        android:orientation="vertical"
+        android:background="@color/grey_background"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="1"
+            android:layout_marginBottom="@dimen/parent_container_padding"
+            android:orientation="horizontal">
+
+
+            <android.support.v7.widget.CardView
+                android:layout_width="0dp"
+                android:layout_marginRight="@dimen/parent_container_padding"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:clickable="true"
+                android:id="@+id/sale"
+                app:cardElevation="@dimen/flat_card_elevation"
+                app:cardUseCompatPadding="true"
+               >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="@dimen/layout_margin"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:layout_width="@dimen/card_view_icon_size"
+                        android:layout_height="@dimen/card_view_icon_size"
+                        android:src="@drawable/ic_sell"
+                        android:layout_marginBottom="@dimen/layout_margin"
+                        android:tint="@color/colorPrimary"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="17sp"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:text="@string/sale"/>
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:cardElevation="@dimen/flat_card_elevation"
+                android:id="@+id/customer_card"
+                app:cardUseCompatPadding="true"
+                android:layout_weight="0.5">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="@dimen/layout_margin"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:layout_width="@dimen/card_view_icon_size"
+                        android:layout_height="@dimen/card_view_icon_size"
+                        android:src="@drawable/ic_customers"
+                        android:layout_marginBottom="@dimen/layout_margin"
+                        android:tint="@color/colorPrimary"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="17sp"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:text="Customer"/>
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+        </LinearLayout>
+
+
+
+
+        <!-- Comment -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="1"
+            android:layout_marginBottom="@dimen/parent_container_padding"
+            android:orientation="horizontal">
+
+
+            <android.support.v7.widget.CardView
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                app:cardElevation="@dimen/flat_card_elevation"
+                android:id="@+id/installation_card"
+                app:cardUseCompatPadding="true"
+                android:layout_marginRight="@dimen/parent_container_padding"
+                android:layout_weight="0.5">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="@dimen/layout_margin"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:layout_width="@dimen/card_view_icon_size"
+                        android:layout_height="@dimen/card_view_icon_size"
+                        android:src="@drawable/ic_install"
+                        android:layout_marginBottom="@dimen/layout_margin"
+                        android:tint="@color/colorPrimary"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="17sp"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:text="@string/install"/>
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:cardElevation="@dimen/flat_card_elevation"
+                android:id="@+id/stock_management_card"
+
+                app:cardUseCompatPadding="true"
+                android:layout_weight="0.5">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="@dimen/layout_margin"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:layout_width="@dimen/card_view_icon_size"
+                        android:layout_height="@dimen/card_view_icon_size"
+                        android:src="@drawable/ic_stock"
+                        android:layout_marginBottom="@dimen/layout_margin"
+                        android:tint="@color/colorPrimary"
+                        />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="17sp"
+                        android:gravity="center"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:text="@string/stock_management"/>
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+        </LinearLayout>
+
+
+        <!-- Third row-->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="1"
+            android:layout_marginBottom="@dimen/parent_container_padding"
+            android:orientation="horizontal">
+
+
+            <android.support.v7.widget.CardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:cardElevation="@dimen/flat_card_elevation"
+                android:id="@+id/repair_card"
+                android:layout_marginRight="@dimen/parent_container_padding"
+                app:cardUseCompatPadding="true"
+                android:layout_weight="0.5">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="@dimen/layout_margin"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:layout_width="@dimen/card_view_icon_size"
+                        android:layout_height="@dimen/card_view_icon_size"
+                        android:src="@drawable/ic_repair"
+                        android:layout_marginBottom="@dimen/layout_margin"
+                        android:tint="@color/colorPrimary"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="17sp"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:text="Repair"/>
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

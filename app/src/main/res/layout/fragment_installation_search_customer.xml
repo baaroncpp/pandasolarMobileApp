@@ -1,0 +1,48 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.panda.solar.presentation.view.fragments.InstallationSearchCustomerFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/layout_margin">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/layout_margin"
+                android:gravity="center"
+                android:textSize="16sp"
+                android:text="@string/search_customer_for_installation"/>
+
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:layout_marginTop="@dimen/layout_margin"
+                android:background="@drawable/edit_text_3px"
+                android:padding="10dp"
+                android:id="@+id/installation_customer_phone_number"
+                android:hint="@string/phone_number"/>
+
+        </LinearLayout>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/search"
+            android:textColor="@color/white"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/generic_button_bg"
+            android:id="@+id/installation_search_customer_button"/>
+
+    </RelativeLayout>
+</FrameLayout>

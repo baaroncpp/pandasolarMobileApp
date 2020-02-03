@@ -1,0 +1,91 @@
+<resources>
+    <string name="app_name">PandaSolar</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_login">LoginActivity</string>
+
+    <string name="customer">Customers</string>
+    <string name="agent">Agent</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="forgot_password">Forgot password? </string>
+    <string name="recover_password"><u>Click to recover</u></string>
+    <string name="show_password">Show password</string>
+    <string name="sign_up_here"><u>SIGN UP HERE</u></string>
+    <string name="need_help"><u>Need help?</u></string>
+    <string name="title_activity_home">HomeActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="login">Login</string>
+    <string name="panda">Panda</string>
+    <string name="equipment">Equipment</string>
+    <string name="sale">Sales</string>
+    <string name="title_activity_new_sale">NewSaleActivity</string>
+    <string name="register">Register</string>
+    <string name="permission_denied">Permission denied</string>
+    <string name="location_updated">Location Updated: %1$s</string>
+    <string name="turn_on_location_warning">You need to turn on location to continue</string>
+    <string name="scan_barcode">Scan Barcode</string>
+    <string name="title_activity_register_customer">RegisterCustomerActivity</string>
+    <string name="time_to_resolution">TIME TO RESOLUTION</string>
+    <string name="title_activity_new_equipment">NewEquipmentActivity</string>
+    <string name="submit">Submit</string>
+    <string name="register_new_equipment">Register New Equipment</string>
+    <string name="title_activity_query_customer">QueryCustomerActivity</string>
+    <string name="query_customer">Query Customer</string>
+    <string name="title_activity_sale">SaleActivity</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="direct_sale">Direct Sale</string>
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancel</string>
+    <string name="choose_sale_type">Choose Sale Type</string>
+    <string name="next">Next</string>
+    <string name="first_name">First Name</string>
+    <string name="middle_name">Middle Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="sex">Sex</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="district">District</string>
+    <string name="county">Country</string>
+    <string name="sub_country">Sub-Country</string>
+    <string name="village">Village</string>
+    <string name="customer_details">Customer Details</string>
+    <string name="place_not_found_register_message">The place you are looking is not registered or found. You can register this place</string>
+    <string name="messaage_new_place_registration">Enter the name of the %1$s you want to register.</string>
+    <string name="hint_new_place_registration">%1$s Name</string>
+    <string name="register_new_place">Register New Place</string>
+    <string name="products">Products</string>
+    <string name="initial_deposit">Initial Deposit</string>
+    <string name="payment_plan">Payment Plan</string>
+    <string name="asset_financing">Asset Financing</string>
+    <string name="national_id_upload">Upload a picture of the national ID</string>
+    <string name="upload">Upload</string>
+    <string name="camera">Camera</string>
+    <string name="receipt">Receipt</string>
+    <string name="title_activity_installation">InstallationActivity</string>
+    <string name="search_customer_for_installation">Search customer for installation</string>
+    <string name="search">Search</string>
+    <string name="scan_equipment">Scan Equipment</string>
+    <string name="get_location_coord_installation">Get location coordinates of your place of installation.</string>
+    <string name="install">Install</string>
+    <string name="search_location">Search location</string>
+    <string name="take_pic_house">Take a picture of the house which you going to make the installation.</string>
+    <string name="repair">Repair</string>
+    <string name="title_activity_stock_management">StockManagementActivity</string>
+    <string name="total_commission">Total Commission</string>
+    <string name="stock_management">Stock Mag\'mt</string>
+    <string name="title_activity_customer">CustomerActivity</string>
+    <string name="title_activity_direct_asset_financing">DirectAssetFinancingActivity</string>
+    <string name="title_activity_forgot_password">ForgotPasswordActivity</string>
+
+    <string name="fab_content">Sell</string>
+    <string name="products_card">Products</string>
+    <string name="stock_card">Sell</string>
+    <string name="installation_card">Installation</string>
+
+
+</resources>

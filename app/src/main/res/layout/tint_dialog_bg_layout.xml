@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical"
+    android:paddingBottom="@dimen/tint_dialog_padding_top_bottom"
+    android:paddingTop="@dimen/tint_dialog_padding_top_bottom"
+    android:paddingLeft="@dimen/tint_dialog_padding_left_right"
+    android:paddingRight="@dimen/tint_dialog_padding_left_right"
+    android:background="@color/colorPrimaryDark">
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.DarkAccent"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Please wait..."
+        android:textSize="14sp"
+        android:layout_marginLeft="15dp"
+        android:textColor="@color/colorPrimary"/>
+
+</LinearLayout>

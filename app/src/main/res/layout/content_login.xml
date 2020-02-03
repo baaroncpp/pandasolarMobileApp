@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.panda.solar.activities.com.panda.solar.presentation.view.activities.LoginActivity"
+    tools:showIn="@layout/activity_login">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="@dimen/layout_margin"
+        android:id="@+id/login_container">
+
+        <ImageView
+            android:layout_width="@dimen/login_panda_icon_image_size"
+            android:layout_height="@dimen/login_panda_icon_image_size"
+            android:src="@drawable/ic_panda_soloar"
+            android:layout_gravity="center"
+            />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
+            android:gravity="center"
+            >
+
+            <EditText
+                android:id="@+id/login_phone_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:padding="10dp"
+                android:inputType="phone"
+                android:background="@drawable/edit_text_3px"
+                android:hint="@string/phone_number" />
+
+            <EditText
+                android:id="@+id/login_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:layout_marginTop="@dimen/layout_margin"
+                android:layout_below= "@id/login_phone_number"
+                android:background="@drawable/edit_text_3px"
+                android:inputType="numberPassword"
+                android:hint="@string/password" />
+
+        </RelativeLayout>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/layout_margin"
+            android:background="@drawable/generic_button_bg"
+            android:text="@string/login"
+            android:textColor="@color/white"
+            android:id="@+id/login_button"
+
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/layout_margin"
+            android:id="@+id/forgot_password_text"
+            android:clickable="true"
+            android:focusable="true"
+            android:text="@string/forgot_password"
+            />
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>
