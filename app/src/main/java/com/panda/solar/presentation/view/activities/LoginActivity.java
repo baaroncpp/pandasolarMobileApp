@@ -11,12 +11,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.JsonObject;
+import com.panda.solar.Model.entities.Login;
+import com.panda.solar.Model.entities.Token;
 import com.panda.solar.activities.R;
 import com.panda.solar.data.network.NetworkCallback;
 import com.panda.solar.data.network.NetworkResponse;
 import com.panda.solar.data.network.RetrofitHelper;
+import com.panda.solar.data.repository.retroRepository.LoginRepository;
 import com.panda.solar.utils.Utils;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, TextWatcher, NetworkCallback {
@@ -30,6 +34,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private String password;
 
     private Dialog dialog;
+
+    private LoginRepository loginRepository;
+    private Token token;
+    private String bad_request;
+    private String connection_fail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,8 +70,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.login_button:
-                //loginUser();
-                startActivity(new Intent(this,HomeActivity.class));
+                loginUser();
+                //startActivity(new Intent(this,HomeActivity.class));
                 break;
             case R.id.forgot_password_text:
                 startActivity(new Intent(this, ForgotPasswordActivity.class));
@@ -77,6 +86,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         phoneNumber = loginPhoneNumberEditTxt.getText().toString().trim();
         password = loginPasswordEditTxt.getText().toString().trim();
 
+        Login log = new Login(phoneNumber, password);
+
         if(validInputs()){
             JsonObject object = new JsonObject();
             object.addProperty("username", loginPhoneNumberEditTxt.getText().toString().trim());
@@ -84,8 +95,31 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             dialog = new Utils().getDialog(this);
             showProgressDialog(dialog);
-            new RetrofitHelper().login(object, this);
+
+            loginRepository = new LoginRepository();
+            token = loginRepository.userLogin(log);
+            bad_request = LoginRepository.getBad_request();
+            connection_fail = LoginRepository.getConnection_fail();
+
+            dismissProgressDialog(dialog);
+
+            if(token != null && bad_request.isEmpty() && connection_fail.isEmpty()){
+                //pass token to DB
+                startActivity(new Intent(this,HomeActivity.class));
+            }else if(!bad_request.isEmpty()){
+                Toast.makeText(this,bad_request, Toast.LENGTH_LONG).show();
+            }else if(!connection_fail.isEmpty()){
+                Toast.makeText(this,connection_fail, Toast.LENGTH_LONG).show();
+            }
+
+
+            //new RetrofitHelper().login(object, this);
         }
+
+        loginRepository = new LoginRepository();
+        token = loginRepository.userLogin(log);
+        bad_request = LoginRepository.getBad_request();
+        connection_fail = LoginRepository.getConnection_fail();
 
     }
 

@@ -11,4 +11,14 @@
     <color name="dark_orange">#b7860b</color>
     <color name="grey_background">#e9e8e8</color>
     <color name="dark_grey">#616161</color>
+
+    <color name="grey">#E5E5E5</color>
+    <color name="solidCircle">#AAFFFFFF</color>
+    <color name="circleBorder">#50FFFFFF</color>
+    <color name="gradStart">#e7ba20</color>
+    <color name="gradEnd">#FFD400</color>
+    <color name="address">#b7860b</color>
+    <color name="headings">#3797cf</color>
+
+
 </resources>

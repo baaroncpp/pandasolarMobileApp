@@ -5,6 +5,7 @@ import com.panda.solar.Model.entities.Customer;
 import com.panda.solar.Model.entities.Login;
 import com.panda.solar.Model.entities.Product;
 import com.panda.solar.Model.entities.Token;
+import com.panda.solar.Model.entities.User;
 
 import java.util.List;
 import io.reactivex.Observable;
@@ -14,6 +15,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.Query;
 
 /**
  * Created by macosx on 02/05/2019.
@@ -26,12 +28,23 @@ public interface PandaCoreAPI {
     @POST("/token/get")
     Observable<NetworkResponse> login(@Body JsonObject body);
 
-    @GET("/token/refresh")
-    Call<Token> refreshJWT(@Header("Bearer ") @Body Token token);
+    @POST("/token/refresh")
+    Call<Token> refreshJWT(@Header("Bearer ")String jwtToken, @Body Token token);
 
-    @GET("/token/get")
+    @POST("/token/get")
     Call<Token> bkLogin(@Body Login login);
 
+    /*user endpoint*/
+
+    @GET("/v1/user/get")
+    Call<User> getUserByUsername(@Header("Bearer ")String jwtToken, @Query("username") String username);
+
+    @GET("/v1/user/get")
+    Call<User> getUserById(@Header("Bearer ")String jwtToken, @Query("id") String id);
+
+
+    @GET("")
+    Call<List<User>> getUsers();
 
     /* customer endpoint*/
 

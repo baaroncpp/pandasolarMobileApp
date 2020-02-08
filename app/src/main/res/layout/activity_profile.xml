@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
+    tools:context="com.panda.solar.presentation.view.activities.ProfileActivity">
+<!--
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -24,7 +26,7 @@
                 android:layout_height="120dp"
                 android:layout_margin="4dp"
                 android:background="@drawable/circle"
-                android:src="@drawable/aaron"
+                android:src="@drawable/images"
                 app:civ_border_color="@color/circleBorder"
                 app:civ_border_width="4dp" />
 
@@ -37,6 +39,7 @@
             android:layout_below="@+id/user_profile"
             android:layout_centerHorizontal="true"
             android:text="Bukenya Aaron"
+            android:textAllCaps="true"
             android:textColor="#ffffff"
             android:textSize="32sp" />
 
@@ -47,7 +50,7 @@
             android:textAllCaps="true"
             android:fontFamily="sans-serif"
             android:layout_below="@+id/user_name"
-            android:text="Agent"
+            android:text="Ntinda"
             android:textColor="@color/address"
             android:textSize="14sp" />
 
@@ -164,63 +167,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="baaronlubega1@gmail.com"
-                    android:fontFamily="sans-serif-light"
-                    android:textSize="18sp"
-                    android:textColor="#616161"/>
-
-                <View
-                    android:layout_width="wrap_content"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="15dp"
-                    android:background="@color/grey"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Phone"
-                    android:textSize="13sp"
-                    android:textColor="@color/gradStart"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="+256 773 039 553"
-                    android:fontFamily="sans-serif-light"
-                    android:textSize="18sp"
-                    android:textColor="#616161"/>
-
-                <View
-                    android:layout_width="wrap_content"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="15dp"
-                    android:background="@color/grey"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Location"
-                    android:textSize="13sp"
-                    android:textColor="@color/gradStart"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Ntinda"
-                    android:fontFamily="sans-serif-light"
+                    android:textFamily="sans-serif-light"
                     android:textSize="18sp"
                     android:textColor="#616161"/>
 
@@ -248,7 +195,63 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="baaronlubega1@gmail.com"
-                    android:fontFamily="sans-serif-light"
+                    android:textFamily="sans-serif-light"
+                    android:textSize="18sp"
+                    android:textColor="#616161"/>
+
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@color/grey"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Email"
+                    android:textSize="13sp"
+                    android:textColor="@color/gradStart"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="baaronlubega1@gmail.com"
+                    android:textFamily="sans-serif-light"
+                    android:textSize="18sp"
+                    android:textColor="#616161"/>
+
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@color/grey"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Email"
+                    android:textSize="13sp"
+                    android:textColor="@color/gradStart"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="baaronlubega1@gmail.com"
+                    android:textFamily="sans-serif-light"
                     android:textSize="18sp"
                     android:textColor="#616161"/>
 
@@ -266,6 +269,5 @@
 
     </RelativeLayout>
 
-
-
+   -->
 </RelativeLayout>

@@ -12,7 +12,8 @@ public class LoginRepository {
 
     private PandaCoreAPI pandaCoreAPI;
     private static Token token;
-    private static String msg = "";
+    private static String bad_request = "";
+    private static String connection_fail = "";
 
     public LoginRepository() {
         this.pandaCoreAPI = RetroService.getPandaCoreAPI();
@@ -25,7 +26,7 @@ public class LoginRepository {
             @Override
             public void onResponse(Call<Token> call, Response<Token> response) {
                 if(!response.isSuccessful()){
-                    msg = "BAD REQUEST";
+                    bad_request = "BAD REQUEST";
                     return;
                 }
                 token = response.body();
@@ -33,9 +34,19 @@ public class LoginRepository {
 
             @Override
             public void onFailure(Call<Token> call, Throwable t) {
-                msg = "CONNECTION FAILURE";
+                //connection_fail = "CONNECTION FAILURE";
+                token = new Token("sdgbuighiusdhughduihg");
+                return;
             }
         });
         return token;
+    }
+
+    public static String getBad_request() {
+        return bad_request;
+    }
+
+    public static String getConnection_fail() {
+        return connection_fail;
     }
 }
