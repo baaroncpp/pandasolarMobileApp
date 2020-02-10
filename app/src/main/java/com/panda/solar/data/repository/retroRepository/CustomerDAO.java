@@ -6,12 +6,12 @@ import java.util.List;
 
 public interface CustomerDAO {
 
-    public Customer addCustomer(String jwt, Customer customer);
+    public Customer addCustomer(Customer customer);
 
-    public Customer getCustomerByUsername(String jwt,String username);
+    public Customer getCustomerByUsername(String username);
 
-    public Customer getCustomerById(String jwt, String id);
+    public Customer getCustomerById(String id);
 
-    public List<Customer> getCustomers(String jwt);
+    public List<Customer> getCustomers();
 
  }

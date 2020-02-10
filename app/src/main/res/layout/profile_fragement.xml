@@ -4,6 +4,14 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -41,6 +49,7 @@
             android:textSize="32sp" />
 
         <TextView
+            android:id="@+id/user_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -161,6 +170,7 @@
                     android:textColor="@color/gradStart"/>
 
                 <TextView
+                    android:id="@+id/profile_email"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="baaronlubega1@gmail.com"
@@ -189,6 +199,7 @@
                     android:textColor="@color/gradStart"/>
 
                 <TextView
+                    android:id="@+id/profile_phone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="+256 773 039 553"
@@ -217,6 +228,7 @@
                     android:textColor="@color/gradStart"/>
 
                 <TextView
+                    android:id="@+id/profile_location"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Ntinda"
@@ -240,14 +252,15 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Email"
+                    android:text="Account Status"
                     android:textSize="13sp"
                     android:textColor="@color/gradStart"/>
 
                 <TextView
+                    android:id="@+id/profile_status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="baaronlubega1@gmail.com"
+                    android:text="Activated"
                     android:fontFamily="sans-serif-light"
                     android:textSize="18sp"
                     android:textColor="#616161"/>
@@ -266,6 +279,8 @@
 
     </RelativeLayout>
 
+        </RelativeLayout>
 
+    </ScrollView>
 
 </RelativeLayout>

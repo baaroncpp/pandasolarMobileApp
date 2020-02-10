@@ -94,4 +94,19 @@ public class Utils {
         return "";
 
     }
+
+
+
+    public static String insertCharacterForEveryNDistance(int distance, String original, char c){
+        StringBuilder sb = new StringBuilder();
+        char[] charArrayOfOriginal = original.toCharArray();
+        for(int ch = 0 ; ch < charArrayOfOriginal.length ; ch++){
+            if(ch % distance == 0)
+                sb.append(c).append(charArrayOfOriginal[ch]);
+            else
+                sb.append(charArrayOfOriginal[ch]);
+        }
+        return sb.toString();
+    }
+
 }

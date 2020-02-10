@@ -13,13 +13,12 @@ public class CustomerViewModel extends ViewModel {
 
     private CustomerDAO customerDAO = PandaDAOFactory.getCustomerDAO();
     private MutableLiveData<List<Customer>> customers;
-    private static  String jwtToken = "";
 
     public MutableLiveData<List<Customer>> getCustomers(){
 
         if(customers == null){
             customers = new MutableLiveData<>();
-            customers.postValue(customerDAO.getCustomers(jwtToken));
+            customers.postValue(customerDAO.getCustomers());
             return customers;
         }else{
             return customers;

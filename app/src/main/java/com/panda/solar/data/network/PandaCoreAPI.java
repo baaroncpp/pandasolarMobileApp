@@ -2,8 +2,12 @@ package com.panda.solar.data.network;
 
 import com.google.gson.JsonObject;
 import com.panda.solar.Model.entities.Customer;
+import com.panda.solar.Model.entities.DirectSaleModel;
+import com.panda.solar.Model.entities.LeaseSale;
+import com.panda.solar.Model.entities.LeaseSaleModel;
 import com.panda.solar.Model.entities.Login;
 import com.panda.solar.Model.entities.Product;
+import com.panda.solar.Model.entities.Sale;
 import com.panda.solar.Model.entities.Token;
 import com.panda.solar.Model.entities.User;
 
@@ -15,6 +19,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
@@ -29,18 +34,17 @@ public interface PandaCoreAPI {
     Observable<NetworkResponse> login(@Body JsonObject body);
 
     @POST("/token/refresh")
-    Call<Token> refreshJWT(@Header("Bearer ")String jwtToken, @Body Token token);
+    Call<Token> refreshJWT(@Body Token token);
 
     @POST("/token/get")
     Call<Token> bkLogin(@Body Login login);
 
     /*user endpoint*/
+    @GET("/v1/user/get")
+    Call<User> getUserByUsername(@Query("username") String username);
 
     @GET("/v1/user/get")
-    Call<User> getUserByUsername(@Header("Bearer ")String jwtToken, @Query("username") String username);
-
-    @GET("/v1/user/get")
-    Call<User> getUserById(@Header("Bearer ")String jwtToken, @Query("id") String id);
+    Call<User> getUserById(@Query("id") String id);
 
 
     @GET("")
@@ -56,7 +60,6 @@ public interface PandaCoreAPI {
 
 
     /* product endpoint*/
-
     @GET("/v1/product/get")
     Call<List<Product>> getAllProducts();
 
@@ -65,5 +68,15 @@ public interface PandaCoreAPI {
 
     @POST("/v1/product/add")
     Call<Product> postProduct(@Body Product product);
+
+    /*sales endpoint*/
+    @POST("v1/sales/add/direct")
+    Call<Sale> makeDirectSale(@Body DirectSaleModel directSale);
+
+    @POST("v1/sales/add/lease")
+    Call<LeaseSale> makeLeaseSale(@Body LeaseSaleModel leaseSale);
+
+    @GET("v1/sales/get/agent/{id}")
+    Call<List<Sale>> getAgentSales(@Path("id")String id);
 
 }

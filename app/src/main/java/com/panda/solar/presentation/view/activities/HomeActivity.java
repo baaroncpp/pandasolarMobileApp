@@ -92,7 +92,8 @@ public class HomeActivity extends AppCompatActivity
                     selectedFragment = new SettingsFragment();
                     break;
 
-                case R.id.nav_profile:                    selectedFragment = new ProfileFragment();
+                case R.id.nav_profile:
+                    selectedFragment = new ProfileFragment();
                     break;
             }
 
@@ -202,4 +203,6 @@ public class HomeActivity extends AppCompatActivity
 
         }
     }
+
+
 }

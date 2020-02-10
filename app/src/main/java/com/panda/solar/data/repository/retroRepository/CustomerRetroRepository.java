@@ -62,28 +62,42 @@ public class CustomerRetroRepository implements CustomerDAO {
             cu.setUser(user);
 
             c.add(cu);
+
+
+            User use = new User();
+            Customer cur = new Customer();
+
+            use.setEmail("emma@yahoo.com");
+            use.setFirstname("tim");
+            use.setLastname("Senugwawo");
+            use.setPrimaryphone("256 705 051 895");
+
+            cur.setAddress("Bweyogere");
+            cur.setUser(use);
+
+            c.add(cur);
         }
         return c;
     }
 
 
     @Override
-    public Customer addCustomer(String jwt, Customer customer) {
+    public Customer addCustomer(Customer customer) {
         return null;
     }
 
     @Override
-    public Customer getCustomerByUsername(String jwt, String username) {
+    public Customer getCustomerByUsername(String username) {
         return null;
     }
 
     @Override
-    public Customer getCustomerById(String jwt, String id) {
+    public Customer getCustomerById(String id) {
         return null;
     }
 
-    @Override
-    public List<Customer> getCustomers(String jwt) {
+    /*@Override
+    public List<Customer> getCustomers() {
 
         Call<List<Customer>> call = pandaCoreAPI.getCustomers();
         final List<Customer> customers = new ArrayList<>();
@@ -109,5 +123,5 @@ public class CustomerRetroRepository implements CustomerDAO {
         });
 
         return customers;
-    }
+    }*/
 }

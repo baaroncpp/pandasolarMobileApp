@@ -17,6 +17,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity
+            android:name="com.panda.solar.presentation.view.activities.MainActivity"
+            android:label="@string/title_activity_main"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name="com.panda.solar.presentation.view.activities.DirectSale" />
         <activity android:name="com.panda.solar.presentation.view.activities.AddCustomer" />
         <activity
@@ -61,7 +65,11 @@
         <activity
             android:name="com.panda.solar.presentation.view.activities.CustomerList"
             android:label="@string/title_activity_register_customer"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
         <activity
             android:name="com.panda.solar.presentation.view.activities.CustomerDetails"
             android:label="@string/title_activity_register_customer"

@@ -2,6 +2,7 @@ package com.panda.solar.presentation.view.activities;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -39,6 +40,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private Token token;
     private String bad_request;
     private String connection_fail;
+    public static final String SHARED_PREF = "shared_pref";
+    public static final String JWT_TOKEN = "jwt_token";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +108,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             if(token != null && bad_request.isEmpty() && connection_fail.isEmpty()){
                 //pass token to DB
+                saveJWT(token);
+
                 startActivity(new Intent(this,HomeActivity.class));
             }else if(!bad_request.isEmpty()){
                 Toast.makeText(this,bad_request, Toast.LENGTH_LONG).show();
@@ -172,5 +177,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if(dialog != null && dialog.isShowing()){
             dialog.dismiss();
         }
+    }
+
+    public void saveJWT(Token token){
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREF, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putString(JWT_TOKEN, token.getToken());
+        editor.apply();
+        //Toast.makeText(this, token.getToken(), Toast.LENGTH_LONG).show();
     }
 }
