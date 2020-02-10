@@ -26,7 +26,7 @@
     <string name="location_updated">Location Updated: %1$s</string>
     <string name="turn_on_location_warning">You need to turn on location to continue</string>
     <string name="scan_barcode">Scan Barcode</string>
-    <string name="title_activity_register_customer">RegisterCustomerActivity</string>
+    <string name="title_activity_register_customer">Customers</string>
     <string name="time_to_resolution">TIME TO RESOLUTION</string>
     <string name="title_activity_new_equipment">NewEquipmentActivity</string>
     <string name="submit">Submit</string>
@@ -34,6 +34,7 @@
     <string name="title_activity_query_customer">QueryCustomerActivity</string>
     <string name="query_customer">Query Customer</string>
     <string name="title_activity_sale">SaleActivity</string>
+    <string name="customer_search_view">find customer</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -86,6 +87,9 @@
     <string name="products_card">Products</string>
     <string name="stock_card">Sell</string>
     <string name="installation_card">Installation</string>
+
+    <string name="error_message">failed to get result, please try again</string>
+    <string name="title_activity_main">MainActivity</string>
 
 
 </resources>

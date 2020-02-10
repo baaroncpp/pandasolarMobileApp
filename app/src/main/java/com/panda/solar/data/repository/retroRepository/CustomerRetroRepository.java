@@ -1,5 +1,6 @@
 package com.panda.solar.data.repository.retroRepository;
 
+import android.arch.lifecycle.MutableLiveData;
 import android.util.Log;
 import com.panda.solar.Model.entities.Customer;
 import com.panda.solar.Model.entities.User;
@@ -11,22 +12,10 @@ import retrofit2.Response;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomerRetroRepository {
+public class CustomerRetroRepository implements CustomerDAO {
 
-    private PandaCoreAPI pandaCoreAPI;
-    /*private static CustomerRetroRepository customerRetroRepository;
-
-    public static CustomerRetroRepository getInstance(){
-        if(customerRetroRepository == null){
-            customerRetroRepository = new CustomerRetroRepository();
-        }
-        return customerRetroRepository;
-    }*/
-
-    public CustomerRetroRepository(){
-        pandaCoreAPI = RetroService.getPandaCoreAPI();
-        //customerRetroRepository = CustomerRetroRepository.getInstance();
-    }
+    private PandaCoreAPI pandaCoreAPI = RetroService.getPandaCoreAPI();
+    MutableLiveData<List<Customer>> liveCustomers = new MutableLiveData<>();
 
     public List<Customer> getCustomers(){
 
@@ -42,7 +31,8 @@ public class CustomerRetroRepository {
                 }
 
                 //customers.addAll(response.body());
-                //customers.addAll(cust());
+                customers.addAll(cust());
+                liveCustomers.setValue(customers);
             }
 
             @Override
@@ -72,10 +62,66 @@ public class CustomerRetroRepository {
             cu.setUser(user);
 
             c.add(cu);
+
+
+            User use = new User();
+            Customer cur = new Customer();
+
+            use.setEmail("emma@yahoo.com");
+            use.setFirstname("tim");
+            use.setLastname("Senugwawo");
+            use.setPrimaryphone("256 705 051 895");
+
+            cur.setAddress("Bweyogere");
+            cur.setUser(use);
+
+            c.add(cur);
         }
         return c;
     }
 
 
+    @Override
+    public Customer addCustomer(Customer customer) {
+        return null;
+    }
 
+    @Override
+    public Customer getCustomerByUsername(String username) {
+        return null;
+    }
+
+    @Override
+    public Customer getCustomerById(String id) {
+        return null;
+    }
+
+    /*@Override
+    public List<Customer> getCustomers() {
+
+        Call<List<Customer>> call = pandaCoreAPI.getCustomers();
+        final List<Customer> customers = new ArrayList<>();
+
+        call.enqueue(new Callback<List<Customer>>() {
+            @Override
+            public void onResponse(Call<List<Customer>> call, Response<List<Customer>> response) {
+                if(!response.isSuccessful()){
+                    Log.e("REQUEST NOT SUCCESSFULL","customer not fetched");
+                    return;
+                }
+
+                //customers.addAll(response.body());
+                //customers.addAll(cust());
+            }
+
+            @Override
+            public void onFailure(Call<List<Customer>> call, Throwable t) {
+                Log.e("NO CONNECTION",t.getMessage());
+                customers.addAll(cust());
+                return;
+            }
+        });
+
+        return customers;
+    }*/
 }

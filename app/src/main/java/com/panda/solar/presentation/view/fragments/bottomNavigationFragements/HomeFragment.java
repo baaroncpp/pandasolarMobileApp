@@ -75,7 +75,6 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
-
     private void initViews(View view){
         saleCard = (CardView)view.findViewById(R.id.sale);
         stockManagementCard = (CardView)view.findViewById(R.id.stock_management_card);
