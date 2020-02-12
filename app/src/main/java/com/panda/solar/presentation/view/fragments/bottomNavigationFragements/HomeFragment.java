@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import com.panda.solar.presentation.view.activities.AddCustomer;
 import com.panda.solar.presentation.view.activities.CustomerList;
 import com.panda.solar.activities.R;
+import com.panda.solar.presentation.view.activities.DirectSale;
 
 public class HomeFragment extends Fragment {
 
@@ -35,6 +36,7 @@ public class HomeFragment extends Fragment {
         customerCard = (CardView)view.findViewById(R.id.customer_card);
         saleCard = (CardView)view.findViewById(R.id.sale_card);
         installationCard = (CardView)view.findViewById(R.id.installation_card);
+        repairCard = (CardView)view.findViewById(R.id.repair_card);
 
         customerCard.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -67,6 +69,14 @@ public class HomeFragment extends Fragment {
                 //manager.beginTransaction().replace(R.id.fragment_container, salesFragment, salesFragment.getTag()).commit();
 
                 Intent intent = new Intent(getActivity(), AddCustomer.class);
+                startActivity(intent);
+            }
+        });
+
+        repairCard.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Intent intent = new Intent(getActivity(), DirectSale.class);
                 startActivity(intent);
             }
         });

@@ -19,6 +19,14 @@ public class UserRetroRepository implements UserDAO{
     private static String connection_failed = "";
     private static String bad_request = "";
     private User pandaUser;
+    private static UserRetroRepository instance;
+
+    public static UserRetroRepository getInstance(){
+        if(instance == null){
+            instance = new UserRetroRepository();
+        }
+        return instance;
+    }
 
     @Override
     public User addUser(User user) {

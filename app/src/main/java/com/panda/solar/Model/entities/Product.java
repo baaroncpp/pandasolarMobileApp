@@ -1,8 +1,11 @@
 package com.panda.solar.Model.entities;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.Date;
 
-public class Product {
+public class Product implements Parcelable {
 
     private String id;
     private String name;
@@ -33,6 +36,34 @@ public class Product {
         this.usestoken = usestoken;
         this.createdon = createdon;
     }
+
+    protected Product(Parcel in) {
+        id = in.readString();
+        name = in.readString();
+        serialNumber = in.readString();
+        equipmentlist = in.createStringArray();
+        unitcostselling = in.readFloat();
+        description = in.readString();
+        thumbnail = in.readString();
+        byte tmpIsActive = in.readByte();
+        isActive = tmpIsActive == 0 ? null : tmpIsActive == 1;
+        byte tmpIsleasable = in.readByte();
+        isleasable = tmpIsleasable == 0 ? null : tmpIsleasable == 1;
+        byte tmpUsestoken = in.readByte();
+        usestoken = tmpUsestoken == 0 ? null : tmpUsestoken == 1;
+    }
+
+    public static final Creator<Product> CREATOR = new Creator<Product>() {
+        @Override
+        public Product createFromParcel(Parcel in) {
+            return new Product(in);
+        }
+
+        @Override
+        public Product[] newArray(int size) {
+            return new Product[size];
+        }
+    };
 
     public String getId() {
         return id;
@@ -76,5 +107,32 @@ public class Product {
 
     public Date getCreatedon() {
         return createdon;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setUnitcostselling(float unitcostselling) {
+        this.unitcostselling = unitcostselling;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(name);
+        dest.writeString(serialNumber);
+        dest.writeStringArray(equipmentlist);
+        dest.writeFloat(unitcostselling);
+        dest.writeString(description);
+        dest.writeString(thumbnail);
+        dest.writeByte((byte) (isActive == null ? 0 : isActive ? 1 : 2));
+        dest.writeByte((byte) (isleasable == null ? 0 : isleasable ? 1 : 2));
+        dest.writeByte((byte) (usestoken == null ? 0 : usestoken ? 1 : 2));
     }
 }
