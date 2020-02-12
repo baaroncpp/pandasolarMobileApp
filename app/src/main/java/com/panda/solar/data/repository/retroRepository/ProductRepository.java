@@ -6,6 +6,8 @@ import android.util.Log;
 import com.panda.solar.Model.entities.Product;
 import com.panda.solar.data.network.PandaCoreAPI;
 import com.panda.solar.data.network.RetroService;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -33,6 +35,8 @@ public class ProductRepository implements ProductDAO{
     @Override
     public MutableLiveData<List<Product>> getAllProducts() {
 
+        Log.e("repo", "accessed");
+
         final MutableLiveData<List<Product>> data = new MutableLiveData<>();
         Call<List<Product>> call = pandaCoreAPI.getAllProducts();
 
@@ -43,12 +47,15 @@ public class ProductRepository implements ProductDAO{
                     Log.e("REQUEST NOT SUCCESSFULL","product not fetched");
                     return;
                 }
-                data.postValue(response.body());
+                //data.postValue(response.body());
+                data.postValue(setProducts());
             }
 
             @Override
             public void onFailure(Call<List<Product>> call, Throwable t) {
+                Log.e("Connection failed", t.getMessage());
                 errorMessage = t.getMessage();
+                data.setValue(setProducts());
             }
         });
         return data;
@@ -57,5 +64,20 @@ public class ProductRepository implements ProductDAO{
     @Override
     public MutableLiveData<Product> addProduct(Product product) {
         return null;
+    }
+
+
+    public List<Product> setProducts(){
+        List<Product> products = new ArrayList<>();
+
+        for(int i = 0; i < 40 ; i++){
+            Product product = new Product();
+            product.setName("Boom box Panda Solar");
+            product.setUnitcostselling(400000);
+
+            products.add(product);
+        }
+
+        return products;
     }
 }

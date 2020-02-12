@@ -15,6 +15,7 @@ import java.util.List;
 import io.reactivex.Observable;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.Field;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
@@ -77,6 +78,10 @@ public interface PandaCoreAPI {
     Call<LeaseSale> makeLeaseSale(@Body LeaseSaleModel leaseSale);
 
     @GET("v1/sales/get/agent/{id}")
-    Call<List<Sale>> getAgentSales(@Path("id")String id);
+    Call<List<Sale>> getAgentSales(@Path("id")String id,
+                                   @Field("page")int page,
+                                   @Field("size")int size,
+                                   @Field("sortby")String sortby,
+                                   @Field("sortorder")String sortorder);
 
 }
