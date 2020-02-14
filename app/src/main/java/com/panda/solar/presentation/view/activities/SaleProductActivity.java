@@ -3,6 +3,7 @@ package com.panda.solar.presentation.view.activities;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,6 +20,8 @@ import java.util.List;
 
 public class SaleProductActivity extends AppCompatActivity {
 
+    public final static String PRODUCT_RESULT = "saleProductResult";
+    public final static int SALE_PRO_CODE = 1;
     private RecyclerView saleProductRecycler;
     private ProductAdapter productAdapter;
     private RecyclerView.LayoutManager layoutManager;
@@ -39,10 +42,10 @@ public class SaleProductActivity extends AppCompatActivity {
                 buildRecyclerView(products);
             }
         });
-        
+
     }
 
-    public void buildRecyclerView(List<Product> products){
+    public void buildRecyclerView(final List<Product> products){
 
         saleProductRecycler = findViewById(R.id.product_sale_recyclerview);
         layoutManager = new LinearLayoutManager(this);
@@ -54,7 +57,13 @@ public class SaleProductActivity extends AppCompatActivity {
         productAdapter.setOnItemClickListener(new ProductAdapter.OnItemClickListener() {
             @Override
             public void onProductClick(int position) {
-                Toast.makeText(SaleProductActivity.this,"aaa",Toast.LENGTH_SHORT).show();
+
+                //Toast.makeText(SaleProductActivity.this,"aaa",Toast.LENGTH_SHORT).show();
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra(PRODUCT_RESULT, products.get(position));
+                setResult(RESULT_OK, resultIntent);
+                finish();
+
             }
         });
 

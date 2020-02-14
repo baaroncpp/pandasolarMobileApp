@@ -35,4 +35,9 @@ public class SaleRepository implements SaleDAO{
     public MutableLiveData<List<Sale>> getSalesByAgent(String id, int page, int size, String sortby, String sortorder) {
         return null;
     }
+
+    @Override
+    public MutableLiveData<List<Sale>> getAllSales(String id, int page, int size, String sortby, String sortorder) {
+        return null;
+    }
 }

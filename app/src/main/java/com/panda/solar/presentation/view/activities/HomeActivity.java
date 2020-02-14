@@ -1,5 +1,7 @@
 package com.panda.solar.presentation.view.activities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -8,20 +10,28 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.CardView;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
+import com.panda.solar.Model.entities.SaleProduct;
 import com.panda.solar.activities.R;
 import com.panda.solar.presentation.view.fragments.bottomNavigationFragements.AdminFragment;
 import com.panda.solar.presentation.view.fragments.bottomNavigationFragements.HomeFragment;
 import com.panda.solar.presentation.view.fragments.bottomNavigationFragements.ProfileFragment;
 import com.panda.solar.presentation.view.fragments.bottomNavigationFragements.SettingsFragment;
+import com.panda.solar.utils.Constants;
+
+import org.parceler.Parcels;
 
 public class HomeActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
     private CardView saleCard;
     private CardView stockManagementCard;
@@ -29,7 +39,11 @@ public class HomeActivity extends AppCompatActivity
     private CardView repairCard;
     private CardView customerCard;
 
-    FloatingActionButton fab;
+    private AppCompatCheckBox directSaleCheckBox;
+    private AppCompatCheckBox assetFinancingCheckbox;
+    private Intent saleTypeIntent;
+
+    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +55,8 @@ public class HomeActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 //Toast.makeText(HomeActivity.this, "make sale", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(HomeActivity.this, SaleActivity.class));
+                //startActivity(new Intent(HomeActivity.this, SaleActivity.class));
+                saleTypeProductDialog();
             }
         });
 
@@ -70,6 +85,79 @@ public class HomeActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         initViews();*/
+    }
+
+    private void saleTypeProductDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        View v = LayoutInflater.from(this).inflate(R.layout.sale_type_checkbox_layout, null);
+        directSaleCheckBox = (AppCompatCheckBox)v.findViewById(R.id.direct_sale_checkbox);
+        assetFinancingCheckbox = (AppCompatCheckBox)v.findViewById(R.id.asset_financing_checkbox);
+
+        directSaleCheckBox.setOnCheckedChangeListener(this);
+        assetFinancingCheckbox.setOnCheckedChangeListener(this);
+
+        builder.setView(v);
+
+        builder.setPositiveButton(R.string.next, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                if(assetFinancingCheckbox.isChecked()){
+                    saleTypeIntent = new Intent(HomeActivity.this, DirectSale.class);
+                }else if(directSaleCheckBox.isChecked()){
+                    saleTypeIntent = new Intent(HomeActivity.this, DirectSale.class);
+                }
+
+                if(assetFinancingCheckbox.isChecked() || directSaleCheckBox.isChecked()){
+                    startActivity(saleTypeIntent);
+                }
+                else{
+                    Toast.makeText(HomeActivity.this, "Please select sale type.", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        builder.setTitle(R.string.choose_sale_type);
+        builder.setCancelable(false);
+        builder.show();
+    }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if(buttonView.getId() == R.id.asset_financing_checkbox){
+            if(isChecked){
+                if(directSaleCheckBox.isChecked()){
+                    directSaleCheckBox.setChecked(false);
+                }
+            }else{
+                if(!directSaleCheckBox.isChecked()){
+                    directSaleCheckBox.setChecked(true);
+                }
+            }
+        }
+        else{
+            if(isChecked){
+                if(assetFinancingCheckbox.isChecked()){
+                    assetFinancingCheckbox.setChecked(false);
+                }
+            }else{
+                if(!assetFinancingCheckbox.isChecked()){
+                    assetFinancingCheckbox.setChecked(true);
+                }
+            }
+        }
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener = new BottomNavigationView.OnNavigationItemSelectedListener(){
@@ -203,6 +291,5 @@ public class HomeActivity extends AppCompatActivity
 
         }
     }
-
 
 }

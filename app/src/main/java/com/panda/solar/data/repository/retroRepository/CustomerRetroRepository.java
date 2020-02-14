@@ -10,6 +10,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class CustomerRetroRepository implements CustomerDAO {
@@ -60,6 +61,7 @@ public class CustomerRetroRepository implements CustomerDAO {
 
             cu.setAddress("Ndinda");
             cu.setUser(user);
+            cu.setCreatedon(new Date());
 
             c.add(cu);
 
@@ -74,6 +76,7 @@ public class CustomerRetroRepository implements CustomerDAO {
 
             cur.setAddress("Bweyogere");
             cur.setUser(use);
+            cur.setCreatedon(new Date());
 
             c.add(cur);
         }

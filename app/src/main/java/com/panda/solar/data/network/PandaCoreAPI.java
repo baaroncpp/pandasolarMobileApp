@@ -3,6 +3,7 @@ package com.panda.solar.data.network;
 import com.google.gson.JsonObject;
 import com.panda.solar.Model.entities.Customer;
 import com.panda.solar.Model.entities.DirectSaleModel;
+import com.panda.solar.Model.entities.LeaseOffer;
 import com.panda.solar.Model.entities.LeaseSale;
 import com.panda.solar.Model.entities.LeaseSaleModel;
 import com.panda.solar.Model.entities.Login;
@@ -84,4 +85,8 @@ public interface PandaCoreAPI {
                                    @Field("sortby")String sortby,
                                    @Field("sortorder")String sortorder);
 
+    /*Lease offer*/
+
+    @GET("v1/leaseoffer/get")
+    Call<List<LeaseOffer>> getLeaseOffers();
 }

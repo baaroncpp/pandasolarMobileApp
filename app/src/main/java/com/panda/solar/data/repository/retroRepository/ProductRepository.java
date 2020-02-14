@@ -74,6 +74,7 @@ public class ProductRepository implements ProductDAO{
             Product product = new Product();
             product.setName("Boom box Panda Solar");
             product.setUnitcostselling(400000);
+            product.setSerialNumber("83487908903888089r7554");
 
             products.add(product);
         }

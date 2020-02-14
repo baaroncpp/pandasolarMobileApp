@@ -30,9 +30,10 @@ public class ProfileFragment extends Fragment {
     private TextView location;
     private TextView email;
     private TextView phoneNumber;
+    private TextView profile_status;
     private TextView userType;
 
-    @Override
+    /*@Override
     public void onStart() {
         super.onStart();
 
@@ -53,10 +54,7 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-    }
-
-    private TextView profile_status;
-
+    }*/
 
 
     @Nullable
@@ -75,21 +73,24 @@ public class ProfileFragment extends Fragment {
         liveUser.observe(getActivity(), new Observer<User>() {
             @Override
             public void onChanged(@Nullable User user) {
-
-                username.setText(user.getFirstname()+" "+user.getLastname());
-                location.setText("Home");
-                email.setText(user.getEmail());
-                phoneNumber.setText("+"+Utils.insertCharacterForEveryNDistance(3, user.getPrimaryphone(), ' '));
-                profile_status.setText(accountStatus(user.isIsactive()));
-
+                setProfileViews(user);
             }
         });
-        onStart();
+        //onStart();
         return view;
     }
 
+    public void setProfileViews(User user){
+        username.setText(user.getFirstname()+" "+user.getLastname());
+        location.setText("Home");
+        email.setText(user.getEmail());
+        phoneNumber.setText("+"+Utils.insertCharacterForEveryNDistance(3, user.getPrimaryphone(), ' '));
+        profile_status.setText(accountStatus(user.isIsactive()));
+
+    }
+
     public void init(View view){
-        username = (TextView)view.findViewById(R.id.user_name);
+        username = view.findViewById(R.id.user_name);
         location = (TextView)view.findViewById(R.id.profile_location);
         email = (TextView)view.findViewById(R.id.profile_email);
         phoneNumber = (TextView)view.findViewById(R.id.profile_phone);

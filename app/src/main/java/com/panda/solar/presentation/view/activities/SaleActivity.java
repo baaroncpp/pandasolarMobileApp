@@ -81,5 +81,4 @@ public class SaleActivity extends AppCompatActivity {
         }
     }
 
-
 }

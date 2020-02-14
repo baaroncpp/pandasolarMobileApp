@@ -122,6 +122,10 @@ public class Product implements Parcelable {
         this.unitcostselling = unitcostselling;
     }
 
+    public void setSerialNumber(String serialNumber) {
+        this.serialNumber = serialNumber;
+    }
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);

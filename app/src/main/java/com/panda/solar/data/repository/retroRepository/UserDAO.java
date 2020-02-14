@@ -8,14 +8,14 @@ import java.util.List;
 
 public interface UserDAO {
 
-    public User addUser(User user);
+    public MutableLiveData<User> addUser(User user);
 
-    public User getUserById(String id);
+    public MutableLiveData<User> getUserById(String id);
 
-    public User getUserByUsername(String username);
+    public MutableLiveData<User> getUserByUsername(String username);
 
-    public List<User> getUsers(String query);
+    public MutableLiveData<List<User>> getUsers(String query);
 
-    public User updateUser(User user);
+    public MutableLiveData<User> updateUser(User user);
 
 }

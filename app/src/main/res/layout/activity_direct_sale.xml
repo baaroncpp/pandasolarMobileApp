@@ -57,10 +57,14 @@
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_height="60dp"
             app:icon="@drawable/ic_add_product"
+            android:fontFamily="sans-serif"
+            android:textSize="14sp"
             android:outlineSpotShadowColor="@color/grey"
             android:text="Add Product"/>
 
         <android.support.design.button.MaterialButton
+            android:fontFamily="sans-serif"
+            android:textSize="14sp"
             android:id="@+id/add_customer_button"
             android:layout_width="match_parent"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
@@ -73,6 +77,8 @@
             android:id="@+id/set_location_button"
             android:layout_width="match_parent"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:fontFamily="sans-serif"
+            android:textSize="14sp"
             android:layout_height="60dp"
             app:icon="@drawable/ic_location_on_black_24dp"
             android:outlineSpotShadowColor="@color/grey"
@@ -89,12 +95,14 @@
             android:layout_marginLeft="8dp">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_weight="5"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="6"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
                 android:textSize="16sp"
                 android:text="Quantity"/>
 
+            <!--
             <com.michaelmuenzer.android.scrollablennumberpicker.ScrollableNumberPicker
                 android:id="@+id/number_picker_horizontal"
                 android:layout_weight="2"
@@ -110,6 +118,36 @@
                 app:snp_buttonTouchScaleFactor="0.8"
                 app:snp_value_text_appearance="?android:attr/textAppearanceMedium"
                 android:layout_height="wrap_content"/>
+            -->
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="3"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/left_arrow"
+                    android:clickable="true"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="10"
+                    android:gravity="center_vertical"
+                    android:fontFamily="sans-serif-light"
+                    android:textColor="#616161"/>
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:clickable="true"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/right_arrow"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 
@@ -132,6 +170,17 @@
                 android:minLines="1"
                 android:hint="Description" />
         </android.support.design.widget.TextInputLayout>
+
+        <!--<biz.kasual.materialnumberpicker.MaterialNumberPicker
+            android:rotationX="90"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:npMinValue="1"
+            app:npMaxValue="50"
+            app:npDefaultValue="10"
+            app:npSeparatorColor="@color/grey"
+            app:npTextColor="#616161"
+            app:npTextSize="16sp"/> -->
 
         <android.support.design.button.MaterialButton
             android:layout_marginTop="16dp"
