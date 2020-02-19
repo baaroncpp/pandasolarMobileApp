@@ -1,12 +1,16 @@
 package com.panda.solar.Model.entities;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.Date;
 
+@Entity(tableName = "user_table")
 public class User implements Parcelable {
 
+    @PrimaryKey
     private String id;
     private String username;
     private String password;

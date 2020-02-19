@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.panda.solar.presentation.view.activities.LeaseSaleActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Make Lease Sale"
+                android:fontFamily="sans-serif"
+                android:textColor="#616161"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:gravity="center_horizontal"
+                android:layout_marginBottom="20dp"/>
+
+            <android.support.design.button.MaterialButton
+                android:id="@+id/scanner_button"
+                android:layout_width="match_parent"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_height="60dp"
+                app:icon="@drawable/ic_search_black_24dp"
+                android:layout_marginBottom="8dp"
+                android:outlineSpotShadowColor="@color/grey"
+                android:text="Scan Serial Number"/>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/serialnumber_text_wrapper"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_marginBottom="8dp"
+                android:outlineSpotShadowColor="@color/grey"
+                android:layout_height="55dp">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/lease_sale_serialnumber"
+                    android:textSize="14sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Product SerialNumber" />
+            </android.support.design.widget.TextInputLayout>
+
+
+            <android.support.design.button.MaterialButton
+                android:id="@+id/add_lease_offer_button"
+                android:layout_width="match_parent"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_height="60dp"
+                app:icon="@drawable/ic_add_product"
+                android:fontFamily="sans-serif"
+                android:textSize="14sp"
+                android:outlineSpotShadowColor="@color/grey"
+                android:text="Add LeaseOffer"/>
+
+
+            <android.support.design.button.MaterialButton
+                android:id="@+id/set_location_button"
+                android:layout_width="match_parent"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:fontFamily="sans-serif"
+                android:textSize="14sp"
+                android:layout_height="60dp"
+                app:icon="@drawable/ic_location_on_black_24dp"
+                android:outlineSpotShadowColor="@color/grey"
+                android:text="Set Location"/>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/description_text_input"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_marginBottom="16dp"
+                android:outlineSpotShadowColor="@color/grey"
+                android:layout_height="55dp">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/lease_sale_description"
+                    android:textSize="14sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textMultiLine"
+                    android:lines="3"
+                    android:maxLines="3"
+                    android:minLines="1"
+                    android:hint="Description" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.button.MaterialButton
+                android:id="@+id/submit_lease_sale_btn"
+                android:layout_marginTop="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                style="@style/Widget.MaterialComponents.Button"
+                android:text="Submit Lease Sale"
+                app:cornerRadius="4dp"
+                app:backgroundTint="@color/colorPrimary"/>
+
+
+        </LinearLayout>
+    </ScrollView>
+
+
+</LinearLayout>

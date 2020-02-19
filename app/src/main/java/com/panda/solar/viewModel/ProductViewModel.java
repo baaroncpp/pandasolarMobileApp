@@ -8,6 +8,8 @@ import android.util.Log;
 import com.panda.solar.Model.entities.Product;
 import com.panda.solar.data.repository.PandaDAOFactory;
 import com.panda.solar.data.repository.retroRepository.ProductDAO;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProductViewModel extends ViewModel {
@@ -17,6 +19,11 @@ public class ProductViewModel extends ViewModel {
 
     public LiveData<List<Product>> getProducts(){
         Log.e("view model", "accessed");
+        products = productDAO.getAllProducts();
         return productDAO.getAllProducts();
+    }
+
+    public LiveData<Product> getProductBySerialNumber(String serialNumber){
+        return productDAO.getProductBySerialNumber(serialNumber);
     }
 }

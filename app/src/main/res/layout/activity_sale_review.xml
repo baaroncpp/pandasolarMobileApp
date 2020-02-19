@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.panda.solar.presentation.view.activities.SaleReview">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="20dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="Sale Review"
+                android:textColor="#616161"
+                android:textSize="32sp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sale Type"
+                    android:textSize="13sp"
+                    android:textColor="@color/gradStart"/>
+
+                <TextView
+                    android:id="@+id/review_sale_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Direct Sale"
+                    android:fontFamily="sans-serif-light"
+                    android:textSize="18sp"
+                    android:textColor="#616161"/>
+
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@color/grey"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Serial Number"
+                    android:textSize="13sp"
+                    android:textColor="@color/gradStart"/>
+
+                <TextView
+                    android:id="@+id/review_serial_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1"
+                    android:fontFamily="sans-serif-light"
+                    android:textSize="18sp"
+                    android:textColor="#616161"/>
+
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@color/grey"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Product Name"
+                    android:textSize="13sp"
+                    android:textColor="@color/gradStart"/>
+
+                <TextView
+                    android:id="@+id/review_product_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Boom Box"
+                    android:fontFamily="sans-serif-light"
+                    android:textSize="18sp"
+                    android:textColor="#616161"/>
+
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@color/grey"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Customer"
+                    android:textSize="13sp"
+                    android:textColor="@color/gradStart"/>
+
+                <TextView
+                    android:id="@+id/review_customer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ssemwogerere"
+                    android:fontFamily="sans-serif-light"
+                    android:textSize="18sp"
+                    android:textColor="#616161"/>
+
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@color/grey"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Total Price"
+                    android:textSize="13sp"
+                    android:textColor="@color/gradStart"/>
+
+                <TextView
+                    android:id="@+id/review_total_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="400,000 UG sh"
+                    android:fontFamily="sans-serif-light"
+                    android:textSize="18sp"
+                    android:textColor="#616161"/>
+
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@color/grey"/>
+
+            </LinearLayout>
+
+            <android.support.design.button.MaterialButton
+                android:id="@+id/make_direct_sale"
+                android:layout_marginTop="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                style="@style/Widget.MaterialComponents.Button"
+                android:text="MAKE SALE"
+                app:cornerRadius="4dp"
+                app:backgroundTint="@color/colorPrimary"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

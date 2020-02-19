@@ -103,7 +103,7 @@ public class HomeActivity extends AppCompatActivity
             public void onClick(DialogInterface dialog, int which) {
 
                 if(assetFinancingCheckbox.isChecked()){
-                    saleTypeIntent = new Intent(HomeActivity.this, DirectSale.class);
+                    saleTypeIntent = new Intent(HomeActivity.this, LeaseSaleActivity.class);
                 }else if(directSaleCheckBox.isChecked()){
                     saleTypeIntent = new Intent(HomeActivity.this, DirectSale.class);
                 }

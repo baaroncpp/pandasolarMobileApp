@@ -66,6 +66,31 @@ public class ProductRepository implements ProductDAO{
         return null;
     }
 
+    @Override
+    public MutableLiveData<Product> getProductBySerialNumber(String serialNumber) {
+
+        final MutableLiveData<Product> data = new MutableLiveData<>();
+
+        Call<Product> call = pandaCoreAPI.getProductBySerialNumnber(serialNumber);
+
+        call.enqueue(new Callback<Product>() {
+            @Override
+            public void onResponse(Call<Product> call, Response<Product> response) {
+                if(!response.isSuccessful()){
+                    errorMessage = "DAB REQUEST";
+                }
+                data.postValue(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<Product> call, Throwable t) {
+                data.setValue(setProducts().get(1));
+                errorMessage = t.getMessage();
+            }
+        });
+
+        return data;
+    }
 
     public List<Product> setProducts(){
         List<Product> products = new ArrayList<>();
@@ -74,7 +99,7 @@ public class ProductRepository implements ProductDAO{
             Product product = new Product();
             product.setName("Boom box Panda Solar");
             product.setUnitcostselling(400000);
-            product.setSerialNumber("83487908903888089r7554");
+            product.setSerialNumber("8991389741924");
 
             products.add(product);
         }

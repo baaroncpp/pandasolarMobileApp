@@ -9,6 +9,9 @@ import com.panda.solar.Model.entities.Sale;
 
 import java.util.List;
 
+import retrofit2.Response;
+
+
 public interface SaleDAO {
 
     public MutableLiveData<LeaseSale> makeLeaseSale(LeaseSaleModel leaseSaleModel);
@@ -18,5 +21,7 @@ public interface SaleDAO {
     public MutableLiveData<List<Sale>> getSalesByAgent(String id, int page, int size, String sortby, String sortorder);
 
     public MutableLiveData<List<Sale>> getAllSales(String id, int page, int size, String sortby, String sortorder);
+
+    public Response getResponse();
 
 }

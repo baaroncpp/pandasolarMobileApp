@@ -14,4 +14,6 @@ public interface ProductDAO {
 
     public MutableLiveData<Product> addProduct(Product product);
 
+    public MutableLiveData<Product> getProductBySerialNumber(String serialNumber);
+
 }

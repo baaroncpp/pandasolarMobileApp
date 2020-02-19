@@ -71,6 +71,9 @@ public interface PandaCoreAPI {
     @POST("/v1/product/add")
     Call<Product> postProduct(@Body Product product);
 
+    @GET("/v1/product/get/{serial}")
+    Call<Product> getProductBySerialNumnber(@Path("serial")String serialNumber);
+
     /*sales endpoint*/
     @POST("v1/sales/add/direct")
     Call<Sale> makeDirectSale(@Body DirectSaleModel directSale);

@@ -12,10 +12,16 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.Window;
 import android.view.WindowManager;
+import android.app.ProgressDialog;
 
 import com.panda.solar.activities.R;
+import com.panda.solar.presentation.view.activities.CustomerList;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * Created by macosx on 15/01/2019.
@@ -95,8 +101,6 @@ public class Utils {
 
     }
 
-
-
     public static String insertCharacterForEveryNDistance(int distance, String original, char c){
         StringBuilder sb = new StringBuilder();
         char[] charArrayOfOriginal = original.toCharArray();
@@ -107,6 +111,30 @@ public class Utils {
                 sb.append(charArrayOfOriginal[ch]);
         }
         return sb.toString();
+    }
+
+    public static String readableDate(Date date){
+        SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy");
+        return formatter.format(date);
+    }
+
+    public static ProgressDialog customerProgressBar(Context context){
+
+        ProgressDialog dialog;
+        dialog = new ProgressDialog(context);
+        dialog.setMessage("Please wait...");
+        dialog.setCanceledOnTouchOutside(false);
+
+        return dialog;
+    }
+
+    public static SweetAlertDialog customSweetAlertDialog(Context context){
+        final SweetAlertDialog dialog = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
+        dialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        dialog.setTitleText("Loading");
+        dialog.setCancelable(false);
+
+        return dialog;
     }
 
 }

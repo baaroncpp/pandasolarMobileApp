@@ -60,7 +60,6 @@ public class CustomerList extends AppCompatActivity {
         /*instance of the view  Model*/
         customerViewModel = ViewModelProviders.of(this).get(CustomerViewModel.class);
 
-        //ensure you pass jwt
         customerList = customerViewModel.getCustomers();
 
         customerList.observe(this, new Observer<List<Customer>>() {

@@ -33,30 +33,6 @@ public class ProfileFragment extends Fragment {
     private TextView profile_status;
     private TextView userType;
 
-    /*@Override
-    public void onStart() {
-        super.onStart();
-
-        userViewModel = ViewModelProviders.of(getActivity()).get(UserViewModel.class);
-
-        liveUser = userViewModel.getUser("aaron");
-
-        liveUser.observe(getActivity(), new Observer<User>() {
-            @Override
-            public void onChanged(@Nullable User user) {
-
-                username.setText(user.getFirstname()+" "+user.getLastname());
-                location.setText("Home");
-                email.setText(user.getEmail());
-                phoneNumber.setText("+"+Utils.insertCharacterForEveryNDistance(3, user.getPrimaryphone(), ' '));
-                profile_status.setText(accountStatus(user.isIsactive()));
-
-            }
-        });
-
-    }*/
-
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
