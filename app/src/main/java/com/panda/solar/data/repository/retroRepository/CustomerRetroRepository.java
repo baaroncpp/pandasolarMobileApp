@@ -2,15 +2,14 @@ package com.panda.solar.data.repository.retroRepository;
 
 import android.arch.lifecycle.MutableLiveData;
 import android.util.Log;
+
+import com.panda.solar.Model.entities.CustList;
 import com.panda.solar.Model.entities.Customer;
-import com.panda.solar.Model.entities.User;
 import com.panda.solar.data.network.PandaCoreAPI;
 import com.panda.solar.data.network.RetroService;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class CustomerRetroRepository implements CustomerDAO {
@@ -18,71 +17,33 @@ public class CustomerRetroRepository implements CustomerDAO {
     private PandaCoreAPI pandaCoreAPI = RetroService.getPandaCoreAPI();
     MutableLiveData<List<Customer>> liveCustomers = new MutableLiveData<>();
 
-    public List<Customer> getCustomers(){
+    @Override
+    public MutableLiveData<List<Customer>> getCustomers(int page, int size, String sortby, String sortorder){
 
-        Call<List<Customer>> call = pandaCoreAPI.getCustomers();
-        final List<Customer> customers = new ArrayList<>();
+        Call<CustList> call = pandaCoreAPI.getAllCustomers(page, size, sortby, sortorder);
+        final MutableLiveData<List<Customer>> customers = new MutableLiveData<>();
 
-        call.enqueue(new Callback<List<Customer>>() {
+        call.enqueue(new Callback<CustList>() {
             @Override
-            public void onResponse(Call<List<Customer>> call, Response<List<Customer>> response) {
+            public void onResponse(Call<CustList> call, Response<CustList> response) {
                 if(!response.isSuccessful()){
                     Log.e("REQUEST NOT SUCCESSFULL","customer not fetched");
                     return;
                 }
 
-                //customers.addAll(response.body());
-                customers.addAll(cust());
-                liveCustomers.setValue(customers);
+                Log.e("YES CONNECTION","successful");
+                customers.postValue(response.body().getCustomers());
             }
 
             @Override
-            public void onFailure(Call<List<Customer>> call, Throwable t) {
+            public void onFailure(Call<CustList> call, Throwable t) {
                 Log.e("NO CONNECTION",t.getMessage());
-                customers.addAll(cust());
                 return;
             }
         });
 
         return customers;
     }
-
-    public List<Customer> cust(){
-        List<Customer> c = new ArrayList<>();
-
-        for(int i = 0; i < 20; i++){
-            User user = new User();
-            Customer cu = new Customer();
-
-            user.setEmail("baaronlubega1@gmail.com");
-            user.setFirstname("Lady");
-            user.setLastname("Leah");
-            user.setPrimaryphone("256 773 039 553");
-
-            cu.setAddress("Ndinda");
-            cu.setUser(user);
-            cu.setCreatedon(new Date());
-
-            c.add(cu);
-
-
-            User use = new User();
-            Customer cur = new Customer();
-
-            use.setEmail("emma@yahoo.com");
-            use.setFirstname("tim");
-            use.setLastname("Senugwawo");
-            use.setPrimaryphone("256 705 051 895");
-
-            cur.setAddress("Bweyogere");
-            cur.setUser(use);
-            cur.setCreatedon(new Date());
-
-            c.add(cur);
-        }
-        return c;
-    }
-
 
     @Override
     public Customer addCustomer(Customer customer) {
@@ -99,32 +60,4 @@ public class CustomerRetroRepository implements CustomerDAO {
         return null;
     }
 
-    /*@Override
-    public List<Customer> getCustomers() {
-
-        Call<List<Customer>> call = pandaCoreAPI.getCustomers();
-        final List<Customer> customers = new ArrayList<>();
-
-        call.enqueue(new Callback<List<Customer>>() {
-            @Override
-            public void onResponse(Call<List<Customer>> call, Response<List<Customer>> response) {
-                if(!response.isSuccessful()){
-                    Log.e("REQUEST NOT SUCCESSFULL","customer not fetched");
-                    return;
-                }
-
-                //customers.addAll(response.body());
-                //customers.addAll(cust());
-            }
-
-            @Override
-            public void onFailure(Call<List<Customer>> call, Throwable t) {
-                Log.e("NO CONNECTION",t.getMessage());
-                customers.addAll(cust());
-                return;
-            }
-        });
-
-        return customers;
-    }*/
 }

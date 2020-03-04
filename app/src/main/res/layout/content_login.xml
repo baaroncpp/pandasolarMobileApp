@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.panda.solar.activities.com.panda.solar.presentation.view.activities.LoginActivity"
+    tools:context="com.panda.solar.presentation.view.activities.LoginActivity"
     tools:showIn="@layout/activity_login">
 
     <LinearLayout
@@ -47,7 +47,7 @@
                 android:layout_marginTop="@dimen/layout_margin"
                 android:layout_below= "@id/login_phone_number"
                 android:background="@drawable/edit_text_3px"
-                android:inputType="numberPassword"
+                android:inputType="textPassword"
                 android:hint="@string/password" />
 
         </RelativeLayout>
@@ -60,9 +60,9 @@
             android:background="@drawable/generic_button_bg"
             android:text="@string/login"
             android:textColor="@color/white"
-            android:id="@+id/login_button"
-
-            />
+            android:clickable="true"
+            android:focusable="true"
+            android:id="@+id/login_button"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

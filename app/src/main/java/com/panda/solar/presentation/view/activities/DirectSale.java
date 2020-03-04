@@ -13,14 +13,15 @@ import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
 import com.panda.solar.Model.entities.Customer;
 import com.panda.solar.Model.entities.DirectSaleModel;
+import com.panda.solar.Model.entities.PayGoProduct;
+import com.panda.solar.Model.entities.PayGoProductModel;
 import com.panda.solar.Model.entities.Product;
 import com.panda.solar.activities.R;
 import com.panda.solar.utils.Constants;
+import com.panda.solar.viewModel.PayGoProductViewModel;
 import com.panda.solar.viewModel.ProductViewModel;
 
 import java.util.Date;
@@ -37,15 +38,15 @@ public class DirectSale extends AppCompatActivity {
     private TextInputEditText directSaledescription;
     private TextInputLayout directSaleDescriptionWrapper;
     private ProductViewModel productViewModel;
-    /*private ImageButton quantityAdd;
-    private ImageButton quantitySubtract;
-    private TextView quantityText;*/
 
     private DirectSaleModel directSaleModel;
+    private PayGoProductViewModel payGoProductViewModel;
     private Product directSaleProduct;
     private Customer customerResult;
 
     private String customerName;
+    private Boolean productExists;
+    private PayGoProduct payGoProd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,14 +62,6 @@ public class DirectSale extends AppCompatActivity {
                 startActivityForResult(intent, Constants.SALE_CUST_CODE);
             }
         });
-
-        /*productButtonView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(DirectSale.this, SaleProductActivity.class);
-                startActivityForResult(intent, SALE_PRO_CODE);
-            }
-        });*/
 
         scannerButtonView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,46 +86,58 @@ public class DirectSale extends AppCompatActivity {
                     directSaleModel.setCreatedon(new Date());
                     directSaleModel.setScannedserial(serialTextView.getText().toString());
                     directSaleModel.setCustomerid(customerResult.getUserid());
-                    //directSaleModel.setQuantity(Integer.parseInt(quantityText.getText().toString()));
                     directSaleModel.setDescription(directSaledescription.getText().toString());
                     directSaleModel.setLat(43);
                     directSaleModel.setLong_(54);
 
                     customerName = customerResult.getUser().getFirstname()+" "+customerResult.getUser().getLastname();
 
-                    directSaleProduct = findProductBySerialNumber(directSaleModel.getScannedserial());
+                    //directSaleProduct = findProductBySerialNumber(directSaleModel.getScannedserial());
+
+                    //PayGoProduct payGoProduct = getPayGoProduct(directSaleModel.getScannedserial());
 
                     intent.putExtra(Constants.CUSTOMER_NAME, customerName);
+                    intent.putExtra(Constants.SALE_REVIEW, Constants.DIRECT_SALE_REVIEW);
                     intent.putExtra(Constants.DIRECT_SALE_OBJ, directSaleModel);
-                    intent.putExtra(Constants.PROD_SALE_OBJ, directSaleProduct);
+                    intent.putExtra(Constants.PROD_SALE_OBJ, payGoProd);
                     startActivity(intent);
                 }
             }
         });
+    }
 
-        /*quantityAdd.setOnClickListener(new View.OnClickListener() {
+    public void getPayGoProduct(String scannedserial){
+        LiveData<PayGoProduct> payGoProduct = payGoProductViewModel.getPayGoProduct(scannedserial);
+        payGoProduct.observe(this, new Observer<PayGoProduct>() {
             @Override
-            public void onClick(View v) {
-                if(quantity < 10 && quantity != 10){
-                    quantity = quantity + 1;
-                    quantityText.setText(String.valueOf(quantity));
+            public void onChanged(@Nullable PayGoProduct payGoProduct) {
+                payGoProd = payGoProduct;
+            }
+        });
+        //return payGoProd;
+    }
+
+    public Boolean productExists(final String scannedSerial){
+        final String serial = scannedSerial;
+
+        LiveData<Boolean> existsLive = payGoProductViewModel.payGoProductIsAvailable(scannedSerial);
+        existsLive.observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(@Nullable Boolean aBoolean) {
+                productExists = aBoolean;
+                if(aBoolean == true){
+                    getPayGoProduct(serial);
                 }
             }
         });
-
-        quantitySubtract.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(quantity > 0 && quantity != 1){
-                    quantity = quantity - 1;
-                    quantityText.setText(String.valueOf(quantity));
-                }
-            }
-        });*/
-
+        return productExists;
     }
 
     public void init(){
+
+        productExists = false;
+        payGoProductViewModel = ViewModelProviders.of(this).get(PayGoProductViewModel.class);
+
         scannerButtonView = findViewById(R.id.scanner_button);
         customerButtonView = findViewById(R.id.add_customer_button);
         locationButtonView = findViewById(R.id.set_location_button);
@@ -163,10 +168,6 @@ public class DirectSale extends AppCompatActivity {
         return product;
     }
 
-    public boolean validateProductToken(String tokenSerialNumber){
-        return true;
-    }
-
     public boolean validateSubmit(){
 
         if(validateSerialEditView() && validateCustomerBtn() && validateDescriptionField() && validateLocationBtn()){
@@ -190,7 +191,6 @@ public class DirectSale extends AppCompatActivity {
             return false;
         }
 
-
     }
 
 
@@ -207,25 +207,6 @@ public class DirectSale extends AppCompatActivity {
             return true;
         }
     }
-
-
-    /*public boolean validateProductBtn(){
-        String text = productButtonView.getText().toString();
-
-        if(!text.equalsIgnoreCase("Add Product")){
-            productButtonView.setStrokeColor(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary)));
-            productButtonView.setTextColor(getResources().getColor(R.color.colorPrimary));
-            productButtonView.setIcon(getResources().getDrawable(R.drawable.ic_panda_add_product_yellow));
-            productButtonView.setAllCaps(false);
-            return true;
-        }else{
-            productButtonView.setStrokeColor(ColorStateList.valueOf(getResources().getColor(R.color.dark_grey)));
-            productButtonView.setTextColor(getResources().getColor(R.color.dark_grey));
-            productButtonView.setIcon(getResources().getDrawable(R.drawable.ic_add_product));
-            productButtonView.setAllCaps(true);
-            return false;
-        }
-    }*/
 
     public boolean validateCustomerBtn(){
         String text = customerButtonView.getText().toString();
@@ -291,13 +272,11 @@ public class DirectSale extends AppCompatActivity {
                 {
                     String serialNumberResult = data.getStringExtra(Constants.SCAN_RESULT);
 
-                    if(validateProductToken(serialNumberResult)){
+                    if(productExists(serialNumberResult)){
                         serialTextView.setText(serialNumberResult);
-                        //productButtonView.setText(findProductBySerialNumber(serialNumberResult).getName());
-                        //validateProductBtn();
                         validateSerialEditView();
                     }else{
-                        Toast.makeText(this, "Product not registered by PANDASOLAR", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Product not available, Try again", Toast.LENGTH_SHORT).show();
                     }
                 } else if(resultCode == RESULT_CANCELED) {
                     Toast.makeText(this, "Camera unavailable", Toast.LENGTH_SHORT).show();

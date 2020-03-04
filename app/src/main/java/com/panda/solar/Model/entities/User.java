@@ -4,7 +4,6 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import java.util.Date;
 
 @Entity(tableName = "user_table")
@@ -13,10 +12,8 @@ public class User implements Parcelable {
     @PrimaryKey
     private String id;
     private String username;
-    private String password;
     private boolean isactive;
     private boolean isapproved;
-    private Date passwordreseton;
     private Date createdon;
     private String usertype;
     private String firstname;
@@ -26,15 +23,19 @@ public class User implements Parcelable {
     private String primaryphone;
     private String companyemail;
     private Date dateofbirth;
-    private Date lastlogon;
     private Date updatedon;
+    private String profilepath;
+    private String coipath;
+    private String idcopypath;
+    private String contractpath;
+    private String consentformpath;
+    private String housephotopath;
 
     public User() { super();}
 
     protected User(Parcel in) {
         id = in.readString();
         username = in.readString();
-        password = in.readString();
         isactive = in.readByte() != 0;
         isapproved = in.readByte() != 0;
         usertype = in.readString();
@@ -44,6 +45,12 @@ public class User implements Parcelable {
         email = in.readString();
         primaryphone = in.readString();
         companyemail = in.readString();
+        profilepath = in.readString();
+        coipath = in.readString();
+        idcopypath = in.readString();
+        contractpath = in.readString();
+        consentformpath = in.readString();
+        housephotopath = in.readString();
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {
@@ -58,47 +65,6 @@ public class User implements Parcelable {
         }
     };
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(id);
-        parcel.writeString(username);
-        parcel.writeString(password);
-        parcel.writeByte((byte) (isactive ? 1 : 0));
-        parcel.writeByte((byte) (isapproved ? 1 : 0));
-        parcel.writeString(usertype);
-        parcel.writeString(firstname);
-        parcel.writeString(middlename);
-        parcel.writeString(lastname);
-        parcel.writeString(email);
-        parcel.writeString(primaryphone);
-        parcel.writeString(companyemail);
-    }
-
-    public User(String id, String username, String password, boolean isactive, boolean isapproved, Date passwordreseton, Date createdon, String usertype, String firstname, String middlename, String lastname, String email, String primaryphone, String companyemail, Date dateofbirth, Date lastlogon, Date updatedon) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-        this.isactive = isactive;
-        this.isapproved = isapproved;
-        this.passwordreseton = passwordreseton;
-        this.createdon = createdon;
-        this.usertype = usertype;
-        this.firstname = firstname;
-        this.middlename = middlename;
-        this.lastname = lastname;
-        this.email = email;
-        this.primaryphone = primaryphone;
-        this.companyemail = companyemail;
-        this.dateofbirth = dateofbirth;
-        this.lastlogon = lastlogon;
-        this.updatedon = updatedon;
-    }
-
     public String getId() {
         return id;
     }
@@ -107,20 +73,12 @@ public class User implements Parcelable {
         return username;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
     public boolean isIsactive() {
         return isactive;
     }
 
     public boolean isIsapproved() {
         return isapproved;
-    }
-
-    public Date getPasswordreseton() {
-        return passwordreseton;
     }
 
     public Date getCreatedon() {
@@ -159,16 +117,33 @@ public class User implements Parcelable {
         return dateofbirth;
     }
 
-    public Date getLastlogon() {
-        return lastlogon;
-    }
-
     public Date getUpdatedon() {
         return updatedon;
     }
 
-    //setters
+    public String getProfilepath() {
+        return profilepath;
+    }
 
+    public String getCoipath() {
+        return coipath;
+    }
+
+    public String getIdcopypath() {
+        return idcopypath;
+    }
+
+    public String getContractpath() {
+        return contractpath;
+    }
+
+    public String getConsentformpath() {
+        return consentformpath;
+    }
+
+    public String getHousephotopath() {
+        return housephotopath;
+    }
 
     public void setId(String id) {
         this.id = id;
@@ -178,20 +153,12 @@ public class User implements Parcelable {
         this.username = username;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public void setIsactive(boolean isactive) {
         this.isactive = isactive;
     }
 
     public void setIsapproved(boolean isapproved) {
         this.isapproved = isapproved;
-    }
-
-    public void setPasswordreseton(Date passwordreseton) {
-        this.passwordreseton = passwordreseton;
     }
 
     public void setCreatedon(Date createdon) {
@@ -230,13 +197,57 @@ public class User implements Parcelable {
         this.dateofbirth = dateofbirth;
     }
 
-    public void setLastlogon(Date lastlogon) {
-        this.lastlogon = lastlogon;
-    }
-
     public void setUpdatedon(Date updatedon) {
         this.updatedon = updatedon;
     }
 
+    public void setProfilepath(String profilepath) {
+        this.profilepath = profilepath;
+    }
 
+    public void setCoipath(String coipath) {
+        this.coipath = coipath;
+    }
+
+    public void setIdcopypath(String idcopypath) {
+        this.idcopypath = idcopypath;
+    }
+
+    public void setContractpath(String contractpath) {
+        this.contractpath = contractpath;
+    }
+
+    public void setConsentformpath(String consentformpath) {
+        this.consentformpath = consentformpath;
+    }
+
+    public void setHousephotopath(String housephotopath) {
+        this.housephotopath = housephotopath;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(username);
+        dest.writeByte((byte) (isactive ? 1 : 0));
+        dest.writeByte((byte) (isapproved ? 1 : 0));
+        dest.writeString(usertype);
+        dest.writeString(firstname);
+        dest.writeString(middlename);
+        dest.writeString(lastname);
+        dest.writeString(email);
+        dest.writeString(primaryphone);
+        dest.writeString(companyemail);
+        dest.writeString(profilepath);
+        dest.writeString(coipath);
+        dest.writeString(idcopypath);
+        dest.writeString(contractpath);
+        dest.writeString(consentformpath);
+        dest.writeString(housephotopath);
+    }
 }

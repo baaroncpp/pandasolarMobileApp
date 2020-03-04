@@ -20,7 +20,7 @@ public interface SaleDAO {
 
     public MutableLiveData<List<Sale>> getSalesByAgent(String id, int page, int size, String sortby, String sortorder);
 
-    public MutableLiveData<List<Sale>> getAllSales(String id, int page, int size, String sortby, String sortorder);
+    public MutableLiveData<List<Sale>> getAllSales(int page, int size, String sortby, String sortorder);
 
     public Response getResponse();
 

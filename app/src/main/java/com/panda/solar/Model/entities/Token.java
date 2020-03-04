@@ -1,16 +1,18 @@
 package com.panda.solar.Model.entities;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 
 @Entity(tableName = "token_table")
 public class Token {
 
-    @PrimaryKey(autoGenerate = true)
-    private int id;
-
+    @NonNull
+    @PrimaryKey
     private String token;
 
+    @Ignore
     public Token() {
         super();
     }
@@ -24,5 +26,4 @@ public class Token {
         return token;
     }
 
-    public int getId(){return id;}
 }

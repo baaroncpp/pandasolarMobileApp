@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.panda.solar.Model.entities.Product;
 import com.panda.solar.activities.R;
 import com.panda.solar.presentation.adapters.ProductAdapter;
+import com.panda.solar.utils.Constants;
 import com.panda.solar.viewModel.ProductViewModel;
 
 import java.util.List;
@@ -51,7 +52,7 @@ public class SaleProductActivity extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         saleProductRecycler.setLayoutManager(layoutManager);
 
-        productAdapter = new ProductAdapter(products);
+        productAdapter = new ProductAdapter(products, Constants.PRODUCT_LIST_SALE);
         saleProductRecycler.setAdapter(productAdapter);
 
         productAdapter.setOnItemClickListener(new ProductAdapter.OnItemClickListener() {

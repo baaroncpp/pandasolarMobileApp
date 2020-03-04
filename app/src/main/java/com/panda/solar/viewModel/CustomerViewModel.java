@@ -1,5 +1,6 @@
 package com.panda.solar.viewModel;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 
@@ -12,17 +13,9 @@ import java.util.List;
 public class CustomerViewModel extends ViewModel {
 
     private CustomerDAO customerDAO = PandaDAOFactory.getCustomerDAO();
-    private MutableLiveData<List<Customer>> customers;
 
-    public MutableLiveData<List<Customer>> getCustomers(){
-
-        if(customers == null){
-            customers = new MutableLiveData<>();
-            customers.postValue(customerDAO.getCustomers());
-            return customers;
-        }else{
-            return customers;
-        }
+    public LiveData<List<Customer>> getCustomers(int page, int size, String sortby, String sortorder){
+        return customerDAO.getCustomers(page, size, sortby,sortorder);
     }
 
 }

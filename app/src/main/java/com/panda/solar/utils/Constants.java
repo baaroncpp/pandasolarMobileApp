@@ -25,13 +25,27 @@ public class Constants {
     public final static String DIRECT_SALE_OBJ = "direct_sale_object";
     public final static String PROD_SALE_OBJ = "product_sale_object";
 
+    public static final String BAD_REQUEST = "BAD REQUEST";
+    public final static String LEASE_SALE_OBJ = "lease_sale_object";
+    public final static String LEASE_OFFER = "lease_offer";
+
+    public final static String SALE_REVIEW = "sale_review";
+    public final static String SALE_CUSTOMER = "sale_customer";
+
+    public final static String LEASE_SALE_REVIEW = "lease_sale_review";
+    public final static String DIRECT_SALE_REVIEW = "direct_sale_review";
+
 
     public static final int ZBAR_SCANNER_REQUEST = 0;
     public final static int SALE_PRO_CODE = 1;
     public static final int ZBAR_QR_SCANNER_REQUEST = 2;
     public final static int SALE_CUST_CODE = 3;
+    public static final int PRODUCT_LIST_SALE = 4;
+    public static final int PRODUCT_LIST_DASH = 5;
 
-    public static final String BAD_REQUEST = "BAD REQUEST";
+    public static final String SHARED_PREF = "shared_pref";
+    public static final String JWT_TOKEN = "jwt_token";
+
 
 }
 

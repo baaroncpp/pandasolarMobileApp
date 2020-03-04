@@ -48,7 +48,7 @@ public class ProductRepository implements ProductDAO{
                     return;
                 }
                 //data.postValue(response.body());
-                data.postValue(setProducts());
+                data.postValue(response.body());
             }
 
             @Override
@@ -56,6 +56,7 @@ public class ProductRepository implements ProductDAO{
                 Log.e("Connection failed", t.getMessage());
                 errorMessage = t.getMessage();
                 data.setValue(setProducts());
+                return;
             }
         });
         return data;
@@ -100,6 +101,9 @@ public class ProductRepository implements ProductDAO{
             product.setName("Boom box Panda Solar");
             product.setUnitcostselling(400000);
             product.setSerialNumber("8991389741924");
+            product.setIsleasable(true);
+            product.setDescription("Boom X has 4 List of all leased payments, initial deposit and expected total payment... think should indicate and coupons" +
+                    "List of all leased payments, initial deposit and expected total payment... think should indicate and coupons");
 
             products.add(product);
         }

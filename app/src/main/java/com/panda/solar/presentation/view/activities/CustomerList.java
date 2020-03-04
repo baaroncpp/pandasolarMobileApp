@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -47,6 +48,12 @@ public class CustomerList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.customer_list);
 
+        ActionBar actionBar = this.getSupportActionBar();
+
+        if(actionBar != null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
         dialog = new ProgressDialog(CustomerList.this);
         dialog.setMessage("Please wait...");
         dialog.setCanceledOnTouchOutside(false);
@@ -60,7 +67,7 @@ public class CustomerList extends AppCompatActivity {
         /*instance of the view  Model*/
         customerViewModel = ViewModelProviders.of(this).get(CustomerViewModel.class);
 
-        customerList = customerViewModel.getCustomers();
+        customerList = customerViewModel.getCustomers(0, 10, "createdon", "DESC");
 
         customerList.observe(this, new Observer<List<Customer>>() {
             @Override
@@ -129,9 +136,6 @@ public class CustomerList extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void init(){
-        customerList = customerViewModel.getCustomers();
-    }
 
 /*
     private LoaderManager.LoaderCallbacks<List<Customer>> loaderCallbacks = new LoaderManager.LoaderCallbacks<List<Customer>>() {

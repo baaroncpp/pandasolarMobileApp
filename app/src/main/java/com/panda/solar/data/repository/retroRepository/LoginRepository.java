@@ -26,7 +26,7 @@ public class LoginRepository {
             @Override
             public void onResponse(Call<Token> call, Response<Token> response) {
                 if(!response.isSuccessful()){
-                    bad_request = "BAD REQUEST";
+                    bad_request = "Code: "+response.code();
                     return;
                 }
                 token = response.body();
@@ -34,8 +34,7 @@ public class LoginRepository {
 
             @Override
             public void onFailure(Call<Token> call, Throwable t) {
-                //connection_fail = "CONNECTION FAILURE";
-                token = new Token("sdgbuighiusdhughduihg");
+                connection_fail = "CONNECTION FAILURE "+ t.getMessage();
                 return;
             }
         });

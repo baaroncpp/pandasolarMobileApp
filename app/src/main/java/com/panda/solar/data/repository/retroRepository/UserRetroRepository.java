@@ -18,7 +18,7 @@ public class UserRetroRepository implements UserDAO{
     private PandaCoreAPI pandaCoreAPI = pandaCoreAPI = RetroService.getPandaCoreAPI();
     private static String connection_failed = "";
     private static String bad_request = "";
-    //private User pandaUser;
+    private static Response userResponse;
     private static UserRetroRepository instance;
 
     public static UserRetroRepository getInstance(){
@@ -41,6 +41,7 @@ public class UserRetroRepository implements UserDAO{
         user.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
+                userResponse = response;
                 if(!response.isSuccessful()){
                     bad_request="BAD REQUEST";
                 }
@@ -57,34 +58,57 @@ public class UserRetroRepository implements UserDAO{
     }
 
     @Override
-    public MutableLiveData<User> getUserByUsername(String username) {
+    public MutableLiveData<User> getUser() {
 
         Log.e("userRepository", "accessed");
         final MutableLiveData<User> pandaUser = new MutableLiveData<>();
 
-        Call<User> user = pandaCoreAPI.getUserByUsername(username);
+        Call<User> user = pandaCoreAPI.getUser();
         user.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
+                userResponse = response;
                 if(!response.isSuccessful()){
                     bad_request="BAD REQUEST";
+                    Log.e("","Not zuccessful");
+                    return;
                 }
                 //.postValue(response.body());
-                pandaUser.setValue(userExample());
+                pandaUser.postValue(response.body());
+                Log.e("","response loaded");
             }
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-                pandaUser.setValue(userExample());
                 connection_failed = "CONNECTION FAILURE user: "+t.getMessage();
+                return;
             }
         });
         return pandaUser;
     }
 
     @Override
-    public MutableLiveData<List<User>> getUsers(String query) {
-        return null;
+    public MutableLiveData<List<User>> getUsers(String userType, int page, int size, String sortby, String sortorder) {
+
+       /* final MutableLiveData<List<User>> data = new MutableLiveData<>();
+        Call<UserList> userListCall = pandaCoreAPI.getAllUsers(userType, page, size, sortby, sortorder);
+
+        userListCall.enqueue(new Callback<UserList>() {
+            @Override
+            public void onResponse(Call<UserList> call, Response<UserList> response) {
+                if(!response.isSuccessful()){
+                    return;
+                }
+                data.postValue(response.body().getUsers());
+            }
+
+            @Override
+            public void onFailure(Call<UserList> call, Throwable t) {
+                return;
+            }
+        });
+        return data;*/
+       return null;
     }
 
     @Override
@@ -100,6 +124,10 @@ public class UserRetroRepository implements UserDAO{
         return null;
     }
 
+    @Override
+    public Response getUserResponse(){
+        return userResponse;
+    }
 
     public User userExample(){
 

@@ -1,6 +1,8 @@
 package com.panda.solar.presentation.view.activities;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -22,9 +24,14 @@ import com.panda.solar.data.network.NetworkCallback;
 import com.panda.solar.data.network.NetworkResponse;
 import com.panda.solar.data.network.RetrofitHelper;
 import com.panda.solar.data.repository.retroRepository.LoginRepository;
+import com.panda.solar.utils.AppContext;
+import com.panda.solar.utils.Constants;
 import com.panda.solar.utils.Utils;
+import com.panda.solar.viewModel.TokenViewModel;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener, TextWatcher, NetworkCallback {
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
+public class LoginActivity extends AppCompatActivity/* implements View.OnClickListener, TextWatcher, NetworkCallback*/ {
 
     private Button loginButton;
     private EditText loginPhoneNumberEditTxt;
@@ -40,8 +47,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private Token token;
     private String bad_request;
     private String connection_fail;
-    public static final String SHARED_PREF = "shared_pref";
-    public static final String JWT_TOKEN = "jwt_token";
+    private TokenViewModel tokenViewModel;
+    private SweetAlertDialog sweetDialog;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,22 +62,30 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             getSupportActionBar().hide();
         }
 
+        sweetDialog = Utils.customSweetAlertDialog(this);
+        progressDialog = Utils.customerProgressBar(this);
+
         loginButton = (Button)findViewById(R.id.login_button);
         loginPhoneNumberEditTxt = (EditText)findViewById(R.id.login_phone_number);
         loginPasswordEditTxt = (EditText)findViewById(R.id.login_password);
         forgotPasswordTextView = (TextView)findViewById(R.id.forgot_password_text);
 
-        loginPasswordEditTxt.addTextChangedListener(this);
+        /*loginPasswordEditTxt.addTextChangedListener(this);
         loginPasswordEditTxt.addTextChangedListener(this);
 
         loginButton.setOnClickListener(this);
-        forgotPasswordTextView.setOnClickListener(this);
+        forgotPasswordTextView.setOnClickListener(this);*/
 
-
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loginUser();
+            }
+        });
 
     }
 
-    @Override
+   /* @Override
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.login_button:
@@ -82,50 +98,43 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
 
 
-    }
+    }*/
 
     private void loginUser(){
 
         phoneNumber = loginPhoneNumberEditTxt.getText().toString().trim();
         password = loginPasswordEditTxt.getText().toString().trim();
 
-        Login log = new Login(phoneNumber, password);
-
         if(validInputs()){
-            JsonObject object = new JsonObject();
-            object.addProperty("username", loginPhoneNumberEditTxt.getText().toString().trim());
-            object.addProperty("password", loginPasswordEditTxt.getText().toString().trim());
 
-            dialog = new Utils().getDialog(this);
-            showProgressDialog(dialog);
+            progressDialog.show();
+
+            Login log = new Login(phoneNumber, password);
 
             loginRepository = new LoginRepository();
             token = loginRepository.userLogin(log);
             bad_request = LoginRepository.getBad_request();
             connection_fail = LoginRepository.getConnection_fail();
 
-            dismissProgressDialog(dialog);
-
-            if(token != null && bad_request.isEmpty() && connection_fail.isEmpty()){
-                //pass token to DB
-                saveJWT(token);
-
+            if(token != null && !((token.getToken()).equals("Bad credentials!")) && bad_request.isEmpty() && connection_fail.isEmpty()){
+                progressDialog.dismiss();
                 startActivity(new Intent(this,HomeActivity.class));
-            }else if(!bad_request.isEmpty()){
-                Toast.makeText(this,bad_request, Toast.LENGTH_LONG).show();
-            }else if(!connection_fail.isEmpty()){
-                Toast.makeText(this,connection_fail, Toast.LENGTH_LONG).show();
+                saveJWT(token);
+            }else if(token != null && (token.getToken()).equals("Bad credentials!")){
+                progressDialog.dismiss();
+                Toast.makeText(this, "Bad credentials!, Try again", Toast.LENGTH_LONG).show();
             }
 
-
+            if(!(LoginRepository.getBad_request()).isEmpty()){
+                progressDialog.dismiss();
+                Toast.makeText(this,bad_request, Toast.LENGTH_LONG).show();
+            }else if(!(LoginRepository.getConnection_fail()).isEmpty()){
+                progressDialog.dismiss();
+                Toast.makeText(this,connection_fail, Toast.LENGTH_LONG).show();
+            }
+            progressDialog.dismiss();
             //new RetrofitHelper().login(object, this);
         }
-
-        loginRepository = new LoginRepository();
-        token = loginRepository.userLogin(log);
-        bad_request = LoginRepository.getBad_request();
-        connection_fail = LoginRepository.getConnection_fail();
-
     }
 
     private boolean validInputs(){
@@ -139,7 +148,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         return true;
     }
 
-    @Override
+   /* @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
     }
@@ -164,27 +173,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onCallback(NetworkResponse networkResponse) {
 
     }
-
-    public void showProgressDialog(Dialog dialog){
-
-        if(dialog != null && !dialog.isShowing()){
-            dialog.show();
-        }
-    }
-
-    public void dismissProgressDialog(Dialog dialog){
-
-        if(dialog != null && dialog.isShowing()){
-            dialog.dismiss();
-        }
-    }
-
+*/
     public void saveJWT(Token token){
-        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREF, MODE_PRIVATE);
+        SharedPreferences sharedPreferences = AppContext.getAppContext().getSharedPreferences(Constants.SHARED_PREF, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        editor.putString(JWT_TOKEN, token.getToken());
+        editor.putString(Constants.JWT_TOKEN, token.getToken());
         editor.apply();
-        //Toast.makeText(this, token.getToken(), Toast.LENGTH_LONG).show();
+
+        tokenViewModel = ViewModelProviders.of(LoginActivity.this).get(TokenViewModel.class);
+        tokenViewModel.saveToken(token);
     }
 }

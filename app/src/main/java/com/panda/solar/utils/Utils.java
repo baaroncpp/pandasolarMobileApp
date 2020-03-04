@@ -2,6 +2,7 @@ package com.panda.solar.utils;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -136,5 +137,4 @@ public class Utils {
 
         return dialog;
     }
-
 }

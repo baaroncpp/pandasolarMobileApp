@@ -1,7 +1,7 @@
 package com.panda.solar.data.repository.retroRepository;
 
 import android.arch.lifecycle.MutableLiveData;
-
+import android.util.Log;
 import com.panda.solar.Model.entities.DirectSaleModel;
 import com.panda.solar.Model.entities.LeaseSale;
 import com.panda.solar.Model.entities.LeaseSaleModel;
@@ -9,9 +9,7 @@ import com.panda.solar.Model.entities.Sale;
 import com.panda.solar.data.network.PandaCoreAPI;
 import com.panda.solar.data.network.RetroService;
 import com.panda.solar.utils.Constants;
-
 import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -30,10 +28,34 @@ public class SaleRepository implements SaleDAO{
         return instance;
     }
 
-
     @Override
     public MutableLiveData<LeaseSale> makeLeaseSale(LeaseSaleModel leaseSaleModel) {
-        return null;
+
+        final MutableLiveData<LeaseSale> resultData = new MutableLiveData<>();
+        Call<LeaseSale> leaseSale = pandaCoreAPI.makeLeaseSale(leaseSaleModel.getLeaseoffer(),
+                                                               leaseSaleModel.getAgentid(),
+                                                               leaseSaleModel.getCustomerid(),
+                                                               leaseSaleModel.getCordlat(),
+                                                               leaseSaleModel.getCordlong(),
+                                                               leaseSaleModel.getDeviceserial());
+
+        leaseSale.enqueue(new Callback<LeaseSale>() {
+            @Override
+            public void onResponse(Call<LeaseSale> call, Response<LeaseSale> response) {
+                if(!response.isSuccessful()){
+                    errorMessage = Constants.BAD_REQUEST;
+                }else{
+                    resultData.postValue(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LeaseSale> call, Throwable t) {
+                errorMessage = t.getMessage();
+                Log.e("MAKE_LEASESALE",t.getMessage());
+            }
+        });
+        return resultData;
     }
 
     @Override
@@ -62,12 +84,52 @@ public class SaleRepository implements SaleDAO{
 
     @Override
     public MutableLiveData<List<Sale>> getSalesByAgent(String id, int page, int size, String sortby, String sortorder) {
-        return null;
+
+        final MutableLiveData<List<Sale>> resultData = new MutableLiveData<>();
+        Call<List<Sale>> sales = pandaCoreAPI.getAgentSales(id, page, size, sortby, sortorder);
+
+        sales.enqueue(new Callback<List<Sale>>() {
+            @Override
+            public void onResponse(Call<List<Sale>> call, Response<List<Sale>> response) {
+                if(!response.isSuccessful()){
+
+                }else{
+                    resultData.postValue(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Sale>> call, Throwable t) {
+                errorMessage = t.getMessage();
+                Log.e("AGENT_SALES",t.getMessage());
+            }
+        });
+        return resultData;
     }
 
     @Override
-    public MutableLiveData<List<Sale>> getAllSales(String id, int page, int size, String sortby, String sortorder) {
-        return null;
+    public MutableLiveData<List<Sale>> getAllSales(int page, int size, String sortby, String sortorder) {
+
+        final MutableLiveData<List<Sale>> resultData = new MutableLiveData<>();
+        Call<List<Sale>> sales = pandaCoreAPI.getAllSales(page, size, sortby, sortorder);
+
+        sales.enqueue(new Callback<List<Sale>>() {
+            @Override
+            public void onResponse(Call<List<Sale>> call, Response<List<Sale>> response) {
+                if(!response.isSuccessful()){
+
+                }else{
+                    resultData.postValue(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Sale>> call, Throwable t) {
+                errorMessage = t.getMessage();
+                Log.e("ALL_SALES",t.getMessage());
+            }
+        });
+        return resultData;
     }
 
     @Override

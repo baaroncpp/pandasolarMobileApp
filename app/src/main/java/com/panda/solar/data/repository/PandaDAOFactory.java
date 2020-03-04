@@ -4,6 +4,8 @@ import com.panda.solar.data.repository.retroRepository.CustomerDAO;
 import com.panda.solar.data.repository.retroRepository.CustomerRetroRepository;
 import com.panda.solar.data.repository.retroRepository.LeaseOfferDAO;
 import com.panda.solar.data.repository.retroRepository.LeaseOfferRepository;
+import com.panda.solar.data.repository.retroRepository.PayGoProductDAO;
+import com.panda.solar.data.repository.retroRepository.PayGoProductRepository;
 import com.panda.solar.data.repository.retroRepository.ProductDAO;
 import com.panda.solar.data.repository.retroRepository.ProductRepository;
 import com.panda.solar.data.repository.retroRepository.SaleDAO;
@@ -26,5 +28,7 @@ public abstract class PandaDAOFactory extends AbstractFactory {
     public static SaleDAO getSaleDAO(){return SaleRepository.getInstance();}
 
     public static LeaseOfferDAO getLeaseOfferDAO(){return LeaseOfferRepository.getInstance();}
+
+    public static PayGoProductDAO getPayGoProductDAO(){return PayGoProductRepository.getInstance();}
 
 }

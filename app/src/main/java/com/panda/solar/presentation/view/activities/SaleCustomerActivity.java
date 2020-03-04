@@ -32,7 +32,7 @@ public class SaleCustomerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sale_customer);
 
         customerViewModel = ViewModelProviders.of(this).get(CustomerViewModel.class);
-        customerList = customerViewModel.getCustomers();
+        customerList = customerViewModel.getCustomers(0, 10, "createdon", "DESC");
 
         customerList.observe(this, new Observer<List<Customer>>() {
             @Override

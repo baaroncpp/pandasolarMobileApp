@@ -123,6 +123,14 @@ public class Product implements Parcelable {
         this.unitcostselling = unitcostselling;
     }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setIsleasable(Boolean isleasable) {
+        this.isleasable = isleasable;
+    }
+
     public void setSerialNumber(String serialNumber) {
         this.serialNumber = serialNumber;
     }

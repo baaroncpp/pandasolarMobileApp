@@ -39,16 +39,18 @@ public class ProfileFragment extends Fragment {
         View view = inflater.inflate(R.layout.profile_fragement, container, false);
         super.onViewCreated(view, savedInstanceState);
 
-        //dialog = new ProgressBar();
+        dialog = Utils.customerProgressBar(getActivity());
         init(view);
 
+        dialog.show();
         userViewModel = ViewModelProviders.of(getActivity()).get(UserViewModel.class);
 
-        liveUser = userViewModel.getUser("aaron");
+        liveUser = userViewModel.getUser();
 
         liveUser.observe(getActivity(), new Observer<User>() {
             @Override
             public void onChanged(@Nullable User user) {
+                dialog.dismiss();
                 setProfileViews(user);
             }
         });

@@ -15,14 +15,17 @@ import com.panda.solar.presentation.view.activities.AddCustomer;
 import com.panda.solar.presentation.view.activities.CustomerList;
 import com.panda.solar.activities.R;
 import com.panda.solar.presentation.view.activities.DirectSale;
+import com.panda.solar.presentation.view.activities.LeaseOfferList;
+import com.panda.solar.presentation.view.activities.ProductListDashBoard;
 
 public class HomeFragment extends Fragment {
 
     private CardView saleCard;
-    private CardView stockManagementCard;
+    private CardView productCard;
     private CardView installationCard;
-    private CardView repairCard;
+    //private CardView repairCard;
     private CardView customerCard;
+    private CardView leaseOfferCard;
 
     public HomeFragment() { }
 
@@ -32,19 +35,11 @@ public class HomeFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.home_fragement, container, false);
 
-        //initViews(view);
-        customerCard = (CardView)view.findViewById(R.id.customer_card);
-        saleCard = (CardView)view.findViewById(R.id.sale_card);
-        installationCard = (CardView)view.findViewById(R.id.installation_card);
-        repairCard = (CardView)view.findViewById(R.id.repair_card);
+        initViews(view);
 
         customerCard.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-               /*CustomerList customerList = new CustomerList();
-               FragmentManager manager = getFragmentManager();
-               manager.beginTransaction().replace(R.id.fragment_container, customerList, customerList.getTag()).commit();
-*/
                 Intent intent = new Intent(getActivity(), CustomerList.class);
                 startActivity(intent);
             }
@@ -53,7 +48,6 @@ public class HomeFragment extends Fragment {
         saleCard.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                //Toast.makeText(getActivity(), "customers", Toast.LENGTH_SHORT).show();
                 SalesFragment salesFragment = new SalesFragment();
                 FragmentManager manager = getFragmentManager();
                 manager.beginTransaction().replace(R.id.fragment_container, salesFragment, salesFragment.getTag()).commit();
@@ -63,36 +57,34 @@ public class HomeFragment extends Fragment {
         installationCard.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                //Toast.makeText(getActivity(), "customers", Toast.LENGTH_SHORT).show();
-                //SalesFragment salesFragment = new SalesFragment();
-                //FragmentManager manager = getFragmentManager();
-                //manager.beginTransaction().replace(R.id.fragment_container, salesFragment, salesFragment.getTag()).commit();
-
                 Intent intent = new Intent(getActivity(), AddCustomer.class);
                 startActivity(intent);
             }
         });
 
-        repairCard.setOnClickListener(new View.OnClickListener(){
+        leaseOfferCard.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                Intent intent = new Intent(getActivity(), DirectSale.class);
+                Intent intent = new Intent(getActivity(), LeaseOfferList.class);
                 startActivity(intent);
             }
         });
 
-
+        productCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), ProductListDashBoard.class);
+                startActivity(intent);
+            }
+        });
         return view;
     }
 
     private void initViews(View view){
-        saleCard = (CardView)view.findViewById(R.id.sale);
-        stockManagementCard = (CardView)view.findViewById(R.id.stock_management_card);
-        installationCard = (CardView)view.findViewById(R.id.installation_card);
-        repairCard = (CardView)view.findViewById(R.id.repair_card);
         customerCard = (CardView)view.findViewById(R.id.customer_card);
-
+        saleCard = (CardView)view.findViewById(R.id.sale_card);
+        installationCard = (CardView)view.findViewById(R.id.installation_card);
+        leaseOfferCard = (CardView)view.findViewById(R.id.lease_offer_card);
+        productCard = view.findViewById(R.id.product_dashboard_card);
     }
-
-
 }
