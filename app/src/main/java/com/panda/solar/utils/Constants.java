@@ -1,5 +1,7 @@
 package com.panda.solar.utils;
 
+import retrofit2.http.PUT;
+
 /**
  * Created by macosx on 27/01/2019.
  */
@@ -29,6 +31,9 @@ public class Constants {
     public final static String LEASE_SALE_OBJ = "lease_sale_object";
     public final static String LEASE_OFFER = "lease_offer";
 
+    public final static String SALE_RESULT = "sale_result";
+    public final static String SALE_OBJ = "sale_object";
+
     public final static String SALE_REVIEW = "sale_review";
     public final static String SALE_CUSTOMER = "sale_customer";
 
@@ -45,7 +50,12 @@ public class Constants {
 
     public static final String SHARED_PREF = "shared_pref";
     public static final String JWT_TOKEN = "jwt_token";
+    public static final String USER_ID = "user_id";
+    public static final String USER_TYPE = "user_type";
 
+    public static final String ERROR_RESPONSE = "something wrong";
+    public static final String SUCCESS_RESPONSE = "success";
+    public static final String FAILURE_RESPONSE = "connection failure";
 
 }
 

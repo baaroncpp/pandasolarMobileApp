@@ -41,18 +41,19 @@ public class SaleReview extends AppCompatActivity {
     private LiveData<LeaseSale> leaseSaleLive;
     private ProgressDialog dialog;
     private SweetAlertDialog sweetAlertDialog;
-    private Response saleResponse;
+    private LiveData<String> liveResponseMsg;
     private LeaseSale leaseSaleResult;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sale_review);
 
-        saleViewModel = ViewModelProviders.of(SaleReview.this).get(SaleViewModel.class);
+        saleViewModel = ViewModelProviders.of(this).get(SaleViewModel.class);
 
         sweetAlertDialog = Utils.customSweetAlertDialog(this);
-        dialog = Utils.customerProgressBar(SaleReview.this);
+        progressDialog = Utils.customerProgressBar(this);
 
         init();
         String saleCode = getIntent().getStringExtra(Constants.SALE_REVIEW);
@@ -81,22 +82,19 @@ public class SaleReview extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                sweetAlertDialog.show();
+                //sweetAlertDialog.show();
+                progressDialog.show();
                 leaseSaleLive = saleViewModel.makeLeaseSale(leaseSaleModel);
-
-                saleResponse = SaleViewModel.getSaleResponse();
 
                 leaseSaleLive.observe(SaleReview.this, new Observer<LeaseSale>() {
                     @Override
                     public void onChanged(@Nullable LeaseSale leaseSale) {
                         leaseSaleResult = leaseSale;
-
                         if(leaseSale != null){
-                            Toast.makeText(SaleReview.this, "Successful", Toast.LENGTH_SHORT).show();
+                            observeResponse();
                         }
                     }
                 });
-                handleResponse(saleResponse);
             }
         });
     }
@@ -118,37 +116,18 @@ public class SaleReview extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                sweetAlertDialog.show();
-
+                //sweetAlertDialog.show();
+                progressDialog.show();
                 saleLiveData = saleViewModel.makeDirectPayGoSale(directSaleModel);
-
-                saleResponse = SaleViewModel.getSaleResponse();
 
                 saleLiveData.observe(SaleReview.this, new Observer<Sale>() {
                     @Override
                     public void onChanged(@Nullable Sale sale) {
-                        sweetAlertDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                        observeResponse();
                     }
                 });
-
-                handleResponse(saleResponse);
             }
         });
-    }
-
-    public void handleResponse(Response response){
-        if(response != null){
-            if(!response.isSuccessful()){
-                sweetAlertDialog.changeAlertType(SweetAlertDialog.ERROR_TYPE);
-                sweetAlertDialog.setTitleText("Something Wrong");
-            }else {
-                sweetAlertDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
-                sweetAlertDialog.setTitleText("Successful");
-            }
-        }else{
-            sweetAlertDialog.changeAlertType(SweetAlertDialog.ERROR_TYPE);
-            sweetAlertDialog.setTitleText("CONNECTION FAILURE");
-        }
     }
 
     public void init(){
@@ -159,5 +138,29 @@ public class SaleReview extends AppCompatActivity {
         totalPriceText = findViewById(R.id.review_total_price);
         makeSaleBtn = findViewById(R.id.make_direct_sale);
         productNmaeTitle = findViewById(R.id.product_name_title);
+    }
+
+    public void observeResponse(){
+        liveResponseMsg = saleViewModel.getResponseMessage();
+        liveResponseMsg.observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable String s) {
+                handleResponse(s);
+            }
+        });
+    }
+
+    public void handleResponse(String message){
+
+        if(message.equals(Constants.SUCCESS_RESPONSE)){
+            progressDialog.dismiss();
+            Toast.makeText(this,"SALE SUCCESSFULL", Toast.LENGTH_SHORT).show();
+        }else if(message.equals(Constants.ERROR_RESPONSE)){
+            progressDialog.dismiss();
+            Toast.makeText(this,"SOMETHING WENT WRONG !!!", Toast.LENGTH_SHORT).show();
+        }else if(message.equals(Constants.FAILURE_RESPONSE)){
+            progressDialog.dismiss();
+            Toast.makeText(this,"CONNECTION FAILURE", Toast.LENGTH_SHORT).show();
+        }
     }
 }

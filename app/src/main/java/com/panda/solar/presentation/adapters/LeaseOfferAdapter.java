@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.panda.solar.Model.entities.LeaseOffer;
 import com.panda.solar.activities.R;
 import com.panda.solar.presentation.view.activities.SaleLeaseOffer;
+import com.panda.solar.utils.Utils;
 
 import java.util.List;
 
@@ -44,11 +45,11 @@ public class LeaseOfferAdapter extends RecyclerView.Adapter<LeaseOfferAdapter.Le
 
         leaseOfferViewHolder.leaseOfferItemName.setText(currentLeaseOffer.getName());
         leaseOfferViewHolder.leaseItemProduct.setText(currentLeaseOffer.getProduct().getName());
-        leaseOfferViewHolder.leaseItemCost.setText(String.valueOf(currentLeaseOffer.getProduct().getUnitcostselling()));
+        leaseOfferViewHolder.leaseItemCost.setText(Utils.moneyFormatter(currentLeaseOffer.getProduct().getUnitcostselling()));
         leaseOfferViewHolder.leaseOfferItemCode.setText(String.valueOf(currentLeaseOffer.getCode()));
-        leaseOfferViewHolder.leaseItemDeposit.setText(String.valueOf(currentLeaseOffer.getIntialdeposit()));
-        leaseOfferViewHolder.leaseItemPayments.setText(String.valueOf(currentLeaseOffer.getRecurrentpaymentamount()));
-        // leaseOfferViewHolder.leaseDescription.setText(currentLeaseOffer.getDescription());
+        leaseOfferViewHolder.leaseItemDeposit.setText(Utils.moneyFormatter(currentLeaseOffer.getIntialdeposit()));
+        leaseOfferViewHolder.leaseItemPayments.setText(Utils.moneyFormatter(currentLeaseOffer.getRecurrentpaymentamount()));
+        leaseOfferViewHolder.leaseDescription.setText(currentLeaseOffer.getDescription());
     }
 
     @Override

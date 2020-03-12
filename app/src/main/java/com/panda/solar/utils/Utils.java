@@ -2,6 +2,7 @@ package com.panda.solar.utils;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -23,6 +24,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
+
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by macosx on 15/01/2019.
@@ -119,6 +122,18 @@ public class Utils {
         return formatter.format(date);
     }
 
+    public static String readableShortDate(Date date){
+
+        Date today = new Date();
+
+        if(today == date){
+            return "Today";
+        }else{
+            SimpleDateFormat formatter = new SimpleDateFormat("dd MM yyyy");
+            return formatter.format(date);
+        }
+    }
+
     public static ProgressDialog customerProgressBar(Context context){
 
         ProgressDialog dialog;
@@ -136,5 +151,24 @@ public class Utils {
         dialog.setCancelable(false);
 
         return dialog;
+    }
+
+    public static String moneyFormatter(float amount){
+        return String.format("%,.2f", amount) + " UGX";
+    }
+
+    public static String saleStatus(short i){
+        if(i == 1){
+            return "Pending";
+        }else if(i == 2){
+            return "Approved";
+        }else{
+            return "Unknown";
+        }
+    }
+
+    public static String getSharedPreference(String val){
+        SharedPreferences sharedPreferences = AppContext.getAppContext().getSharedPreferences(Constants.SHARED_PREF, MODE_PRIVATE);
+        return sharedPreferences.getString(val, null);
     }
 }

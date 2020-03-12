@@ -5,13 +5,17 @@ import com.panda.solar.Model.entities.CustList;
 import com.panda.solar.Model.entities.Customer;
 import com.panda.solar.Model.entities.DirectSaleModel;
 import com.panda.solar.Model.entities.LeaseOffer;
+import com.panda.solar.Model.entities.LeasePayment;
 import com.panda.solar.Model.entities.LeaseSale;
 import com.panda.solar.Model.entities.LeaseSaleModel;
 import com.panda.solar.Model.entities.Login;
 import com.panda.solar.Model.entities.PayGoProduct;
 import com.panda.solar.Model.entities.PayGoProductModel;
+import com.panda.solar.Model.entities.PaymentList;
 import com.panda.solar.Model.entities.Product;
 import com.panda.solar.Model.entities.Sale;
+import com.panda.solar.Model.entities.SaleList;
+import com.panda.solar.Model.entities.SaleModel;
 import com.panda.solar.Model.entities.Token;
 import com.panda.solar.Model.entities.User;
 
@@ -74,6 +78,9 @@ public interface PandaCoreAPI {
 
 
     /* product endpoint*/
+    @GET("v1/product/get/")
+    Call<Product> getProductById(@Query("id") String id);
+
     @GET("v1/product/get")
     Call<List<Product>> getAllProducts();
 
@@ -109,17 +116,33 @@ public interface PandaCoreAPI {
                                   @Query("deviceserial")String deviceserial);
 
     @GET("v1/sales/get/agent/{id}")
-    Call<List<Sale>> getAgentSales(@Path("id")String id,
-                                   @Field("page")int page,
-                                   @Field("size")int size,
-                                   @Field("sortby")String sortby,
-                                   @Field("sortorder")String sortorder);
+    Call<List<SaleModel>> getAgentSales(@Path("id")String id,
+                                 @Query("page") int page,
+                                 @Query("size") int size,
+                                 @Query("sortby") String sortby,
+                                 @Query("sortorder") String sortorder);
+
+    @GET("v1/payments/get")
+    Call<PaymentList> getAllLeasePayments(@Query("page") int page,
+                                          @Query("size") int size,
+                                          @Query("direction") String direction);
+
+    @GET("v1/payments/get/{id}")
+    Call<PaymentList> getAllAgentLeasePayments(@Path("id") String id,
+                                               @Query("page") int page,
+                                               @Query("size") int size,
+                                               @Query("direction") String direction);
+
+    @POST("v1/approvals/sale/approve/{id}")
+    Call<Sale> approveSale(@Path("id") String id,
+                           @Query("approvestatus")String approveStatus,
+                           @Query("reviewdescription")String reviewDescription);
 
     @GET("v1/sales/get/allsales")
-    Call<List<Sale>> getAllSales(@Field("page")int page,
-                                 @Field("size")int size,
-                                 @Field("sortby")String sortby,
-                                 @Field("sortorder")String sortorder);
+    Call<List<SaleModel>> getAllSales(@Query("page") int page,
+                                      @Query("size") int size,
+                                      @Query("sortby") String sortby,
+                                      @Query("sortorder") String sortorder);
 
     /*Lease offer*/
     @GET("v1/leaseoffer/get")

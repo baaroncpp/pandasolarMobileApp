@@ -6,9 +6,13 @@ import com.panda.solar.Model.entities.DirectSaleModel;
 import com.panda.solar.Model.entities.LeaseSale;
 import com.panda.solar.Model.entities.LeaseSaleModel;
 import com.panda.solar.Model.entities.Sale;
+import com.panda.solar.Model.entities.SaleList;
+import com.panda.solar.Model.entities.SaleModel;
 import com.panda.solar.data.network.PandaCoreAPI;
 import com.panda.solar.data.network.RetroService;
 import com.panda.solar.utils.Constants;
+import com.panda.solar.utils.ResponseCallBack;
+
 import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -17,8 +21,6 @@ import retrofit2.Response;
 public class SaleRepository implements SaleDAO{
 
     private static SaleRepository instance;
-    private Response saleResponse;
-    private static String errorMessage = "";
     private PandaCoreAPI pandaCoreAPI = RetroService.getPandaCoreAPI();
 
     public static SaleRepository getInstance(){
@@ -29,7 +31,7 @@ public class SaleRepository implements SaleDAO{
     }
 
     @Override
-    public MutableLiveData<LeaseSale> makeLeaseSale(LeaseSaleModel leaseSaleModel) {
+    public MutableLiveData<LeaseSale> makeLeaseSale(final ResponseCallBack callBack, LeaseSaleModel leaseSaleModel) {
 
         final MutableLiveData<LeaseSale> resultData = new MutableLiveData<>();
         Call<LeaseSale> leaseSale = pandaCoreAPI.makeLeaseSale(leaseSaleModel.getLeaseoffer(),
@@ -43,23 +45,26 @@ public class SaleRepository implements SaleDAO{
             @Override
             public void onResponse(Call<LeaseSale> call, Response<LeaseSale> response) {
                 if(!response.isSuccessful()){
-                    errorMessage = Constants.BAD_REQUEST;
-                }else{
-                    resultData.postValue(response.body());
+                    callBack.onError();
+                    return;
                 }
+                callBack.onSuccess();
+                resultData.postValue(response.body());
+
             }
 
             @Override
             public void onFailure(Call<LeaseSale> call, Throwable t) {
-                errorMessage = t.getMessage();
+                callBack.onFailure();
                 Log.e("MAKE_LEASESALE",t.getMessage());
+                return;
             }
         });
         return resultData;
     }
 
     @Override
-    public MutableLiveData<Sale> makeDirectSale(DirectSaleModel directSaleModel) {
+    public MutableLiveData<Sale> makeDirectSale(final ResponseCallBack callBack, DirectSaleModel directSaleModel) {
 
         final MutableLiveData<Sale> data = new MutableLiveData<>();
         Call<Sale> sale = pandaCoreAPI.makeDirectSale(directSaleModel);
@@ -67,40 +72,43 @@ public class SaleRepository implements SaleDAO{
         sale.enqueue(new Callback<Sale>() {
             @Override
             public void onResponse(Call<Sale> call, Response<Sale> response) {
-                saleResponse = response;
                 if(!response.isSuccessful()){
-                    errorMessage = Constants.BAD_REQUEST;
+                    callBack.onError();
+                    return;
                 }
+                callBack.onSuccess();
                 data.postValue(response.body());
             }
 
             @Override
             public void onFailure(Call<Sale> call, Throwable t) {
-                errorMessage = t.getMessage();
+                callBack.onFailure();
+                return;
             }
         });
         return data;
     }
 
     @Override
-    public MutableLiveData<List<Sale>> getSalesByAgent(String id, int page, int size, String sortby, String sortorder) {
+    public MutableLiveData<List<SaleModel>> getSalesByAgent(final ResponseCallBack callBack, String id, int page, int size, String sortby, String sortorder) {
 
-        final MutableLiveData<List<Sale>> resultData = new MutableLiveData<>();
-        Call<List<Sale>> sales = pandaCoreAPI.getAgentSales(id, page, size, sortby, sortorder);
+        final MutableLiveData<List<SaleModel>> resultData = new MutableLiveData<>();
+        Call<List<SaleModel>> sales = pandaCoreAPI.getAgentSales(id, page, size, sortby, sortorder);
 
-        sales.enqueue(new Callback<List<Sale>>() {
+        sales.enqueue(new Callback<List<SaleModel>>() {
             @Override
-            public void onResponse(Call<List<Sale>> call, Response<List<Sale>> response) {
+            public void onResponse(Call<List<SaleModel>> call, Response<List<SaleModel>> response) {
                 if(!response.isSuccessful()){
-
-                }else{
-                    resultData.postValue(response.body());
+                    callBack.onError();
+                    return;
                 }
+                callBack.onSuccess();
+                resultData.postValue(response.body());
             }
 
             @Override
-            public void onFailure(Call<List<Sale>> call, Throwable t) {
-                errorMessage = t.getMessage();
+            public void onFailure(Call<List<SaleModel>> call, Throwable t) {
+                callBack.onFailure();
                 Log.e("AGENT_SALES",t.getMessage());
             }
         });
@@ -108,32 +116,56 @@ public class SaleRepository implements SaleDAO{
     }
 
     @Override
-    public MutableLiveData<List<Sale>> getAllSales(int page, int size, String sortby, String sortorder) {
+    public MutableLiveData<List<SaleModel>> getAllSales(final ResponseCallBack callBack, int page, int size, String sortby, String sortorder) {
 
-        final MutableLiveData<List<Sale>> resultData = new MutableLiveData<>();
-        Call<List<Sale>> sales = pandaCoreAPI.getAllSales(page, size, sortby, sortorder);
+        final MutableLiveData<List<SaleModel>> resultData = new MutableLiveData<>();
+        Call<List<SaleModel>> sales = pandaCoreAPI.getAllSales(page, size, sortby, sortorder);
 
-        sales.enqueue(new Callback<List<Sale>>() {
+        sales.enqueue(new Callback<List<SaleModel>>() {
             @Override
-            public void onResponse(Call<List<Sale>> call, Response<List<Sale>> response) {
+            public void onResponse(Call<List<SaleModel>> call, Response<List<SaleModel>> response) {
                 if(!response.isSuccessful()){
-
-                }else{
-                    resultData.postValue(response.body());
+                    callBack.onError();
+                    Log.e("ALL_SALES","failed");
+                    return;
                 }
+                callBack.onSuccess();
+                resultData.postValue(response.body());
             }
 
             @Override
-            public void onFailure(Call<List<Sale>> call, Throwable t) {
-                errorMessage = t.getMessage();
+            public void onFailure(Call<List<SaleModel>> call, Throwable t) {
+                callBack.onFailure();
                 Log.e("ALL_SALES",t.getMessage());
+                return;
             }
         });
         return resultData;
     }
 
     @Override
-    public Response getResponse() {
-        return saleResponse;
+    public MutableLiveData<Sale> approveSale(final ResponseCallBack callBack, String itemId, String approveStatus, String reviewDescription) {
+
+        final MutableLiveData<Sale> dataResult = new MutableLiveData<>();
+        Call<Sale> call = pandaCoreAPI.approveSale(itemId, approveStatus, reviewDescription);
+
+        call.enqueue(new Callback<Sale>() {
+            @Override
+            public void onResponse(Call<Sale> call, Response<Sale> response) {
+                if(!response.isSuccessful()){
+                    callBack.onError();
+                    return;
+                }
+                dataResult.postValue(response.body());
+                callBack.onSuccess();
+            }
+
+            @Override
+            public void onFailure(Call<Sale> call, Throwable t) {
+                callBack.onFailure();
+                return;
+            }
+        });
+        return dataResult;
     }
 }

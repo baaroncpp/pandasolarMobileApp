@@ -21,7 +21,7 @@ public class CustomerDetails extends AppCompatActivity {
         setContentView(R.layout.customer_details);
         //  getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        customer = (Customer)getIntent().getParcelableExtra("customerObject");
+        customer = getIntent().getParcelableExtra("customerObject");
 
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

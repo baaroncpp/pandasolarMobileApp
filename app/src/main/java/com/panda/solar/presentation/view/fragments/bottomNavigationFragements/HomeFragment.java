@@ -16,14 +16,16 @@ import com.panda.solar.presentation.view.activities.CustomerList;
 import com.panda.solar.activities.R;
 import com.panda.solar.presentation.view.activities.DirectSale;
 import com.panda.solar.presentation.view.activities.LeaseOfferList;
+import com.panda.solar.presentation.view.activities.PaymentsList;
 import com.panda.solar.presentation.view.activities.ProductListDashBoard;
+import com.panda.solar.presentation.view.activities.SalesList;
 
 public class HomeFragment extends Fragment {
 
     private CardView saleCard;
     private CardView productCard;
     private CardView installationCard;
-    //private CardView repairCard;
+    private CardView paymentsCard;
     private CardView customerCard;
     private CardView leaseOfferCard;
 
@@ -48,9 +50,8 @@ public class HomeFragment extends Fragment {
         saleCard.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                SalesFragment salesFragment = new SalesFragment();
-                FragmentManager manager = getFragmentManager();
-                manager.beginTransaction().replace(R.id.fragment_container, salesFragment, salesFragment.getTag()).commit();
+                Intent intent = new Intent(getActivity(), SalesList.class);
+                startActivity(intent);
             }
         });
 
@@ -77,14 +78,24 @@ public class HomeFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
+        paymentsCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), PaymentsList.class);
+                startActivity(intent);
+            }
+        });
+
         return view;
     }
 
     private void initViews(View view){
-        customerCard = (CardView)view.findViewById(R.id.customer_card);
-        saleCard = (CardView)view.findViewById(R.id.sale_card);
-        installationCard = (CardView)view.findViewById(R.id.installation_card);
-        leaseOfferCard = (CardView)view.findViewById(R.id.lease_offer_card);
+        customerCard = view.findViewById(R.id.customer_card);
+        saleCard = view.findViewById(R.id.sale_card);
+        installationCard = view.findViewById(R.id.installation_card);
+        leaseOfferCard = view.findViewById(R.id.lease_offer_card);
         productCard = view.findViewById(R.id.product_dashboard_card);
+        paymentsCard = view.findViewById(R.id.lease_payments_card);
     }
 }

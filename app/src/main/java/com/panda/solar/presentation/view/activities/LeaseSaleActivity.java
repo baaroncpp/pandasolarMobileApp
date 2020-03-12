@@ -22,6 +22,7 @@ import com.panda.solar.Model.entities.PayGoProduct;
 import com.panda.solar.Model.entities.Product;
 import com.panda.solar.activities.R;
 import com.panda.solar.utils.Constants;
+import com.panda.solar.utils.Utils;
 import com.panda.solar.viewModel.PayGoProductViewModel;
 
 public class LeaseSaleActivity extends AppCompatActivity {
@@ -75,7 +76,7 @@ public class LeaseSaleActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(validateCustomerBtn() && validateDescriptionField() && validateLocationBtn() && validateSerialEditView()){
                     leaseSaleModel = new LeaseSaleModel();
-                    leaseSaleModel.setAgentid("fc179a74c902420bba3d16dfef1522af");
+                    leaseSaleModel.setAgentid(Utils.getSharedPreference(Constants.USER_ID));
                     leaseSaleModel.setCordlat(56);
                     leaseSaleModel.setCustomerid(customerResult.getUserid());
                     leaseSaleModel.setDeviceserial(serialNumberView.getText().toString());

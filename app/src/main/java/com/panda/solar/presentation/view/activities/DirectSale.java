@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
@@ -21,6 +22,7 @@ import com.panda.solar.Model.entities.PayGoProductModel;
 import com.panda.solar.Model.entities.Product;
 import com.panda.solar.activities.R;
 import com.panda.solar.utils.Constants;
+import com.panda.solar.utils.Utils;
 import com.panda.solar.viewModel.PayGoProductViewModel;
 import com.panda.solar.viewModel.ProductViewModel;
 
@@ -52,6 +54,12 @@ public class DirectSale extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_direct_sale);
+
+        ActionBar actionBar = this.getSupportActionBar();
+
+        if(actionBar != null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         init();
 
@@ -172,7 +180,7 @@ public class DirectSale extends AppCompatActivity {
 
         if(validateSerialEditView() && validateCustomerBtn() && validateDescriptionField() && validateLocationBtn()){
             directSaleModel = new DirectSaleModel();
-            directSaleModel.setAgentid("");
+            directSaleModel.setAgentid(Utils.getSharedPreference(Constants.USER_ID));
             directSaleModel.setCreatedon(new Date());
             directSaleModel.setScannedserial(serialTextView.getText().toString());
             directSaleModel.setCustomerid(customerResult.getUserid());

@@ -2,10 +2,13 @@ package com.panda.solar.presentation.view.activities;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -19,6 +22,7 @@ import android.widget.Toast;
 import com.google.gson.JsonObject;
 import com.panda.solar.Model.entities.Login;
 import com.panda.solar.Model.entities.Token;
+import com.panda.solar.Model.entities.User;
 import com.panda.solar.activities.R;
 import com.panda.solar.data.network.NetworkCallback;
 import com.panda.solar.data.network.NetworkResponse;
@@ -28,6 +32,7 @@ import com.panda.solar.utils.AppContext;
 import com.panda.solar.utils.Constants;
 import com.panda.solar.utils.Utils;
 import com.panda.solar.viewModel.TokenViewModel;
+import com.panda.solar.viewModel.UserViewModel;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -50,6 +55,8 @@ public class LoginActivity extends AppCompatActivity/* implements View.OnClickLi
     private TokenViewModel tokenViewModel;
     private SweetAlertDialog sweetDialog;
     private ProgressDialog progressDialog;
+    private UserViewModel userViewModel;
+    private User userDetails;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +86,7 @@ public class LoginActivity extends AppCompatActivity/* implements View.OnClickLi
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+               // clearJWT();
                 loginUser();
             }
         });
@@ -117,9 +125,12 @@ public class LoginActivity extends AppCompatActivity/* implements View.OnClickLi
             connection_fail = LoginRepository.getConnection_fail();
 
             if(token != null && !((token.getToken()).equals("Bad credentials!")) && bad_request.isEmpty() && connection_fail.isEmpty()){
+                saveJWT(token);
+                getUserDetails();
                 progressDialog.dismiss();
                 startActivity(new Intent(this,HomeActivity.class));
                 saveJWT(token);
+                getUserDetails();
             }else if(token != null && (token.getToken()).equals("Bad credentials!")){
                 progressDialog.dismiss();
                 Toast.makeText(this, "Bad credentials!, Try again", Toast.LENGTH_LONG).show();
@@ -146,6 +157,19 @@ public class LoginActivity extends AppCompatActivity/* implements View.OnClickLi
             return false;
         }
         return true;
+    }
+
+    public void getUserDetails(){
+
+        userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
+        LiveData<User> liveUser = userViewModel.getUser();
+        liveUser.observe(this, new Observer<User>() {
+            @Override
+            public void onChanged(@Nullable User user) {
+                userDetails = user;
+                saveUserDetails(user);
+            }
+        });
     }
 
    /* @Override
@@ -181,7 +205,22 @@ public class LoginActivity extends AppCompatActivity/* implements View.OnClickLi
         editor.putString(Constants.JWT_TOKEN, token.getToken());
         editor.apply();
 
-        tokenViewModel = ViewModelProviders.of(LoginActivity.this).get(TokenViewModel.class);
-        tokenViewModel.saveToken(token);
+    }
+
+    public void saveUserDetails(User user){
+        SharedPreferences sharedPreferences = AppContext.getAppContext().getSharedPreferences(Constants.SHARED_PREF, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putString(Constants.USER_ID, user.getId());
+        editor.putString(Constants.USER_TYPE, user.getUsertype());
+        editor.apply();
+    }
+
+    public void clearJWT(){
+        SharedPreferences sharedPreferences = AppContext.getAppContext().getSharedPreferences(Constants.SHARED_PREF, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putString(Constants.JWT_TOKEN, "");
+        editor.apply();
     }
 }

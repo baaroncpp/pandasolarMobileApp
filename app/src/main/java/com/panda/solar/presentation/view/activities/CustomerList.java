@@ -17,12 +17,16 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.panda.solar.Model.entities.Customer;
 import com.panda.solar.activities.R;
 import com.panda.solar.presentation.adapters.CustomerListRecyclerViewAdapter;
+import com.panda.solar.utils.Constants;
+import com.panda.solar.utils.Utils;
 import com.panda.solar.viewModel.CustomerViewModel;
 
 import java.util.ArrayList;
@@ -36,10 +40,8 @@ public class CustomerList extends AppCompatActivity {
     private CustomerViewModel customerViewModel;
     private List<Customer> onClickCustomers = new ArrayList<>();
     private ProgressDialog dialog;
-    private Toolbar toolbar;
-
-    public static final String SHARED_PREF = "shared_pref";
-    public static final String JWT_TOKEN = "jwt_token";
+    private TextView errorView;
+    private LiveData<String> responseMsgLive;
 
     @Nullable
     @Override
@@ -54,42 +56,63 @@ public class CustomerList extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        dialog = new ProgressDialog(CustomerList.this);
-        dialog.setMessage("Please wait...");
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.show();
+        dialog = Utils.customerProgressBar(this);
+        errorView = findViewById(R.id.customer_error_view);
+        recyclerView = findViewById(R.id.customer_list_recycler);
 
-        recyclerView = (RecyclerView)findViewById(R.id.customer_list_recycler);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        customerAdapter = new CustomerListRecyclerViewAdapter(this);
-        // note
-        /*instance of the view  Model*/
         customerViewModel = ViewModelProviders.of(this).get(CustomerViewModel.class);
+        customerList = customerViewModel.getCustomers(0, 100, "createdon", "DESC");
 
-        customerList = customerViewModel.getCustomers(0, 10, "createdon", "DESC");
-
+        dialog.show();
         customerList.observe(this, new Observer<List<Customer>>() {
             @Override
             public void onChanged(@Nullable List<Customer> customers) {
-                onClickCustomers.addAll(customers);
-                customerAdapter.setCustomers(customers);
-                recyclerView.setAdapter(customerAdapter);
-                dialog.dismiss();
+                buildRecycler(customers);
             }
         });
+        observeResponse();
 
-        customerAdapter.setOnCustomerListener(new CustomerListRecyclerViewAdapter.OnCustomerListener() {
+    }
+
+    public void buildRecycler(List<Customer> customers){
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        customerAdapter = new CustomerListRecyclerViewAdapter(this);
+        onClickCustomers.addAll(customers);
+        customerAdapter.setCustomers(customers);
+        recyclerView.setAdapter(customerAdapter);
+    }
+
+    public void observeResponse(){
+        responseMsgLive = customerViewModel.getResponseMessage();
+        responseMsgLive.observe(this, new Observer<String>() {
             @Override
-            public void onCustomerClick(Customer customer) {
-                Toast.makeText(CustomerList.this,"aaron test", Toast.LENGTH_SHORT).show();
-
-                //Intent intent = new Intent(CustomerList.this, CustomerDetails.class);
-                //intent.putExtra("customerObject",customer);
-                //startActivityForResult(intent, 1);
+            public void onChanged(@Nullable String s) {
+                handleResponse(s);
             }
         });
+    }
 
+    public void handleResponse(String msg){
+        if(msg.equals(Constants.SUCCESS_RESPONSE)){
+            dialog.dismiss();
+        }else if(msg.equals(Constants.ERROR_RESPONSE)){
+            dialog.dismiss();
+
+            recyclerView.setVisibility(View.GONE);
+            errorView.setVisibility(View.VISIBLE);
+            errorView.setText("No Items Fetched");
+
+            Toast.makeText(this,"SOMETHING WENT WRONG !!!", Toast.LENGTH_SHORT).show();
+        }else if(msg.equals(Constants.FAILURE_RESPONSE)){
+            dialog.dismiss();
+
+            recyclerView.setVisibility(View.GONE);
+            errorView.setVisibility(View.VISIBLE);
+            errorView.setText("NO CONNECTION");
+
+            Toast.makeText(this,"CONNECTION FAILURE", Toast.LENGTH_SHORT).show();
+        }
     }
 
 
@@ -97,11 +120,6 @@ public class CustomerList extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.customer_search, menu);
 
-        MenuItem menuItem = menu.findItem(R.id.search);
-
-        //associating search configurations with the search view
-
-       // SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
 
         SearchView searchView = (SearchView)menu.findItem(R.id.search).getActionView();
 
@@ -118,8 +136,7 @@ public class CustomerList extends AppCompatActivity {
             }
         });
 
-        //searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        return true;//super.onCreateOptionsMenu(menu);
+        return true;
     }
 
 
@@ -136,44 +153,4 @@ public class CustomerList extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
-/*
-    private LoaderManager.LoaderCallbacks<List<Customer>> loaderCallbacks = new LoaderManager.LoaderCallbacks<List<Customer>>() {
-        @NonNull
-        @Override
-        public Loader<List<Customer>> onCreateLoader(int i, @Nullable Bundle bundle) {
-            return new CustomerLoader(getApplicationContext());
-        }
-
-        @Override
-        public void onLoadFinished(@NonNull Loader<List<Customer>> loader, List<Customer> customer) {
-
-            customerAdapter = new CustomerListRecyclerViewAdapter(customer,this);
-            customers = customer;
-            recyclerView.setAdapter(customerAdapter);
-        }
-
-        @Override
-        public void onLoaderReset(@NonNull Loader<List<Customer>> loader) {
-            customerAdapter.setCustomers(Collections.<Customer>emptyList());
-        }
-    };
-*/
-
-    /*@Override
-    public void onCustomerClick(int position) {
-
-        Customer customer = onClickCustomers.get(position);
-
-        Intent intent = new Intent(this, CustomerDetails.class);
-        intent.putExtra("customerObject",customer);
-        startActivity(intent);
-    }*/
-
-    /*public String loadJWTData(){
-        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREF, MODE_PRIVATE);
-        jwtToken = sharedPreferences.getString(JWT_TOKEN,"");
-
-        return jwtToken;
-    }*/
 }

@@ -17,6 +17,8 @@ public class Sale {
     private short salestatus;
     private Date createdon;
 
+    public Sale(){super();}
+
     public Sale(String id, String saletype, float amount, String description, String scannedserial, float agentcommission, String agentid, float long_, float lat, boolean isreviewed, short salestatus, Date createdon) {
         this.id = id;
         this.saletype = saletype;

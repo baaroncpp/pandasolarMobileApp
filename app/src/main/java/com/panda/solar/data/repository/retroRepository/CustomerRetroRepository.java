@@ -7,6 +7,8 @@ import com.panda.solar.Model.entities.CustList;
 import com.panda.solar.Model.entities.Customer;
 import com.panda.solar.data.network.PandaCoreAPI;
 import com.panda.solar.data.network.RetroService;
+import com.panda.solar.utils.ResponseCallBack;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -18,7 +20,7 @@ public class CustomerRetroRepository implements CustomerDAO {
     MutableLiveData<List<Customer>> liveCustomers = new MutableLiveData<>();
 
     @Override
-    public MutableLiveData<List<Customer>> getCustomers(int page, int size, String sortby, String sortorder){
+    public MutableLiveData<List<Customer>> getCustomers(final ResponseCallBack callBack, int page, int size, String sortby, String sortorder){
 
         Call<CustList> call = pandaCoreAPI.getAllCustomers(page, size, sortby, sortorder);
         final MutableLiveData<List<Customer>> customers = new MutableLiveData<>();
@@ -27,21 +29,22 @@ public class CustomerRetroRepository implements CustomerDAO {
             @Override
             public void onResponse(Call<CustList> call, Response<CustList> response) {
                 if(!response.isSuccessful()){
+                    callBack.onError();
                     Log.e("REQUEST NOT SUCCESSFULL","customer not fetched");
                     return;
                 }
-
+                callBack.onSuccess();
                 Log.e("YES CONNECTION","successful");
                 customers.postValue(response.body().getCustomers());
             }
 
             @Override
             public void onFailure(Call<CustList> call, Throwable t) {
+                callBack.onFailure();
                 Log.e("NO CONNECTION",t.getMessage());
                 return;
             }
         });
-
         return customers;
     }
 

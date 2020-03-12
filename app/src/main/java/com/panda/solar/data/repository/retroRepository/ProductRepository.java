@@ -6,6 +6,7 @@ import android.util.Log;
 import com.panda.solar.Model.entities.Product;
 import com.panda.solar.data.network.PandaCoreAPI;
 import com.panda.solar.data.network.RetroService;
+import com.panda.solar.utils.ResponseCallBack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,11 +30,29 @@ public class ProductRepository implements ProductDAO{
 
     @Override
     public MutableLiveData<Product> getProductById(String id) {
-        return null;
+
+        final MutableLiveData<Product> data = new MutableLiveData<>();
+
+        Call<Product> call = pandaCoreAPI.getProductById(id);
+        call.enqueue(new Callback<Product>() {
+            @Override
+            public void onResponse(Call<Product> call, Response<Product> response) {
+                if(!response.isSuccessful()){
+                    return;
+                }
+                data.postValue(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<Product> call, Throwable t) {
+                return;
+            }
+        });
+        return data;
     }
 
     @Override
-    public MutableLiveData<List<Product>> getAllProducts() {
+    public MutableLiveData<List<Product>> getAllProducts(final ResponseCallBack callBack) {
 
         Log.e("repo", "accessed");
 
@@ -45,9 +64,10 @@ public class ProductRepository implements ProductDAO{
             public void onResponse(Call<List<Product>> call, Response<List<Product>> response) {
                 if(!response.isSuccessful()){
                     Log.e("REQUEST NOT SUCCESSFULL","product not fetched");
+                    callBack.onError();
                     return;
                 }
-                //data.postValue(response.body());
+                callBack.onSuccess();
                 data.postValue(response.body());
             }
 
@@ -55,7 +75,7 @@ public class ProductRepository implements ProductDAO{
             public void onFailure(Call<List<Product>> call, Throwable t) {
                 Log.e("Connection failed", t.getMessage());
                 errorMessage = t.getMessage();
-                data.setValue(setProducts());
+                callBack.onFailure();
                 return;
             }
         });

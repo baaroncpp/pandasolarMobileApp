@@ -5,11 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.panda.solar.presentation.view.activities.ProductListDashBoard">
+    tools:context="com.panda.solar.presentation.view.activities.SalesList">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/product_recyclerview_dash"
-        android:orientation="vertical"
+        android:id="@+id/sale_list_recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -21,13 +20,14 @@
 
         <TextView
             android:visibility="gone"
-            android:id="@+id/product_error_view"
+            android:id="@+id/sales_error_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="error!!!"
             android:textSize="18sp"
             android:fontFamily="sans-serif"
             android:layout_centerInParent="true"/>
+
     </RelativeLayout>
 
 </LinearLayout>
