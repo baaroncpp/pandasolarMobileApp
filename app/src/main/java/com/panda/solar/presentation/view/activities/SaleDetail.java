@@ -59,7 +59,7 @@ public class SaleDetail extends AppCompatActivity {
         String createdon = getIntent().getStringExtra("saleDate");
 
         //if(Utils.getSharedPreference(Constants.USER_ID).equalsIgnoreCase("ADMIN")){
-            if(saleModel.getSalestatus() == 2){
+            if(saleModel.getSalestatus() == 2 || saleModel.getSaletype().equalsIgnoreCase("DIRECT")){
                 approveBtn.setVisibility(View.GONE);
             }else{
                 approveBtn.setVisibility(View.VISIBLE);

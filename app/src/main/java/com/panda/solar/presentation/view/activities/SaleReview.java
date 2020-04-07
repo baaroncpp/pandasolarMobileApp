@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
 import android.support.v7.app.AppCompatActivity;
@@ -44,6 +45,7 @@ public class SaleReview extends AppCompatActivity {
     private LiveData<String> liveResponseMsg;
     private LeaseSale leaseSaleResult;
     private ProgressDialog progressDialog;
+    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +61,10 @@ public class SaleReview extends AppCompatActivity {
         String saleCode = getIntent().getStringExtra(Constants.SALE_REVIEW);
 
         if(saleCode.equals(Constants.LEASE_SALE_REVIEW)){
+            intent = new Intent(this, LeaseSale.class);
             leaseSale();
         }else if(saleCode.equals(Constants.DIRECT_SALE_REVIEW)){
+            intent = new Intent(this, DirectSale.class);
             directSale();
         }
     }
@@ -76,7 +80,7 @@ public class SaleReview extends AppCompatActivity {
         serialNumberText.setText(leaseSaleModel.getDeviceserial());
         productNameText.setText(payGoProduct.getLeaseOffer().getProduct().getName());
         customerNameText.setText(customer.getUser().getFirstname()+" "+customer.getUser().getLastname());
-        totalPriceText.setText(String.valueOf(payGoProduct.getLeaseOffer().getProduct().getUnitcostselling()));
+        totalPriceText.setText(Utils.moneyFormatter(payGoProduct.getLeaseOffer().getProduct().getUnitcostselling()));
 
         makeSaleBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,21 +106,20 @@ public class SaleReview extends AppCompatActivity {
     public void directSale(){
 
         String customerName = getIntent().getStringExtra(Constants.CUSTOMER_NAME);
-        PayGoProduct saleProduct = getIntent().getExtras().getParcelable(Constants.PROD_SALE_OBJ);
+        Product saleProduct = getIntent().getExtras().getParcelable(Constants.PROD_SALE_OBJ);
         final DirectSaleModel directSaleModel = getIntent().getExtras().getParcelable(Constants.DIRECT_SALE_OBJ);
 
         productNmaeTitle.setText("Product Name");
         saleTypeText.setText("Direct Sale");
-        serialNumberText.setText(directSaleModel.getScannedserial());
-        productNameText.setText(saleProduct.getLeaseOffer().getProduct().getName());
+        serialNumberText.setText(saleProduct.getSerialNumber());
+        productNameText.setText(saleProduct.getName());
         customerNameText.setText(customerName);
-        totalPriceText.setText(String.valueOf(saleProduct.getLeaseOffer().getProduct().getUnitcostselling()));
+        totalPriceText.setText(Utils.moneyFormatter(saleProduct.getUnitcostselling()));
 
         makeSaleBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                //sweetAlertDialog.show();
                 progressDialog.show();
                 saleLiveData = saleViewModel.makeDirectPayGoSale(directSaleModel);
 
@@ -153,12 +156,15 @@ public class SaleReview extends AppCompatActivity {
     public void handleResponse(String message){
 
         if(message.equals(Constants.SUCCESS_RESPONSE)){
+            startActivity(new Intent(this, HomeActivity.class));
             progressDialog.dismiss();
             Toast.makeText(this,"SALE SUCCESSFULL", Toast.LENGTH_SHORT).show();
         }else if(message.equals(Constants.ERROR_RESPONSE)){
+            startActivity(intent);
             progressDialog.dismiss();
             Toast.makeText(this,"SOMETHING WENT WRONG !!!", Toast.LENGTH_SHORT).show();
         }else if(message.equals(Constants.FAILURE_RESPONSE)){
+            startActivity(intent);
             progressDialog.dismiss();
             Toast.makeText(this,"CONNECTION FAILURE", Toast.LENGTH_SHORT).show();
         }

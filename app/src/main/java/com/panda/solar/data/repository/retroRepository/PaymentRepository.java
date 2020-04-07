@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.panda.solar.Model.entities.LeasePayment;
 import com.panda.solar.Model.entities.PaymentList;
+import com.panda.solar.data.network.NetworkResponse;
 import com.panda.solar.data.network.PandaCoreAPI;
 import com.panda.solar.data.network.RetroService;
 import com.panda.solar.utils.ResponseCallBack;
@@ -19,6 +20,7 @@ public class PaymentRepository implements PaymentDAO {
 
     private PandaCoreAPI pandaCoreAPI = RetroService.getPandaCoreAPI();
     private static PaymentRepository instance;
+    NetworkResponse netResponse = new NetworkResponse();
 
     public static PaymentRepository getInstance(){
         if(instance == null){
@@ -27,7 +29,7 @@ public class PaymentRepository implements PaymentDAO {
         return instance;
     }
     @Override
-    public MutableLiveData<List<LeasePayment>> getAllPayments(final ResponseCallBack responseWrapper, int page, int size, String direction) {
+    public MutableLiveData<List<LeasePayment>> getAllPayments(final ResponseCallBack callBack, int page, int size, String direction) {
 
         final MutableLiveData<List<LeasePayment>> dataResult = new MutableLiveData<>();
         Call<PaymentList> call = pandaCoreAPI.getAllLeasePayments(page, size, direction);
@@ -36,25 +38,29 @@ public class PaymentRepository implements PaymentDAO {
             @Override
             public void onResponse(Call<PaymentList> call, Response<PaymentList> response) {
                 if(!response.isSuccessful()){
-                    responseWrapper.onError();
+                    netResponse.setBody(response.message());
+                    netResponse.setCode(response.code());
+                    callBack.onError(netResponse);
                     Log.e("error","wrong req");
+                    return;
                 }
-                responseWrapper.onSuccess();
+                callBack.onSuccess();
                 dataResult.postValue(response.body().getPaymentList());
                 Log.e("success","good req");
             }
 
             @Override
             public void onFailure(Call<PaymentList> call, Throwable t) {
-                responseWrapper.onFailure();
+                callBack.onFailure();
                 Log.e("failure",t.getMessage());
+                return;
             }
         });
         return dataResult;
     }
 
     @Override
-    public MutableLiveData<List<LeasePayment>> getAllPaymentsByAgentSales(final ResponseCallBack responseCallBack, String agentId, int page, int size, String direction) {
+    public MutableLiveData<List<LeasePayment>> getAllPaymentsByAgentSales(final ResponseCallBack callBack, String agentId, int page, int size, String direction) {
 
         final MutableLiveData<List<LeasePayment>> dataResult = new MutableLiveData<>();
         Call<PaymentList> call = pandaCoreAPI.getAllAgentLeasePayments(agentId, page, size, direction);
@@ -63,15 +69,19 @@ public class PaymentRepository implements PaymentDAO {
             @Override
             public void onResponse(Call<PaymentList> call, Response<PaymentList> response) {
                 if(!response.isSuccessful()){
-                    responseCallBack.onError();
+                    netResponse.setBody(response.message());
+                    netResponse.setCode(response.code());
+                    callBack.onError(netResponse);
+                    return;
                 }
-                responseCallBack.onSuccess();
+                callBack.onSuccess();
                 dataResult.postValue(response.body().getPaymentList());
             }
 
             @Override
             public void onFailure(Call<PaymentList> call, Throwable t) {
-                responseCallBack.onFailure();
+                callBack.onFailure();
+                return;
             }
         });
         return dataResult;

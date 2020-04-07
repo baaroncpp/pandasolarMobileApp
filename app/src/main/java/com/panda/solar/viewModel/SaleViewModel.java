@@ -8,6 +8,7 @@ import com.panda.solar.Model.entities.LeaseSale;
 import com.panda.solar.Model.entities.LeaseSaleModel;
 import com.panda.solar.Model.entities.Sale;
 import com.panda.solar.Model.entities.SaleModel;
+import com.panda.solar.data.network.NetworkResponse;
 import com.panda.solar.data.repository.PandaDAOFactory;
 import com.panda.solar.data.repository.retroRepository.SaleDAO;
 import com.panda.solar.utils.Constants;
@@ -33,7 +34,7 @@ public class SaleViewModel extends ViewModel {
             }
 
             @Override
-            public void onError() {
+            public void onError(NetworkResponse response) {
                 responseMessage.postValue(Constants.ERROR_RESPONSE);
             }
         }, directSaleModel);
@@ -52,7 +53,7 @@ public class SaleViewModel extends ViewModel {
             }
 
             @Override
-            public void onError() {
+            public void onError(NetworkResponse response) {
                 responseMessage.postValue(Constants.ERROR_RESPONSE);
             }
         }, leaseSaleModel);
@@ -71,7 +72,7 @@ public class SaleViewModel extends ViewModel {
             }
 
             @Override
-            public void onError() {
+            public void onError(NetworkResponse response) {
                 responseMessage.postValue(Constants.ERROR_RESPONSE);
             }
         }, page, size, sortby, sortorder);
@@ -90,7 +91,7 @@ public class SaleViewModel extends ViewModel {
             }
 
             @Override
-            public void onError() {
+            public void onError(NetworkResponse response) {
                 responseMessage.postValue(Constants.ERROR_RESPONSE);
             }
         }, id, page, size, sortby, sortorder);
@@ -109,7 +110,7 @@ public class SaleViewModel extends ViewModel {
             }
 
             @Override
-            public void onError() {
+            public void onError(NetworkResponse response) {
                 responseMessage.postValue(Constants.ERROR_RESPONSE);
             }
         }, saleId, approveStatus, reviewDescription);

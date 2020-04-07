@@ -3,6 +3,8 @@ package com.panda.solar.data.network;
 import com.google.gson.JsonObject;
 import com.panda.solar.Model.entities.CustList;
 import com.panda.solar.Model.entities.Customer;
+import com.panda.solar.Model.entities.CustomerMeta;
+import com.panda.solar.Model.entities.CustomerModel;
 import com.panda.solar.Model.entities.DirectSaleModel;
 import com.panda.solar.Model.entities.LeaseOffer;
 import com.panda.solar.Model.entities.LeasePayment;
@@ -17,6 +19,7 @@ import com.panda.solar.Model.entities.Sale;
 import com.panda.solar.Model.entities.SaleList;
 import com.panda.solar.Model.entities.SaleModel;
 import com.panda.solar.Model.entities.Token;
+import com.panda.solar.Model.entities.UploadLinks;
 import com.panda.solar.Model.entities.User;
 
 import java.util.List;
@@ -53,28 +56,21 @@ public interface PandaCoreAPI {
     @GET("/v1/user/get")
     Call<User> getUserById(@Query("id") String id);
 
-    /*@GET("/v1/user/get/all/{usertype}")
-    Call<UserList> getAllUsers(@Path("usertype") String userType,
-                               @Query("page") int page,
-                               @Query("size")int size,
-                               @Query("sortby")String sortby,
-                               @Query("sortorder")String sortorder);
-*/
+    @POST("v1/user/add")
+    Call<User> addUser(@Body User user);
 
     @GET("")
     Call<List<User>> getUsers();
 
     /* customer endpoint*/
-
-    //@FormUrlEncoded
-    @GET("/v1/customermeta/get/all")
+    @GET("v1/customermeta/get/all")
     Call<CustList> getAllCustomers(@Query("page") int page,
                                    @Query("size")int size,
                                    @Query("sortby")String sortby,
                                    @Query("sortorder")String sortorder);
 
-    @POST("")
-    Call<Customer> getCustomer(@Body Customer customer);
+    @POST("/v1/customermeta/add/mobile")
+    Call<CustomerMeta> addCustomer(@Body CustomerModel customer);
 
 
     /* product endpoint*/
@@ -147,4 +143,8 @@ public interface PandaCoreAPI {
     /*Lease offer*/
     @GET("v1/leaseoffer/get")
     Call<List<LeaseOffer>> getLeaseOffers();
+
+    /*file upload*/
+    @GET("v1/uploadlink/{usertype}/{id}")
+    Call<UploadLinks> getUploadLinks(@Path("usertype") String usertype, @Path("id") String id);
 }

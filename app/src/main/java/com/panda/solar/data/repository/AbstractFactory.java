@@ -6,6 +6,7 @@ import com.panda.solar.data.repository.retroRepository.PayGoProductDAO;
 import com.panda.solar.data.repository.retroRepository.PaymentDAO;
 import com.panda.solar.data.repository.retroRepository.ProductDAO;
 import com.panda.solar.data.repository.retroRepository.SaleDAO;
+import com.panda.solar.data.repository.retroRepository.UploadLinkDAO;
 import com.panda.solar.data.repository.retroRepository.UserDAO;
 
 public abstract class AbstractFactory {
@@ -27,5 +28,7 @@ public abstract class AbstractFactory {
     public static PayGoProductDAO getPayGoProductDAO(){return null;}
 
     public static PaymentDAO getPaymentDAO(){return null;}
+
+    public static UploadLinkDAO getUploadLinkDAO(){return null;}
 
 }

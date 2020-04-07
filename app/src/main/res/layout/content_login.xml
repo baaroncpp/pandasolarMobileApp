@@ -18,13 +18,31 @@
         <ImageView
             android:layout_width="@dimen/login_panda_icon_image_size"
             android:layout_height="@dimen/login_panda_icon_image_size"
-            android:src="@drawable/ic_panda_soloar"
+            android:layout_marginTop="50dp"
+            android:src="@drawable/panda_icon_circle"
             android:layout_gravity="center"
             />
+
+        <TextView
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-light"
+            android:textSize="30sp"
+            android:text="Panda Solar"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textSize="16sp"
+            android:text="Lighten Up"/>
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="80dp"
             android:gravity="center"
             >
 

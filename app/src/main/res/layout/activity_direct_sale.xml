@@ -17,13 +17,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Make Direct Sale"
-            android:fontFamily="sans-serif"
+            android:fontFamily="sans-serif-light"
             android:textColor="#616161"
             android:textStyle="bold"
-            android:textSize="20sp"
+            android:textSize="25sp"
             android:gravity="center_horizontal"
-            android:layout_marginBottom="20dp"/>
+            android:layout_marginBottom="50dp"/>
 
+<!--
         <android.support.design.button.MaterialButton
             android:id="@+id/scanner_button"
             app:strokeWidth="2dp"
@@ -52,9 +53,10 @@
                 android:layout_height="wrap_content"
                 android:hint="SerialNumber" />
         </android.support.design.widget.TextInputLayout>
+-->
 
 
-        <!-- <android.support.design.button.MaterialButton
+        <android.support.design.button.MaterialButton
             android:id="@+id/add_product_button"
             android:layout_width="match_parent"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
@@ -63,7 +65,7 @@
             android:textSize="14sp"
             app:strokeWidth="2dp"
             app:strokeColor="@color/dark_grey"
-            android:text="Add Product"/> -->
+            android:text="Add Product"/>
 
         <android.support.design.button.MaterialButton
             app:strokeWidth="2dp"

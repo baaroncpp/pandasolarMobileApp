@@ -8,6 +8,7 @@ import com.panda.solar.Model.entities.LeaseSaleModel;
 import com.panda.solar.Model.entities.Sale;
 import com.panda.solar.Model.entities.SaleList;
 import com.panda.solar.Model.entities.SaleModel;
+import com.panda.solar.data.network.NetworkResponse;
 import com.panda.solar.data.network.PandaCoreAPI;
 import com.panda.solar.data.network.RetroService;
 import com.panda.solar.utils.Constants;
@@ -22,6 +23,7 @@ public class SaleRepository implements SaleDAO{
 
     private static SaleRepository instance;
     private PandaCoreAPI pandaCoreAPI = RetroService.getPandaCoreAPI();
+    NetworkResponse netResponse = new NetworkResponse();
 
     public static SaleRepository getInstance(){
         if(instance == null){
@@ -45,7 +47,9 @@ public class SaleRepository implements SaleDAO{
             @Override
             public void onResponse(Call<LeaseSale> call, Response<LeaseSale> response) {
                 if(!response.isSuccessful()){
-                    callBack.onError();
+                    netResponse.setBody(response.message());
+                    netResponse.setCode(response.code());
+                    callBack.onError(netResponse);
                     return;
                 }
                 callBack.onSuccess();
@@ -73,7 +77,9 @@ public class SaleRepository implements SaleDAO{
             @Override
             public void onResponse(Call<Sale> call, Response<Sale> response) {
                 if(!response.isSuccessful()){
-                    callBack.onError();
+                    netResponse.setBody(response.message());
+                    netResponse.setCode(response.code());
+                    callBack.onError(netResponse);
                     return;
                 }
                 callBack.onSuccess();
@@ -99,7 +105,9 @@ public class SaleRepository implements SaleDAO{
             @Override
             public void onResponse(Call<List<SaleModel>> call, Response<List<SaleModel>> response) {
                 if(!response.isSuccessful()){
-                    callBack.onError();
+                    netResponse.setBody(response.message());
+                    netResponse.setCode(response.code());
+                    callBack.onError(netResponse);
                     return;
                 }
                 callBack.onSuccess();
@@ -110,6 +118,7 @@ public class SaleRepository implements SaleDAO{
             public void onFailure(Call<List<SaleModel>> call, Throwable t) {
                 callBack.onFailure();
                 Log.e("AGENT_SALES",t.getMessage());
+                return;
             }
         });
         return resultData;
@@ -125,7 +134,9 @@ public class SaleRepository implements SaleDAO{
             @Override
             public void onResponse(Call<List<SaleModel>> call, Response<List<SaleModel>> response) {
                 if(!response.isSuccessful()){
-                    callBack.onError();
+                    netResponse.setBody(response.message());
+                    netResponse.setCode(response.code());
+                    callBack.onError(netResponse);
                     Log.e("ALL_SALES","failed");
                     return;
                 }
@@ -153,7 +164,9 @@ public class SaleRepository implements SaleDAO{
             @Override
             public void onResponse(Call<Sale> call, Response<Sale> response) {
                 if(!response.isSuccessful()){
-                    callBack.onError();
+                    netResponse.setBody(response.message());
+                    netResponse.setCode(response.code());
+                    callBack.onError(netResponse);
                     return;
                 }
                 dataResult.postValue(response.body());

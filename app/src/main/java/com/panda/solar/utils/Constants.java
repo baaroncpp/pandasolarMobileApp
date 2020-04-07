@@ -57,5 +57,19 @@ public class Constants {
     public static final String SUCCESS_RESPONSE = "success";
     public static final String FAILURE_RESPONSE = "connection failure";
 
+    public static final String CUSTOMER_PROFILE_PATH = "customer_profile_path";
+    public static final String CUSTOMER_ID_PATH = "customer_id_path";
+    public static final String CUSTOMER_COI_PATH = "customer_coi_path";
+    public static final int PICK_PROFILE_IMAGE_REQUEST = 6;
+    public static final int PICK_COI_IMAGE_REQUEST = 7;
+    public static final int PICK_ID_IMAGE_REQUEST = 8;
+
+    public static final String FIELD_REQUIRED = "Field required";
+    public static final String SHORT_INPUT = "too short, at least 4 characters";
+    public static final String CUSTOMER_MODEL_OBJECT = "customerModel_object";
+    public static final String CUSTOMER_OBJECT = "customer_object";
+
+    public static final String BASE_URL = "http://10.42.0.1:8993";
+    public static final int CUSTOMER_REVIEW_CODE = 9;
 }
 

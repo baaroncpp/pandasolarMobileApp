@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -42,6 +43,7 @@ public class CustomerList extends AppCompatActivity {
     private ProgressDialog dialog;
     private TextView errorView;
     private LiveData<String> responseMsgLive;
+    private FloatingActionButton registerCustomer;
 
     @Nullable
     @Override
@@ -56,10 +58,7 @@ public class CustomerList extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        dialog = Utils.customerProgressBar(this);
-        errorView = findViewById(R.id.customer_error_view);
-        recyclerView = findViewById(R.id.customer_list_recycler);
-
+        init();
 
         customerViewModel = ViewModelProviders.of(this).get(CustomerViewModel.class);
         customerList = customerViewModel.getCustomers(0, 100, "createdon", "DESC");
@@ -73,6 +72,22 @@ public class CustomerList extends AppCompatActivity {
         });
         observeResponse();
 
+        registerCustomer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent  = new Intent(CustomerList.this, AddCustomer.class);
+                startActivity(intent);
+            }
+        });
+
+
+    }
+
+    public void init(){
+        registerCustomer = findViewById(R.id.register_customer_btn);
+        dialog = Utils.customerProgressBar(this);
+        errorView = findViewById(R.id.customer_error_view);
+        recyclerView = findViewById(R.id.customer_list_recycler);
     }
 
     public void buildRecycler(List<Customer> customers){

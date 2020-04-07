@@ -5,8 +5,10 @@ import android.util.Log;
 
 import com.panda.solar.Model.entities.PayGoProduct;
 import com.panda.solar.Model.entities.PayGoProductModel;
+import com.panda.solar.data.network.NetworkResponse;
 import com.panda.solar.data.network.PandaCoreAPI;
 import com.panda.solar.data.network.RetroService;
+import com.panda.solar.utils.ResponseCallBack;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -15,9 +17,8 @@ import retrofit2.Response;
 public class PayGoProductRepository implements PayGoProductDAO {
 
     private static PayGoProductRepository instance;
-    private static Response payGoProductResponse;
-    private static String errorMessage = "";
     private PandaCoreAPI pandaCoreAPI = RetroService.getPandaCoreAPI();
+    NetworkResponse netResponse = new NetworkResponse();
 
     public static PayGoProductRepository getInstance(){
         if(instance == null){
@@ -27,7 +28,7 @@ public class PayGoProductRepository implements PayGoProductDAO {
     }
 
     @Override
-    public MutableLiveData<PayGoProduct> getPayGoProduct(String serial) {
+    public MutableLiveData<PayGoProduct> getPayGoProduct(final ResponseCallBack callBack, String serial) {
 
         final MutableLiveData<PayGoProduct> data = new MutableLiveData<>();
         Call<PayGoProduct> call = pandaCoreAPI.getPayGoProduct(serial);
@@ -35,23 +36,27 @@ public class PayGoProductRepository implements PayGoProductDAO {
         call.enqueue(new Callback<PayGoProduct>() {
             @Override
             public void onResponse(Call<PayGoProduct> call, Response<PayGoProduct> response) {
-                payGoProductResponse = response;
                 if(!response.isSuccessful()){
+                    netResponse.setBody(response.message());
+                    netResponse.setCode(response.code());
+                    callBack.onError(netResponse);
                     return;
                 }
+                callBack.onSuccess();
                 data.postValue(response.body());
             }
 
             @Override
             public void onFailure(Call<PayGoProduct> call, Throwable t) {
-                errorMessage = t.getMessage();
+                callBack.onFailure();
+                return;
             }
         });
         return data;
     }
 
     @Override
-    public MutableLiveData<Boolean> payGoProductIsAvailable(String serial) {
+    public MutableLiveData<Boolean> payGoProductIsAvailable(final ResponseCallBack callBack, String serial) {
 
         final MutableLiveData<Boolean> data = new MutableLiveData<>();
         Call<Boolean> call = pandaCoreAPI.payGoProductIsAvailable(serial);
@@ -60,24 +65,26 @@ public class PayGoProductRepository implements PayGoProductDAO {
             @Override
             public void onResponse(Call<Boolean> call, Response<Boolean> response) {
                 if(!response.isSuccessful()){
-                    Log.e("fail","connect");
+                    netResponse.setBody(response.message());
+                    netResponse.setCode(response.code());
+                    callBack.onError(netResponse);
                     return;
                 }
                 data.setValue(response.body());
-                Log.e("success","connect");
+                callBack.onSuccess();
             }
 
             @Override
             public void onFailure(Call<Boolean> call, Throwable t) {
-                Log.e("No","connect");
-                errorMessage = t.getMessage();
+                callBack.onFailure();
+                return;
             }
         });
         return data;
     }
 
     @Override
-    public MutableLiveData<PayGoProduct> stockPayGoProduct(PayGoProductModel payGoProductModel) {
+    public MutableLiveData<PayGoProduct> stockPayGoProduct(final ResponseCallBack callBack, PayGoProductModel payGoProductModel) {
 
         final MutableLiveData<PayGoProduct> data = new MutableLiveData<>();
         Call<PayGoProduct> call = pandaCoreAPI.stockPayGoProduct(payGoProductModel);
@@ -85,23 +92,23 @@ public class PayGoProductRepository implements PayGoProductDAO {
         call.enqueue(new Callback<PayGoProduct>() {
             @Override
             public void onResponse(Call<PayGoProduct> call, Response<PayGoProduct> response) {
-                payGoProductResponse = response;
                 if(!response.isSuccessful()){
+                    netResponse.setBody(response.message());
+                    netResponse.setCode(response.code());
+                    callBack.onError(netResponse);
                     return;
                 }
+                callBack.onSuccess();
                 data.postValue(response.body());
             }
 
             @Override
             public void onFailure(Call<PayGoProduct> call, Throwable t) {
-                errorMessage = t.getMessage();
+                callBack.onFailure();
+                return;
             }
         });
         return data;
     }
 
-    @Override
-    public Response getPayGoProductResponse(){
-        return payGoProductResponse;
-    }
 }

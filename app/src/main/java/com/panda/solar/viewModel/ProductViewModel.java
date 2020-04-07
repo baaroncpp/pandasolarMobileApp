@@ -6,6 +6,7 @@ import android.arch.lifecycle.ViewModel;
 import android.util.Log;
 
 import com.panda.solar.Model.entities.Product;
+import com.panda.solar.data.network.NetworkResponse;
 import com.panda.solar.data.repository.PandaDAOFactory;
 import com.panda.solar.data.repository.retroRepository.ProductDAO;
 import com.panda.solar.utils.Constants;
@@ -33,7 +34,7 @@ public class ProductViewModel extends ViewModel {
             }
 
             @Override
-            public void onError() {
+            public void onError(NetworkResponse response) {
                 responseMessage.postValue(Constants.ERROR_RESPONSE);
             }
         });

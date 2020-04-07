@@ -17,6 +17,8 @@ import com.bumptech.glide.Glide;
 import com.panda.solar.activities.R;
 import com.panda.solar.Model.entities.Customer;
 import com.panda.solar.presentation.view.activities.CustomerDetails;
+import com.panda.solar.utils.Constants;
+import com.panda.solar.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,14 +89,12 @@ public class CustomerListRecyclerViewAdapter extends RecyclerView.Adapter<Custom
                 @Override
                 public void onClick(View v) {
 
-
-                    Toast.makeText(v.getContext(), String.valueOf(getAdapterPosition()), Toast.LENGTH_SHORT).show();
                     int position = getAdapterPosition();
 
                     Customer customer = customers.get(position);
 
                     Intent intent = new Intent(context, CustomerDetails.class);
-                    intent.putExtra("customerObject",customer);
+                    intent.putExtra(Constants.CUSTOMER_OBJECT,customer);
                     context.startActivity(intent);
 
                     if(onCustomerListener != null && position != RecyclerView.NO_POSITION){
@@ -110,7 +110,7 @@ public class CustomerListRecyclerViewAdapter extends RecyclerView.Adapter<Custom
             //viewHolder.image.setImageDrawable(context.getDrawable(R.drawable.ic_home_black_24dp));
             customerName.setText(customer.getUser().getLastname()+", "+customer.getUser().getFirstname());
             customerAddress.setText(customer.getAddress());
-            phoneNumber.setText(customer.getUser().getPrimaryphone());
+            phoneNumber.setText("+"+ Utils.insertCharacterForEveryNDistance(3,customer.getUser().getPrimaryphone(), ' '));
 
             //Glide.with(context).load(customer.getProfilephotopath()).into(image);
 

@@ -8,11 +8,6 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
-    <!--
-    <include
-        layout="@layout/app_bar_home"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" /> -->
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
@@ -32,30 +27,12 @@
             android:clickable="true"
             android:fontFamily="sans-serif-medium"
             android:src="@drawable/ic_sell_panda"
-            android:text="@string/fab_content"
 
-            android:textColor="#000"
             android:textSize="18sp"
             android:textStyle="bold"
             app:borderWidth="0dp" />
     </FrameLayout>
 
-
-    <!--
-    <android.support.design.widget.NavigationView
-        android:id="@+id/nav_view"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:fitsSystemWindows="true"
-        app:headerLayout="@layout/nav_header_home"
-        app:menu="@menu/activity_home_drawer" /> -->
-
-    <!-- <android.support.design.widget.FloatingActionButton
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         app:layout_anchor="@id/bottom_navigation_bar"
-         /> -->
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/bottom_navigation_bar"

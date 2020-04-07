@@ -157,13 +157,27 @@ public class Utils {
         return String.format("%,.2f", amount) + " UGX";
     }
 
+    public static boolean validatePhoneNumberInput(String phoneNumber){
+        String result = phoneNumber.replaceAll(" ","");
+
+        if(result.length() == 10){
+            if(Character.getNumericValue(result.charAt(0)) == 0 && Character.getNumericValue(result.charAt(1)) == 7){
+                return true;
+            }else {
+                return false;
+            }
+        }else {
+            return false;
+        }
+    }
+
     public static String saleStatus(short i){
         if(i == 1){
             return "Pending";
         }else if(i == 2){
             return "Approved";
         }else{
-            return "Unknown";
+            return "Pending";
         }
     }
 

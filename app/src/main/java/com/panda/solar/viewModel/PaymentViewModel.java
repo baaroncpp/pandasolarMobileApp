@@ -5,6 +5,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 
 import com.panda.solar.Model.entities.LeasePayment;
+import com.panda.solar.data.network.NetworkResponse;
 import com.panda.solar.data.repository.PandaDAOFactory;
 import com.panda.solar.data.repository.retroRepository.PaymentDAO;
 import com.panda.solar.utils.Constants;
@@ -30,7 +31,7 @@ public class PaymentViewModel extends ViewModel {
             public void onFailure() {responseMessage.postValue(Constants.FAILURE_RESPONSE); }
 
             @Override
-            public void onError() {responseMessage.postValue(Constants.ERROR_RESPONSE);}
+            public void onError(NetworkResponse response) {responseMessage.postValue(Constants.ERROR_RESPONSE);}
         }, page, size, direction);
     }
 
@@ -43,7 +44,7 @@ public class PaymentViewModel extends ViewModel {
             public void onFailure() {responseMessage.postValue(Constants.FAILURE_RESPONSE);}
 
             @Override
-            public void onError() {responseMessage.postValue(Constants.ERROR_RESPONSE);}
+            public void onError(NetworkResponse response) {responseMessage.postValue(Constants.ERROR_RESPONSE);}
         }, agentId, page, size, direction);
     }
 

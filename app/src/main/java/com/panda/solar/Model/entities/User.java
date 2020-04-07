@@ -33,6 +33,7 @@ public class User implements Parcelable {
 
     public User() { super();}
 
+
     protected User(Parcel in) {
         id = in.readString();
         username = in.readString();
@@ -51,6 +52,87 @@ public class User implements Parcelable {
         contractpath = in.readString();
         consentformpath = in.readString();
         housephotopath = in.readString();
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+
+    public void setIsactive(boolean isactive) {
+        this.isactive = isactive;
+    }
+
+    public void setIsapproved(boolean isapproved) {
+        this.isapproved = isapproved;
+    }
+
+    public void setCreatedon(Date createdon) {
+        this.createdon = createdon;
+    }
+
+    public void setUsertype(String usertype) {
+        this.usertype = usertype;
+    }
+
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public void setMiddlename(String middlename) {
+        this.middlename = middlename;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPrimaryphone(String primaryphone) {
+        this.primaryphone = primaryphone;
+    }
+
+    public void setCompanyemail(String companyemail) {
+        this.companyemail = companyemail;
+    }
+
+    public void setDateofbirth(Date dateofbirth) {
+        this.dateofbirth = dateofbirth;
+    }
+
+    public void setUpdatedon(Date updatedon) {
+        this.updatedon = updatedon;
+    }
+
+    public void setProfilepath(String profilepath) {
+        this.profilepath = profilepath;
+    }
+
+    public void setCoipath(String coipath) {
+        this.coipath = coipath;
+    }
+
+    public void setIdcopypath(String idcopypath) {
+        this.idcopypath = idcopypath;
+    }
+
+    public void setContractpath(String contractpath) {
+        this.contractpath = contractpath;
+    }
+
+    public void setConsentformpath(String consentformpath) {
+        this.consentformpath = consentformpath;
+    }
+
+    public void setHousephotopath(String housephotopath) {
+        this.housephotopath = housephotopath;
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {
@@ -143,86 +225,6 @@ public class User implements Parcelable {
 
     public String getHousephotopath() {
         return housephotopath;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setIsactive(boolean isactive) {
-        this.isactive = isactive;
-    }
-
-    public void setIsapproved(boolean isapproved) {
-        this.isapproved = isapproved;
-    }
-
-    public void setCreatedon(Date createdon) {
-        this.createdon = createdon;
-    }
-
-    public void setUsertype(String usertype) {
-        this.usertype = usertype;
-    }
-
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
-    }
-
-    public void setMiddlename(String middlename) {
-        this.middlename = middlename;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPrimaryphone(String primaryphone) {
-        this.primaryphone = primaryphone;
-    }
-
-    public void setCompanyemail(String companyemail) {
-        this.companyemail = companyemail;
-    }
-
-    public void setDateofbirth(Date dateofbirth) {
-        this.dateofbirth = dateofbirth;
-    }
-
-    public void setUpdatedon(Date updatedon) {
-        this.updatedon = updatedon;
-    }
-
-    public void setProfilepath(String profilepath) {
-        this.profilepath = profilepath;
-    }
-
-    public void setCoipath(String coipath) {
-        this.coipath = coipath;
-    }
-
-    public void setIdcopypath(String idcopypath) {
-        this.idcopypath = idcopypath;
-    }
-
-    public void setContractpath(String contractpath) {
-        this.contractpath = contractpath;
-    }
-
-    public void setConsentformpath(String consentformpath) {
-        this.consentformpath = consentformpath;
-    }
-
-    public void setHousephotopath(String housephotopath) {
-        this.housephotopath = housephotopath;
     }
 
     @Override

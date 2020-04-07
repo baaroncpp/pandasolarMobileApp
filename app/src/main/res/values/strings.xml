@@ -91,5 +91,7 @@
     <string name="error_message">failed to get result, please try again</string>
     <string name="title_activity_main">MainActivity</string>
 
+    <string name="customer_reg_msg">Add a new customer before making a sale to that specific customer, if the customer has not been registered before</string>
+
 
 </resources>

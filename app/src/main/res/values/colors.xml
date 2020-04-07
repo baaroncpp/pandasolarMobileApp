@@ -19,6 +19,7 @@
     <color name="gradEnd">#FFD400</color>
     <color name="address">#b7860b</color>
     <color name="headings">#3797cf</color>
+    <color name="error">#d50000</color>
 
 
 </resources>

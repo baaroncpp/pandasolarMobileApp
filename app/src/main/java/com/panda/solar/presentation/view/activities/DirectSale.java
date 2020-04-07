@@ -1,8 +1,5 @@
 package com.panda.solar.presentation.view.activities;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
@@ -17,38 +14,27 @@ import android.view.View;
 import android.widget.Toast;
 import com.panda.solar.Model.entities.Customer;
 import com.panda.solar.Model.entities.DirectSaleModel;
-import com.panda.solar.Model.entities.PayGoProduct;
-import com.panda.solar.Model.entities.PayGoProductModel;
 import com.panda.solar.Model.entities.Product;
 import com.panda.solar.activities.R;
 import com.panda.solar.utils.Constants;
 import com.panda.solar.utils.Utils;
-import com.panda.solar.viewModel.PayGoProductViewModel;
-import com.panda.solar.viewModel.ProductViewModel;
 
 import java.util.Date;
 
 public class DirectSale extends AppCompatActivity {
 
-    private MaterialButton scannerButtonView;
     private MaterialButton productButtonView;
     private MaterialButton customerButtonView;
     private MaterialButton locationButtonView;
-    private TextInputEditText serialTextView;
     private MaterialButton directSaleSubmitBtn;
-    private TextInputLayout serialWrapper;
     private TextInputEditText directSaledescription;
     private TextInputLayout directSaleDescriptionWrapper;
-    private ProductViewModel productViewModel;
 
     private DirectSaleModel directSaleModel;
-    private PayGoProductViewModel payGoProductViewModel;
-    private Product directSaleProduct;
     private Customer customerResult;
 
     private String customerName;
-    private Boolean productExists;
-    private PayGoProduct payGoProd;
+    private Product productResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,15 +57,11 @@ public class DirectSale extends AppCompatActivity {
             }
         });
 
-        scannerButtonView.setOnClickListener(new View.OnClickListener() {
+        productButtonView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isCameraAvailable()) {
-                    Intent intent = new Intent(DirectSale.this, BarCodeScanner.class);
-                    startActivityForResult(intent, Constants.ZBAR_SCANNER_REQUEST);
-                } else {
-                    Toast.makeText(DirectSale.this, "Rear Facing Camera Unavailable", Toast.LENGTH_SHORT).show();
-                }
+                Intent intent = new Intent(DirectSale.this, SaleProductActivity.class);
+                startActivityForResult(intent, Constants.SALE_PRO_CODE);
             }
         });
 
@@ -87,134 +69,40 @@ public class DirectSale extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(DirectSale.this, SaleReview.class);
-                if(validateSerialEditView() && validateCustomerBtn() && validateDescriptionField() && validateLocationBtn()){
+                if(validateProductBtn() && validateCustomerBtn() && validateDescriptionField() && validateLocationBtn()){
 
                     directSaleModel = new DirectSaleModel();
-                    directSaleModel.setAgentid("y5r677tg9yh99juj");
+                    directSaleModel.setAgentid(Utils.getSharedPreference(Constants.USER_ID));
                     directSaleModel.setCreatedon(new Date());
-                    directSaleModel.setScannedserial(serialTextView.getText().toString());
+                    directSaleModel.setScannedserial(productResult.getSerialNumber());
                     directSaleModel.setCustomerid(customerResult.getUserid());
                     directSaleModel.setDescription(directSaledescription.getText().toString());
                     directSaleModel.setLat(43);
                     directSaleModel.setLong_(54);
+                    directSaleModel.setQuantity(1);
 
                     customerName = customerResult.getUser().getFirstname()+" "+customerResult.getUser().getLastname();
-
-                    //directSaleProduct = findProductBySerialNumber(directSaleModel.getScannedserial());
-
-                    //PayGoProduct payGoProduct = getPayGoProduct(directSaleModel.getScannedserial());
 
                     intent.putExtra(Constants.CUSTOMER_NAME, customerName);
                     intent.putExtra(Constants.SALE_REVIEW, Constants.DIRECT_SALE_REVIEW);
                     intent.putExtra(Constants.DIRECT_SALE_OBJ, directSaleModel);
-                    intent.putExtra(Constants.PROD_SALE_OBJ, payGoProd);
+                    intent.putExtra(Constants.PROD_SALE_OBJ, productResult);
                     startActivity(intent);
                 }
             }
         });
     }
 
-    public void getPayGoProduct(String scannedserial){
-        LiveData<PayGoProduct> payGoProduct = payGoProductViewModel.getPayGoProduct(scannedserial);
-        payGoProduct.observe(this, new Observer<PayGoProduct>() {
-            @Override
-            public void onChanged(@Nullable PayGoProduct payGoProduct) {
-                payGoProd = payGoProduct;
-            }
-        });
-        //return payGoProd;
-    }
-
-    public Boolean productExists(final String scannedSerial){
-        final String serial = scannedSerial;
-
-        LiveData<Boolean> existsLive = payGoProductViewModel.payGoProductIsAvailable(scannedSerial);
-        existsLive.observe(this, new Observer<Boolean>() {
-            @Override
-            public void onChanged(@Nullable Boolean aBoolean) {
-                productExists = aBoolean;
-                if(aBoolean == true){
-                    getPayGoProduct(serial);
-                }
-            }
-        });
-        return productExists;
-    }
-
     public void init(){
 
-        productExists = false;
-        payGoProductViewModel = ViewModelProviders.of(this).get(PayGoProductViewModel.class);
-
-        scannerButtonView = findViewById(R.id.scanner_button);
         customerButtonView = findViewById(R.id.add_customer_button);
         locationButtonView = findViewById(R.id.set_location_button);
-        serialTextView = findViewById(R.id.serialnumber_text_field);
         directSaleSubmitBtn = findViewById(R.id.submit_direct_sale);
-        serialWrapper = findViewById(R.id.serialnumber_text_wrapper);
         directSaledescription = findViewById(R.id.direct_sale_description);
         directSaleDescriptionWrapper = findViewById(R.id.description_wrapper);
+        productButtonView = findViewById(R.id.add_product_button);
     }
 
-    public Product findProductBySerialNumber(String serialNumber){
-        final Product result = new Product();
-        productViewModel = ViewModelProviders.of(this).get(ProductViewModel.class);
-        LiveData<Product> liveProduct = productViewModel.getProductBySerialNumber(serialNumber);
-        liveProduct.observe(this, new Observer<Product>() {
-            @Override
-            public void onChanged(@Nullable Product product) {
-                result.setUnitcostselling(product.getUnitcostselling());
-                result.setName(product.getName());
-                result.setSerialNumber(product.getSerialNumber());
-            }
-        });
-        Product product = new Product();
-        product.setName("Boom box Panda Solar");
-        product.setUnitcostselling(400000);
-        product.setSerialNumber("8991389741924");
-
-        return product;
-    }
-
-    public boolean validateSubmit(){
-
-        if(validateSerialEditView() && validateCustomerBtn() && validateDescriptionField() && validateLocationBtn()){
-            directSaleModel = new DirectSaleModel();
-            directSaleModel.setAgentid(Utils.getSharedPreference(Constants.USER_ID));
-            directSaleModel.setCreatedon(new Date());
-            directSaleModel.setScannedserial(serialTextView.getText().toString());
-            directSaleModel.setCustomerid(customerResult.getUserid());
-            //directSaleModel.setQuantity(Integer.parseInt(quantityText.getText().toString()));
-            directSaleModel.setDescription(directSaledescription.getText().toString());
-            directSaleModel.setLat(43);
-            directSaleModel.setLong_(54);
-
-            customerName = customerResult.getUser().getFirstname()+" "+customerResult.getUser().getLastname();
-
-            directSaleProduct = new Product();
-            directSaleProduct = findProductBySerialNumber(directSaleModel.getScannedserial());
-
-            return true;
-        }else{
-            return false;
-        }
-
-    }
-
-
-    public boolean validateSerialEditView(){
-        String text = serialTextView.getText().toString();
-        if(text.isEmpty()){
-            serialWrapper.setBoxStrokeColor(getResources().getColor(R.color.dark_grey));
-            serialTextView.setTextColor(getResources().getColor(R.color.dark_grey));
-            Toast.makeText(this, "Please Enter Product Serial", Toast.LENGTH_SHORT).show();
-            return false;
-        }else{
-            serialWrapper.setBoxStrokeColor(getResources().getColor(R.color.colorPrimary));
-            serialTextView.setTextColor(getResources().getColor(R.color.colorPrimary));
-            return true;
-        }
-    }
 
     public boolean validateCustomerBtn(){
         String text = customerButtonView.getText().toString();
@@ -254,6 +142,25 @@ public class DirectSale extends AppCompatActivity {
         }
     }
 
+    public boolean validateProductBtn(){
+        String text = productButtonView.getText().toString();
+
+        if(!text.equalsIgnoreCase("Add Product")){
+            productButtonView.setStrokeColor(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary)));
+            productButtonView.setTextColor(getResources().getColor(R.color.colorPrimary));
+            productButtonView.setIcon(getResources().getDrawable(R.drawable.ic_panda_add_product_yellow));
+            productButtonView.setAllCaps(false);
+            return true;
+        }else{
+            productButtonView.setStrokeColor(ColorStateList.valueOf(getResources().getColor(R.color.dark_grey)));
+            productButtonView.setTextColor(getResources().getColor(R.color.dark_grey));
+            productButtonView.setIcon(getResources().getDrawable(R.drawable.ic_add_product));
+            productButtonView.setAllCaps(false);
+            Toast.makeText(this, "Please Select a Product", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+    }
+
 
     public boolean validateDescriptionField(){
         String text = directSaledescription.getText().toString();
@@ -280,12 +187,6 @@ public class DirectSale extends AppCompatActivity {
                 {
                     String serialNumberResult = data.getStringExtra(Constants.SCAN_RESULT);
 
-                    if(productExists(serialNumberResult)){
-                        serialTextView.setText(serialNumberResult);
-                        validateSerialEditView();
-                    }else{
-                        Toast.makeText(this, "Product not available, Try again", Toast.LENGTH_SHORT).show();
-                    }
                 } else if(resultCode == RESULT_CANCELED) {
                     Toast.makeText(this, "Camera unavailable", Toast.LENGTH_SHORT).show();
                 }
@@ -299,12 +200,10 @@ public class DirectSale extends AppCompatActivity {
             case Constants.SALE_PRO_CODE:
 
                 if(resultCode == RESULT_OK){
-                    Product productResult = data.getParcelableExtra(Constants.PRODUCT_RESULT);
+                    productResult = new Product();
+                    productResult = data.getParcelableExtra(Constants.PRODUCT_RESULT);
                     productButtonView.setText(productResult.getName());
-                    serialTextView.setText(productResult.getSerialNumber());
-
-                    validateSerialEditView();
-                    //validateProductBtn();
+                    validateProductBtn();
 
                     Toast.makeText(DirectSale.this, productResult.getName(), Toast.LENGTH_SHORT).show();
                 }

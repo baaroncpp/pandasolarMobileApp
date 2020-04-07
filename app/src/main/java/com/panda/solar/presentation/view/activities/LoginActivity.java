@@ -1,40 +1,35 @@
 package com.panda.solar.presentation.view.activities;
 
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.JsonObject;
 import com.panda.solar.Model.entities.Login;
 import com.panda.solar.Model.entities.Token;
 import com.panda.solar.Model.entities.User;
 import com.panda.solar.activities.R;
-import com.panda.solar.data.network.NetworkCallback;
+
 import com.panda.solar.data.network.NetworkResponse;
-import com.panda.solar.data.network.RetrofitHelper;
 import com.panda.solar.data.repository.retroRepository.LoginRepository;
 import com.panda.solar.utils.AppContext;
 import com.panda.solar.utils.Constants;
 import com.panda.solar.utils.Utils;
-import com.panda.solar.viewModel.TokenViewModel;
-import com.panda.solar.viewModel.UserViewModel;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
+import com.panda.solar.viewModel.UserViewModel;
 
 public class LoginActivity extends AppCompatActivity/* implements View.OnClickListener, TextWatcher, NetworkCallback*/ {
 
@@ -46,22 +41,18 @@ public class LoginActivity extends AppCompatActivity/* implements View.OnClickLi
     private String phoneNumber;
     private String password;
 
-    private Dialog dialog;
-
     private LoginRepository loginRepository;
-    private Token token;
-    private String bad_request;
-    private String connection_fail;
-    private TokenViewModel tokenViewModel;
-    private SweetAlertDialog sweetDialog;
     private ProgressDialog progressDialog;
     private UserViewModel userViewModel;
-    private User userDetails;
+    private LiveData<Token> liveToken;
+    private LiveData<String> responseMessage;
+    private LiveData<NetworkResponse> networkResponseLiveData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -69,82 +60,93 @@ public class LoginActivity extends AppCompatActivity/* implements View.OnClickLi
             getSupportActionBar().hide();
         }
 
-        sweetDialog = Utils.customSweetAlertDialog(this);
-        progressDialog = Utils.customerProgressBar(this);
-
-        loginButton = (Button)findViewById(R.id.login_button);
-        loginPhoneNumberEditTxt = (EditText)findViewById(R.id.login_phone_number);
-        loginPasswordEditTxt = (EditText)findViewById(R.id.login_password);
-        forgotPasswordTextView = (TextView)findViewById(R.id.forgot_password_text);
-
-        /*loginPasswordEditTxt.addTextChangedListener(this);
-        loginPasswordEditTxt.addTextChangedListener(this);
-
-        loginButton.setOnClickListener(this);
-        forgotPasswordTextView.setOnClickListener(this);*/
+        init();
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // clearJWT();
                 loginUser();
             }
         });
 
     }
 
-   /* @Override
-    public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.login_button:
-                loginUser();
-                //startActivity(new Intent(this,HomeActivity.class));
-                break;
-            case R.id.forgot_password_text:
-                startActivity(new Intent(this, ForgotPasswordActivity.class));
-                break;
-        }
+    public void init(){
+        progressDialog = Utils.customerProgressBar(this);
 
-
-    }*/
+        loginButton = (Button)findViewById(R.id.login_button);
+        loginPhoneNumberEditTxt = (EditText)findViewById(R.id.login_phone_number);
+        loginPasswordEditTxt = (EditText)findViewById(R.id.login_password);
+        forgotPasswordTextView = (TextView)findViewById(R.id.forgot_password_text);
+        userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
+    }
 
     private void loginUser(){
-
         phoneNumber = loginPhoneNumberEditTxt.getText().toString().trim();
         password = loginPasswordEditTxt.getText().toString().trim();
 
         if(validInputs()){
 
-            progressDialog.show();
-
             Login log = new Login(phoneNumber, password);
 
-            loginRepository = new LoginRepository();
-            token = loginRepository.userLogin(log);
-            bad_request = LoginRepository.getBad_request();
-            connection_fail = LoginRepository.getConnection_fail();
+            liveToken = userViewModel.authenticateUser(log);
+            responseMessage = userViewModel.getResponseMessage();
 
-            if(token != null && !((token.getToken()).equals("Bad credentials!")) && bad_request.isEmpty() && connection_fail.isEmpty()){
-                saveJWT(token);
-                getUserDetails();
-                progressDialog.dismiss();
-                startActivity(new Intent(this,HomeActivity.class));
-                saveJWT(token);
-                getUserDetails();
-            }else if(token != null && (token.getToken()).equals("Bad credentials!")){
-                progressDialog.dismiss();
-                Toast.makeText(this, "Bad credentials!, Try again", Toast.LENGTH_LONG).show();
-            }
+            progressDialog.show();
+            liveToken.observe(this, new Observer<Token>() {
+                @Override
+                public void onChanged(@Nullable Token token) {
+                    observeResponse(token);
+                }
+            });
+        }
+    }
 
-            if(!(LoginRepository.getBad_request()).isEmpty()){
-                progressDialog.dismiss();
-                Toast.makeText(this,bad_request, Toast.LENGTH_LONG).show();
-            }else if(!(LoginRepository.getConnection_fail()).isEmpty()){
-                progressDialog.dismiss();
-                Toast.makeText(this,connection_fail, Toast.LENGTH_LONG).show();
+    public void observeResponse(final Token token){
+
+        responseMessage = userViewModel.getResponseMessage();
+        responseMessage.observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable String s) {
+                handleResponse(s, token);
             }
+        });
+    }
+
+    public void handleResponse(String msg, Token token){
+        if(msg.equals(Constants.SUCCESS_RESPONSE)){
+            getUserDetails();
+            saveJWT(token);
+            startActivity(new Intent(this,HomeActivity.class));
             progressDialog.dismiss();
-            //new RetrofitHelper().login(object, this);
+        }else if(msg.equals(Constants.ERROR_RESPONSE)){
+
+            networkResponseLiveData = userViewModel.getNetworkResponse();
+            networkResponseLiveData.observe(this, new Observer<NetworkResponse>() {
+                @Override
+                public void onChanged(@Nullable NetworkResponse response) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+                    builder.setTitle("Error");
+                    builder.setMessage(response.getBody());
+                    builder.setCancelable(false);
+                    builder.setPositiveButton("Ok", new DialogInterface.OnClickListener(){
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    });
+
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                }
+            });
+
+            progressDialog.dismiss();
+            Toast.makeText(this,"BAD CREDENTIALS TRY AGAIN", Toast.LENGTH_SHORT).show();
+        }else if(msg.equals(Constants.FAILURE_RESPONSE)){
+            progressDialog.dismiss();
+            Toast.makeText(this,"CONNECTION FAILURE", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -166,7 +168,6 @@ public class LoginActivity extends AppCompatActivity/* implements View.OnClickLi
         liveUser.observe(this, new Observer<User>() {
             @Override
             public void onChanged(@Nullable User user) {
-                userDetails = user;
                 saveUserDetails(user);
             }
         });

@@ -52,7 +52,6 @@ public class RetroService {
 
     public static String getToken(){
         SharedPreferences sharedPreferences = AppContext.getAppContext().getSharedPreferences(Constants.SHARED_PREF, MODE_PRIVATE);
-        Toast.makeText(AppContext.getAppContext(), sharedPreferences.getString(Constants.JWT_TOKEN, null), Toast.LENGTH_SHORT).show();
         return sharedPreferences.getString(Constants.JWT_TOKEN, null);
     }
 

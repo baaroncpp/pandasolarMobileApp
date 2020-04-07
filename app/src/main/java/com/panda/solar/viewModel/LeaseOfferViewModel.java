@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import com.panda.solar.Model.entities.LeaseOffer;
+import com.panda.solar.data.network.NetworkResponse;
 import com.panda.solar.data.repository.PandaDAOFactory;
 import com.panda.solar.data.repository.retroRepository.LeaseOfferDAO;
 import com.panda.solar.utils.Constants;
@@ -31,7 +32,7 @@ public class LeaseOfferViewModel extends ViewModel {
             }
 
             @Override
-            public void onError() {
+            public void onError(NetworkResponse response) {
                 responseMessage.postValue(Constants.ERROR_RESPONSE);
             }
         });

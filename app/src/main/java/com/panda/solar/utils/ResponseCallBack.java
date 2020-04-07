@@ -1,13 +1,14 @@
 package com.panda.solar.utils;
 
-import android.arch.lifecycle.LiveData;
+
+import com.panda.solar.data.network.NetworkResponse;
 
 public interface ResponseCallBack {
 
-    public void onSuccess();
+    void onSuccess();
 
-    public void onFailure();
+    void onFailure();
 
-    public void onError();
+    void onError(NetworkResponse response);
 
 }

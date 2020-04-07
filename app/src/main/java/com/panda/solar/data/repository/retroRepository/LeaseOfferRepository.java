@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.panda.solar.Model.entities.LeaseOffer;
 import com.panda.solar.Model.entities.Product;
+import com.panda.solar.data.network.NetworkResponse;
 import com.panda.solar.data.network.PandaCoreAPI;
 import com.panda.solar.data.network.RetroService;
 import com.panda.solar.utils.ResponseCallBack;
@@ -31,6 +32,7 @@ public class LeaseOfferRepository implements LeaseOfferDAO {
     public MutableLiveData<List<LeaseOffer>> getAllLeaseOffers(final ResponseCallBack callBack) {
 
         final MutableLiveData<List<LeaseOffer>> leaseOffers = new MutableLiveData<>();
+        final NetworkResponse netResponse = new NetworkResponse();
 
         Call<List<LeaseOffer>> call =pandaCoreAPI.getLeaseOffers();
 
@@ -39,7 +41,9 @@ public class LeaseOfferRepository implements LeaseOfferDAO {
             public void onResponse(Call<List<LeaseOffer>> call, Response<List<LeaseOffer>> response) {
 
                 if(!response.isSuccessful()){
-                    callBack.onError();
+                    netResponse.setBody(response.message());
+                    netResponse.setCode(response.code());
+                    callBack.onError(netResponse);
                     return;
                 }
                 callBack.onSuccess();

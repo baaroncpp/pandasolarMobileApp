@@ -1,5 +1,6 @@
 package com.panda.solar.presentation.view.activities;
 
+import android.app.ProgressDialog;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
@@ -13,6 +14,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.panda.solar.Model.entities.Customer;
@@ -24,12 +26,12 @@ import com.panda.solar.activities.R;
 import com.panda.solar.utils.Constants;
 import com.panda.solar.utils.Utils;
 import com.panda.solar.viewModel.PayGoProductViewModel;
+import com.panda.solar.viewModel.SaleViewModel;
 
 public class LeaseSaleActivity extends AppCompatActivity {
 
     private MaterialButton scanSerialNumberViewBtn;
     private TextInputEditText serialNumberView;
-    //private MaterialButton leaseOfferBtn;
     private MaterialButton setLocationBtn;
     private MaterialButton leaseCustomerBtn;
     private TextInputEditText leaseSaleDescriptionView;
@@ -38,11 +40,12 @@ public class LeaseSaleActivity extends AppCompatActivity {
     private MaterialButton makeLeaseSaleBtn;
 
     private Customer customerResult;
-    //private LeaseOffer leaseOffer;
     private LeaseSaleModel leaseSaleModel;
     private PayGoProduct payGoProd;
     private PayGoProductViewModel payGoProductViewModel;
     private Boolean productExists;
+    private LiveData<String> responseMessage;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +97,30 @@ public class LeaseSaleActivity extends AppCompatActivity {
         });
     }
 
+    public void getPayGoResponse(){
+        payGoProductViewModel = ViewModelProviders.of(this).get(PayGoProductViewModel.class);
+        responseMessage = payGoProductViewModel.getResponseMessage();
+
+        responseMessage.observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable String s) {
+                handleResponse(s);
+            }
+        });
+    }
+
+    public void handleResponse(String msg){
+        if(msg.equals(Constants.SUCCESS_RESPONSE)){
+            progressDialog.dismiss();
+        }else if(msg.equals(Constants.ERROR_RESPONSE)){
+            progressDialog.dismiss();
+            Toast.makeText(this,"SOMETHING WENT WRONG, TRY AGAIN", Toast.LENGTH_SHORT).show();
+        }else if(msg.equals(Constants.FAILURE_RESPONSE)){
+            progressDialog.dismiss();
+            Toast.makeText(this,"CONNECTION FAILURE", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     public void getPayGoProduct(String scannedserial){
         LiveData<PayGoProduct> payGoProduct = payGoProductViewModel.getPayGoProduct(scannedserial);
         payGoProduct.observe(this, new Observer<PayGoProduct>() {
@@ -102,10 +129,9 @@ public class LeaseSaleActivity extends AppCompatActivity {
                 payGoProd = payGoProduct;
             }
         });
-        //return payGoProd;
     }
 
-    public Boolean productExists(final String scannedSerial){
+    public void productExists(final String scannedSerial){
         final String serial = scannedSerial;
 
         LiveData<Boolean> existsLive = payGoProductViewModel.payGoProductIsAvailable(scannedSerial);
@@ -118,7 +144,7 @@ public class LeaseSaleActivity extends AppCompatActivity {
                 }
             }
         });
-        return productExists;
+        getPayGoResponse();
     }
 
     public boolean validateCustomerBtn(){
@@ -187,24 +213,21 @@ public class LeaseSaleActivity extends AppCompatActivity {
         }
     }
 
-    public boolean validateProductToken(String tokenSerialNumber){
-        return true;
-    }
-
     public void init(){
 
-        productExists = false;
+        productExists = Boolean.FALSE;
         payGoProductViewModel = ViewModelProviders.of(this).get(PayGoProductViewModel.class);
 
         scanSerialNumberViewBtn = findViewById(R.id.scanner_button);
         serialNumberView = findViewById(R.id.lease_sale_serialnumber);
-        //leaseOfferBtn = findViewById(R.id.add_lease_offer_button);
         setLocationBtn = findViewById(R.id.set_location_button);
         leaseSaleDescriptionView = findViewById(R.id.lease_sale_description);
         leaseCustomerBtn = findViewById(R.id.add_lease_customer_button);
         leaseDescriptionWrapper = findViewById(R.id.description_text_wrapper);
         serialNumberTextWrapper = findViewById(R.id.serialnumber_text_wrapper);
         makeLeaseSaleBtn = findViewById(R.id.submit_lease_sale_btn);
+
+        progressDialog = Utils.customerProgressBar(this);
     }
 
     @Override
@@ -217,8 +240,10 @@ public class LeaseSaleActivity extends AppCompatActivity {
                 if (resultCode == RESULT_OK)
                 {
                     String serialNumberResult = data.getStringExtra(Constants.SCAN_RESULT);
+                    progressDialog.show();
+                    productExists(serialNumberResult);
 
-                    if(productExists(serialNumberResult)){
+                    if(productExists){
                         serialNumberView.setText(serialNumberResult);
                         validateSerialEditView();
                     }else{

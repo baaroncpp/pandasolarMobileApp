@@ -4,6 +4,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.util.Log;
 
 import com.panda.solar.Model.entities.Product;
+import com.panda.solar.data.network.NetworkResponse;
 import com.panda.solar.data.network.PandaCoreAPI;
 import com.panda.solar.data.network.RetroService;
 import com.panda.solar.utils.ResponseCallBack;
@@ -18,8 +19,8 @@ import retrofit2.Response;
 public class ProductRepository implements ProductDAO{
 
     private static ProductRepository instance;
-    private static String errorMessage = "";
     private PandaCoreAPI pandaCoreAPI = RetroService.getPandaCoreAPI();
+    NetworkResponse netResponse = new NetworkResponse();
 
     public static ProductRepository getInstance(){
         if(instance == null){
@@ -64,7 +65,9 @@ public class ProductRepository implements ProductDAO{
             public void onResponse(Call<List<Product>> call, Response<List<Product>> response) {
                 if(!response.isSuccessful()){
                     Log.e("REQUEST NOT SUCCESSFULL","product not fetched");
-                    callBack.onError();
+                    netResponse.setBody(response.message());
+                    netResponse.setCode(response.code());
+                    callBack.onError(netResponse);
                     return;
                 }
                 callBack.onSuccess();
@@ -74,7 +77,6 @@ public class ProductRepository implements ProductDAO{
             @Override
             public void onFailure(Call<List<Product>> call, Throwable t) {
                 Log.e("Connection failed", t.getMessage());
-                errorMessage = t.getMessage();
                 callBack.onFailure();
                 return;
             }
@@ -98,36 +100,19 @@ public class ProductRepository implements ProductDAO{
             @Override
             public void onResponse(Call<Product> call, Response<Product> response) {
                 if(!response.isSuccessful()){
-                    errorMessage = "DAB REQUEST";
+                    return;
                 }
                 data.postValue(response.body());
             }
 
             @Override
             public void onFailure(Call<Product> call, Throwable t) {
-                data.setValue(setProducts().get(1));
-                errorMessage = t.getMessage();
+                return;
             }
         });
 
         return data;
     }
 
-    public List<Product> setProducts(){
-        List<Product> products = new ArrayList<>();
 
-        for(int i = 0; i < 40 ; i++){
-            Product product = new Product();
-            product.setName("Boom box Panda Solar");
-            product.setUnitcostselling(400000);
-            product.setSerialNumber("8991389741924");
-            product.setIsleasable(true);
-            product.setDescription("Boom X has 4 List of all leased payments, initial deposit and expected total payment... think should indicate and coupons" +
-                    "List of all leased payments, initial deposit and expected total payment... think should indicate and coupons");
-
-            products.add(product);
-        }
-
-        return products;
-    }
 }

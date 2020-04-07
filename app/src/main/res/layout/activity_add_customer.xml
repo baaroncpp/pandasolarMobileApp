@@ -7,61 +7,444 @@
     android:orientation="vertical"
     tools:context="com.panda.solar.presentation.view.activities.AddCustomer">
 
-    <LinearLayout
-        android:layout_height="match_parent"
+    <ScrollView
         android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:layout_height="match_parent">
 
-        <android.support.design.widget.TextInputLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:counterEnabled="true"
-            app:counterMaxLength="15"
-            app:errorEnabled="true">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingLeft="16dp"
+            android:paddingTop="8dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="16dp">
 
-            <android.support.design.widget.TextInputEditText
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text"
-                android:hint="Name">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-            </android.support.design.widget.TextInputEditText>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="8dp"
+                    android:fontFamily="sans-serif-light"
+                    android:text="Add New Customer"
+                    android:textSize="25sp"
+                    android:textStyle="bold" />
 
-        </android.support.design.widget.TextInputLayout>
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="15dp"
+                    android:background="@color/colorPrimary" />
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:errorEnabled="true">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-            <android.support.design.widget.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textEmailAddress"
-                android:hint="Email">
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/firstname_wrapper"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:layout_weight="1"
+                        app:boxStrokeColor="@color/dark_grey"
+                        app:boxStrokeWidth="2dp">
 
-            </android.support.design.widget.TextInputEditText>
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/cust_firstname"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="First Name"
+                            android:inputType="text"
+                            android:textSize="14sp" />
 
-        </android.support.design.widget.TextInputLayout>
+                    </android.support.design.widget.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:errorEnabled="true">
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/lastname_wrapper"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:layout_weight="1"
+                        app:boxStrokeColor="@color/dark_grey"
+                        app:boxStrokeWidth="2dp">
 
-            <android.support.design.widget.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textEmailAddress"
-                android:hint="Email">
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/cust_lastname"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Last Name"
+                            android:inputType="text"
+                            android:textSize="14sp" />
+                    </android.support.design.widget.TextInputLayout>
 
-            </android.support.design.widget.TextInputEditText>
+                </LinearLayout>
 
-        </android.support.design.widget.TextInputLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/othername_wrapper"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        app:boxStrokeColor="@color/dark_grey"
+                        app:boxStrokeWidth="2dp">
+
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/cust_othername"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Other Name"
+                            android:inputType="text"
+                            android:textSize="14sp" />
+                    </android.support.design.widget.TextInputLayout>
+                </LinearLayout>
+
+                <RadioGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <android.support.v7.widget.AppCompatRadioButton
+                        android:id="@+id/cust_male_radiobtn"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Male"
+                        android:textColor="@color/dark_grey" />
+
+                    <android.support.v7.widget.AppCompatRadioButton
+                        android:id="@+id/cust_femalebtn"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Female"
+                        android:textColor="@color/dark_grey" />
+
+                </RadioGroup>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/dob_wrapper"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        app:boxStrokeColor="@color/dark_grey"
+                        app:boxStrokeWidth="2dp">
+
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/cust_dob"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:drawableRight="@drawable/ic_date_black"
+                            android:drawablePadding="10dp"
+                            android:hint="Birth Date"
+                            android:inputType="date"
+                            android:textSize="14sp" />
+                    </android.support.design.widget.TextInputLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/email_wrapper"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="3dp"
+                        app:boxStrokeColor="@color/dark_grey"
+                        app:boxStrokeWidth="2dp">
+
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/cust_email"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Email"
+                            android:inputType="textEmailAddress"
+                            android:textSize="14sp" />
+                    </android.support.design.widget.TextInputLayout>
+
+                </LinearLayout>
+
+                <!-- <LinearLayout
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:orientation="horizontal">
+
+                     <android.support.design.widget.TextInputLayout
+                         android:id="@+id/password_wrapper"
+                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                         android:layout_width="match_parent"
+                         android:layout_height="wrap_content"
+                         android:layout_marginBottom="3dp"
+                         app:boxStrokeColor="@color/dark_grey"
+                         app:boxStrokeWidth="2dp">
+
+                         <android.support.design.widget.TextInputEditText
+                             android:id="@+id/cust_password"
+                             android:layout_width="match_parent"
+                             android:layout_height="wrap_content"
+                             android:hint="Password"
+                             android:inputType="textPassword"
+                             android:textSize="14sp" />
+                     </android.support.design.widget.TextInputLayout>
+
+                 </LinearLayout>
+
+                 <LinearLayout
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:orientation="horizontal">
+
+                     <android.support.design.widget.TextInputLayout
+                         android:id="@+id/confirm_wrapper"
+                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                         android:layout_width="match_parent"
+                         android:layout_height="wrap_content"
+                         android:layout_marginBottom="3dp"
+                         app:boxStrokeColor="@color/dark_grey"
+                         app:boxStrokeWidth="2dp">
+
+                         <android.support.design.widget.TextInputEditText
+                             android:id="@+id/confirm_password"
+                             android:layout_width="match_parent"
+                             android:layout_height="wrap_content"
+                             android:hint="Confirm Password"
+                             android:inputType="textPassword"
+                             android:textSize="14sp" />
+                     </android.support.design.widget.TextInputLayout>
+
+                 </LinearLayout>
+ -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/phone_wrapper"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="3dp"
+                        app:boxStrokeColor="@color/dark_grey"
+                        app:boxStrokeWidth="2dp">
+
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/cust_phone"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="phone number"
+                            android:inputType="phone"
+                            android:textSize="14sp" />
+                    </android.support.design.widget.TextInputLayout>
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Others"
+                    android:textColor="@color/gradStart"
+                    android:textSize="13sp" />
+
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="4dp"
+                    android:background="@color/grey" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/idtype_wrapper"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:layout_marginBottom="8dp"
+                        app:boxStrokeColor="@color/dark_grey"
+                        app:boxStrokeWidth="2dp">
+
+                        <Spinner
+                            android:id="@+id/cust_id_type"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:outlineAmbientShadowColor="@color/dark_grey"
+                            android:outlineSpotShadowColor="@color/dark_grey"
+                            android:textSize="14sp" />
+                    </android.support.design.widget.TextInputLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/idnumber_wrapper"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        app:boxStrokeColor="@color/dark_grey"
+                        app:boxStrokeWidth="2dp">
+
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/cust_idnumber"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="ID Number"
+                            android:inputType="text"
+                            android:textSize="14sp" />
+                    </android.support.design.widget.TextInputLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/address_wrapper"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        app:boxStrokeColor="@color/dark_grey"
+                        app:boxStrokeWidth="2dp">
+
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/cust_address"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Address"
+                            android:inputType="text"
+                            android:textSize="14sp" />
+                    </android.support.design.widget.TextInputLayout>
+
+                </LinearLayout>
 
 
-    </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/village_wrapper"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:layout_marginBottom="8dp"
+                        app:boxStrokeColor="@color/dark_grey"
+                        app:boxStrokeWidth="2dp">
+
+                        <Spinner
+                            android:id="@+id/cust_village"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:outlineAmbientShadowColor="@color/dark_grey"
+                            android:outlineSpotShadowColor="@color/dark_grey"
+                            android:textSize="14sp" />
+                    </android.support.design.widget.TextInputLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/secondaryphone_wrapper"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        app:boxStrokeColor="@color/dark_grey"
+                        app:boxStrokeWidth="2dp">
+
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/cust_secondaryphone"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Secondary phone number"
+                            android:inputType="phone"
+                            android:textSize="14sp" />
+                    </android.support.design.widget.TextInputLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/secondarymail_wrapper"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        app:boxStrokeColor="@color/dark_grey"
+                        app:boxStrokeWidth="2dp">
+
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/cust_secondarymail"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Secondary Email"
+                            android:inputType="textEmailAddress"
+                            android:textSize="14sp" />
+                    </android.support.design.widget.TextInputLayout>
+
+                </LinearLayout>
+
+
+                <android.support.design.button.MaterialButton
+                    android:id="@+id/cust_next_btn"
+                    style="@style/Widget.MaterialComponents.Button"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:layout_marginTop="4dp"
+                    android:text="next"
+                    app:backgroundTint="@color/colorPrimary"
+                    app:cornerRadius="4dp" />
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
 
 </LinearLayout>

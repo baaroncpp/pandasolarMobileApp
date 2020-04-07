@@ -8,18 +8,21 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.panda.solar.Model.entities.User;
 import com.panda.solar.activities.R;
+import com.panda.solar.presentation.view.activities.HomeActivity;
+import com.panda.solar.utils.Constants;
 import com.panda.solar.utils.Utils;
 import com.panda.solar.viewModel.UserViewModel;
+import com.squareup.picasso.Picasso;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileFragment extends Fragment {
 
@@ -31,7 +34,9 @@ public class ProfileFragment extends Fragment {
     private TextView email;
     private TextView phoneNumber;
     private TextView profile_status;
+    private CircleImageView profileView;
     private TextView userType;
+    private LiveData<String> responseMessage;
 
     @Nullable
     @Override
@@ -39,22 +44,19 @@ public class ProfileFragment extends Fragment {
         View view = inflater.inflate(R.layout.profile_fragement, container, false);
         super.onViewCreated(view, savedInstanceState);
 
-        dialog = Utils.customerProgressBar(getActivity());
         init(view);
 
-        dialog.show();
         userViewModel = ViewModelProviders.of(getActivity()).get(UserViewModel.class);
 
         liveUser = userViewModel.getUser();
-
+        dialog.show();
         liveUser.observe(getActivity(), new Observer<User>() {
             @Override
             public void onChanged(@Nullable User user) {
-                dialog.dismiss();
                 setProfileViews(user);
             }
         });
-        //onStart();
+        observeResponse();
         return view;
     }
 
@@ -65,15 +67,39 @@ public class ProfileFragment extends Fragment {
         phoneNumber.setText("+"+Utils.insertCharacterForEveryNDistance(3, user.getPrimaryphone(), ' '));
         profile_status.setText(accountStatus(user.isIsactive()));
 
+        Picasso.with(getActivity()).load("https://homepages.cae.wisc.edu/~ece533/images/girl.png").into(profileView);
     }
 
     public void init(View view){
         username = view.findViewById(R.id.user_name);
-        location = (TextView)view.findViewById(R.id.profile_location);
-        email = (TextView)view.findViewById(R.id.profile_email);
-        phoneNumber = (TextView)view.findViewById(R.id.profile_phone);
-        profile_status = (TextView)view.findViewById(R.id.profile_status);
-        //userType = (TextView)view.findViewById(R.id.pr
+        location = view.findViewById(R.id.profile_location);
+        email = view.findViewById(R.id.profile_email);
+        phoneNumber = view.findViewById(R.id.profile_phone);
+        profile_status = view.findViewById(R.id.profile_status);
+        dialog = Utils.customerProgressBar(getActivity());
+        profileView = view.findViewById(R.id.user_profile_view);
+    }
+
+    public void observeResponse(){
+        responseMessage = userViewModel.getResponseMessage();
+        responseMessage.observe(getActivity(), new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable String s) {
+                handleResponse(s);
+            }
+        });
+    }
+
+    public void handleResponse(String msg){
+        if(msg.equals(Constants.SUCCESS_RESPONSE)){
+            dialog.dismiss();
+        }else if(msg.equals(Constants.ERROR_RESPONSE)){
+            dialog.dismiss();
+            Toast.makeText(getActivity(),"SOMETHING WENT WRONG !!!", Toast.LENGTH_SHORT).show();
+        }else if(msg.equals(Constants.FAILURE_RESPONSE)){
+            dialog.dismiss();
+            Toast.makeText(getActivity(),"CONNECTION FAILURE", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public String accountStatus(boolean val){
@@ -82,6 +108,5 @@ public class ProfileFragment extends Fragment {
         }else{
             return "Not Active";
         }
-
     }
 }
