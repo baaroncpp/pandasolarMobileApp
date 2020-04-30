@@ -19,15 +19,22 @@
                 android:layout_height="70dp">
 
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/profile_customer"
+                <!--<de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/profile_customer_list_item"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="6dp"
                     android:src="@drawable/aaron"
                     app:civ_border_width="2dp"
-                    app:civ_border_color="#FFFFFF"/>
+                    app:civ_border_color="#FFFFFF"/>-->
+
+                <ImageView
+                    android:id="@+id/profile_customer_list_item"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/aaron"/>
 
 
             </LinearLayout>
@@ -46,7 +53,8 @@
                     android:fontFamily="sans-serif"
                     android:textSize="16sp"
                     android:gravity="bottom"
-                    android:textColor="#232F34"
+                    android:layout_gravity="bottom"
+                    android:textColor="@color/dark_grey"
                     android:layout_weight="1"/>
 
                 <TextView
@@ -55,15 +63,18 @@
                     android:layout_weight="1"
                     android:id="@+id/customer_address"
                     android:gravity="center_vertical"
+                    android:layout_gravity="center_vertical"
                     android:fontFamily="sans-serif-light"
                     android:textSize="14sp"
-                    android:textColor="#232F34"/>
+                    android:textColor="@color/dark_grey"/>
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
+                    android:textColor="@color/dark_grey"
                     android:gravity="top"
+                    android:layout_gravity="top"
                     android:fontFamily="sans-serif-light"
                     android:id="@+id/customer_phone_number"/>
 

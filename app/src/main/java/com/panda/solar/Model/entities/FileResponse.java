@@ -1,4 +1,4 @@
-package com.fredastone.pandacore.models;
+package com.panda.solar.Model.entities;
 
 public class FileResponse {
 	private String name;

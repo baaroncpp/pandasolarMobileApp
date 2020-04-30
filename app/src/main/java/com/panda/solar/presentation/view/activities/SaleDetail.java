@@ -20,6 +20,7 @@ import com.panda.solar.activities.R;
 import com.panda.solar.utils.Constants;
 import com.panda.solar.utils.Utils;
 import com.panda.solar.viewModel.SaleViewModel;
+import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -76,6 +77,7 @@ public class SaleDetail extends AppCompatActivity {
         saleType.setText(saleModel.getSaletype()+" Sale");
         saleStatus.setText(Utils.saleStatus(saleModel.getSalestatus()));
         customerLocation.setText(saleModel.getCustomer().getAddress());
+        Picasso.with(this).load(saleModel.getCustomer().getProfilephotopath()).fit().centerCrop().placeholder(R.drawable.ic_default_profile).error(R.drawable.ic_default_profile).into(customerProfile);
 
         approveBtn.setOnClickListener(new View.OnClickListener() {
             @Override

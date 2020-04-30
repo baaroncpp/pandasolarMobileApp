@@ -39,7 +39,7 @@
             android:backgroundTint="@color/colorPrimary"
             android:clickable="true"
             android:fontFamily="sans-serif-medium"
-            android:src="@drawable/ic_add_black_24dp"
+            android:src="@drawable/ic_add_customer"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
 

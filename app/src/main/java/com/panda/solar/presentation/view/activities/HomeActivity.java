@@ -1,10 +1,16 @@
 package com.panda.solar.presentation.view.activities;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -21,12 +27,16 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.panda.solar.Model.entities.SaleProduct;
+import com.panda.solar.Model.entities.User;
 import com.panda.solar.activities.R;
 import com.panda.solar.presentation.view.fragments.bottomNavigationFragements.AdminFragment;
 import com.panda.solar.presentation.view.fragments.bottomNavigationFragements.HomeFragment;
 import com.panda.solar.presentation.view.fragments.bottomNavigationFragements.ProfileFragment;
 import com.panda.solar.presentation.view.fragments.bottomNavigationFragements.SettingsFragment;
+import com.panda.solar.utils.AppContext;
 import com.panda.solar.utils.Constants;
+import com.panda.solar.utils.Utils;
+import com.panda.solar.viewModel.UserViewModel;
 
 import org.parceler.Parcels;
 
@@ -44,47 +54,66 @@ public class HomeActivity extends AppCompatActivity
     private Intent saleTypeIntent;
 
     private FloatingActionButton fab;
+    private UserViewModel userViewModel;
+    private LiveData<String> responseMessage;
+    private ProgressDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        dialog = Utils.customerProgressBar(this);
+        dialog.show();
+
+        userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
+        LiveData<User> user = userViewModel.getUser();
+        user.observe(this, new Observer<User>() {
+            @Override
+            public void onChanged(@Nullable User user) {
+                saveUserDetails(user);
+            }
+        });
+
         fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Toast.makeText(HomeActivity.this, "make sale", Toast.LENGTH_SHORT).show();
-                //startActivity(new Intent(HomeActivity.this, SaleActivity.class));
                 saleTypeProductDialog();
             }
         });
+
+        observeResponse();
 
         BottomNavigationView bottomNav = (BottomNavigationView)findViewById(R.id.bottom_navigation_bar);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new HomeFragment()).commit();
 
+    }
 
-        /*BK OUT*/
+    public void observeResponse(){
+        responseMessage = userViewModel.getResponseMessage();
+        responseMessage.observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable String s) {
+                handleResponse(s);
+            }
+        });
+    }
 
-        /*Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        if(getSupportActionBar() != null){
-            getSupportActionBar().setTitle(R.string.panda);
+    public void handleResponse(String msg){
+        if(msg.equals(Constants.SUCCESS_RESPONSE)){
+            dialog.dismiss();
+        }else if(msg.equals(Constants.ERROR_RESPONSE)){
+            finish();
+            dialog.dismiss();
+            Toast.makeText(this,"SORRY TRY AGAIN", Toast.LENGTH_LONG).show();
+        }else if(msg.equals(Constants.FAILURE_RESPONSE)){
+            finish();
+            dialog.dismiss();
+            Toast.makeText(this,"CONNECTION ERROR, TRY AGAIN", Toast.LENGTH_LONG).show();
         }
-
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        initViews();*/
     }
 
     private void saleTypeProductDialog(){
@@ -288,8 +317,16 @@ public class HomeActivity extends AppCompatActivity
                 startActivity(new Intent(this, CustomerActivity.class));
                 break;
 
-
         }
+    }
+
+    public void saveUserDetails(User user){
+        SharedPreferences sharedPreferences = AppContext.getAppContext().getSharedPreferences(Constants.SHARED_PREF, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putString(Constants.USER_ID, user.getId());
+        editor.putString(Constants.USER_TYPE, user.getUsertype());
+        editor.apply();
     }
 
 }

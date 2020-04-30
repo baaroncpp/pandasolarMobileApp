@@ -19,6 +19,7 @@ import com.panda.solar.Model.entities.Customer;
 import com.panda.solar.presentation.view.activities.CustomerDetails;
 import com.panda.solar.utils.Constants;
 import com.panda.solar.utils.Utils;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,7 +80,7 @@ public class CustomerListRecyclerViewAdapter extends RecyclerView.Adapter<Custom
         public ViewHolder(View itemView){
             super(itemView);
 
-            //image = (ImageView)itemView.findViewById(R.id.customer_image);
+            image = (ImageView)itemView.findViewById(R.id.profile_customer_list_item);
             customerName = (TextView) itemView.findViewById(R.id.customer_name);
             customerAddress = (TextView)itemView.findViewById(R.id.customer_address);
             phoneNumber = (TextView)itemView.findViewById(R.id.customer_phone_number);
@@ -107,12 +108,11 @@ public class CustomerListRecyclerViewAdapter extends RecyclerView.Adapter<Custom
         public void bindView(int position){
             Customer customer = customers.get(position);
 
-            //viewHolder.image.setImageDrawable(context.getDrawable(R.drawable.ic_home_black_24dp));
             customerName.setText(customer.getUser().getLastname()+", "+customer.getUser().getFirstname());
             customerAddress.setText(customer.getAddress());
             phoneNumber.setText("+"+ Utils.insertCharacterForEveryNDistance(3,customer.getUser().getPrimaryphone(), ' '));
 
-            //Glide.with(context).load(customer.getProfilephotopath()).into(image);
+            Picasso.with(context).load(customer.getProfilephotopath()).fit().centerCrop().placeholder(R.drawable.ic_default_profile).error(R.drawable.ic_default_profile).into(image);
 
         }
 

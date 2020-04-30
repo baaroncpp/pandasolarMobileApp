@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.panda.solar.Model.entities.SaleModel;
 import com.panda.solar.activities.R;
 import com.panda.solar.utils.Utils;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -27,8 +28,9 @@ public class SalesAdapter extends RecyclerView.Adapter<SalesAdapter.SalesViewHol
         void onSaleItemClick(int position);
     }
 
-    public SalesAdapter(List<SaleModel> sales){
+    public SalesAdapter(List<SaleModel> sales, Context context){
         this.sales = sales;
+        this.context = context;
     }
 
     public void setSaleOnClickListener(SaleOnClickListener saleOnClickListener){
@@ -87,6 +89,8 @@ public class SalesAdapter extends RecyclerView.Adapter<SalesAdapter.SalesViewHol
         salesViewHolder.saleDetail.setText(currentSale.getSaletype()+" Sale");
         salesViewHolder.saleDate.setText(Utils.readableShortDate(currentSale.getCreatedon()));
         salesViewHolder.saleStatus.setText(Utils.saleStatus(currentSale.getSalestatus()));
+
+        Picasso.with(context).load(currentSale.getAgent().getProfilepath()).fit().centerCrop().placeholder(R.drawable.ic_default_profile).error(R.drawable.ic_default_profile).into(salesViewHolder.agentPic);
 
         if(currentSale.getSalestatus() == 2){
             //salesViewHolder.saleStatus.setTextColor(android.R.color.holo_orange_light);

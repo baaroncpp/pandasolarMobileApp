@@ -66,10 +66,18 @@ public class Constants {
 
     public static final String FIELD_REQUIRED = "Field required";
     public static final String SHORT_INPUT = "too short, at least 4 characters";
+    public static final String VALID_SERIAL_INPUT = "serial number must have 15 characters";
     public static final String CUSTOMER_MODEL_OBJECT = "customerModel_object";
     public static final String CUSTOMER_OBJECT = "customer_object";
+    public static final String PAYGO_MODEL = "paygo_product_object";
+    public static final String LEASEOFFER_OBJECT= "lease_offer_object";
+    public static final String CUSTOMER_ID = "customer_id";
 
     public static final String BASE_URL = "http://10.42.0.1:8993";
     public static final int CUSTOMER_REVIEW_CODE = 9;
+    public static final int WRITE_STORAGE_PERMISSION_CODE = 10;
+    public static final int CAMERA_PERMISSION_CODE = 11;
+    public static final int READ_STORAGE_PERMISSION_CODE = 12;
+    public static final int LOCATION_PERMISSION_CODE = 13;
 }
 

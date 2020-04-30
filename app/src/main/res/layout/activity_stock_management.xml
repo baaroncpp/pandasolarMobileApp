@@ -7,32 +7,58 @@
     android:orientation="vertical"
     tools:context="com.panda.solar.presentation.view.activities.StockManagementActivity">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
-        <LinearLayout
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="8dp">
+            android:layout_height="match_parent">
 
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/stock_error_view"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:cardElevation="@dimen/flat_card_elevation"
-                app:cardCornerRadius="5dp"
-                app:cardUseCompatPadding="true">
+                android:text="error!!!"
+                android:textSize="18sp"
+                android:fontFamily="sans-serif"
+                android:layout_centerInParent="true"/>
 
-                <TextView
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/stock_items_recycler"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    />
+                    android:layout_height="match_parent">
 
-            </android.support.v7.widget.CardView>
+                </android.support.v7.widget.RecyclerView>
 
-        </LinearLayout>
+            </LinearLayout>
 
-    </ScrollView>
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/stock_fab_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+
+                android:layout_marginEnd="30dp"
+                android:layout_marginBottom="30dp"
+                android:backgroundTint="@color/colorPrimary"
+                android:clickable="true"
+                android:fontFamily="sans-serif-medium"
+                android:src="@drawable/ic_add_stock"
+                android:layout_centerInParent="true"
+                android:layout_alignParentBottom="true"
+
+                android:textColor="#000"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:borderWidth="0dp" />
+
+        </RelativeLayout>
+
+
+
 
 </LinearLayout>

@@ -13,6 +13,19 @@
         android:orientation="vertical"
         android:padding="16dp">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_gravity="center"
+                android:src="@drawable/panda_icon_circle"/>
+
+        </LinearLayout>
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -20,9 +33,9 @@
             android:fontFamily="sans-serif-light"
             android:textColor="#616161"
             android:textStyle="bold"
-            android:textSize="25sp"
+            android:textSize="22sp"
             android:gravity="center_horizontal"
-            android:layout_marginBottom="50dp"/>
+            android:layout_marginBottom="5dp"/>
 
 <!--
         <android.support.design.button.MaterialButton
@@ -79,7 +92,7 @@
             android:outlineSpotShadowColor="@color/grey"
             android:text="Add Customer"/>
 
-        <android.support.design.button.MaterialButton
+       <!-- <android.support.design.button.MaterialButton
             app:strokeWidth="2dp"
             app:strokeColor="@color/dark_grey"
             android:id="@+id/set_location_button"
@@ -89,7 +102,7 @@
             android:layout_height="60dp"
             app:icon="@drawable/ic_panda_location_black"
             android:outlineSpotShadowColor="@color/grey"
-            android:text="Set Location"/>
+            android:text="Set Location"/>-->
 
         <!-- <LinearLayout
             android:layout_width="match_parent"

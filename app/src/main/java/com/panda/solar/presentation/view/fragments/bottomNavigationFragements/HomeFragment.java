@@ -19,12 +19,13 @@ import com.panda.solar.presentation.view.activities.LeaseOfferList;
 import com.panda.solar.presentation.view.activities.PaymentsList;
 import com.panda.solar.presentation.view.activities.ProductListDashBoard;
 import com.panda.solar.presentation.view.activities.SalesList;
+import com.panda.solar.presentation.view.activities.StockManagementActivity;
 
 public class HomeFragment extends Fragment {
 
     private CardView saleCard;
     private CardView productCard;
-    private CardView installationCard;
+    private CardView stockCard;
     private CardView paymentsCard;
     private CardView customerCard;
     private CardView leaseOfferCard;
@@ -55,10 +56,10 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        installationCard.setOnClickListener(new View.OnClickListener(){
+        stockCard.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                Intent intent = new Intent(getActivity(), AddCustomer.class);
+                Intent intent = new Intent(getActivity(), StockManagementActivity.class);
                 startActivity(intent);
             }
         });
@@ -93,7 +94,7 @@ public class HomeFragment extends Fragment {
     private void initViews(View view){
         customerCard = view.findViewById(R.id.customer_card);
         saleCard = view.findViewById(R.id.sale_card);
-        installationCard = view.findViewById(R.id.installation_card);
+        stockCard = view.findViewById(R.id.home_stock_card);
         leaseOfferCard = view.findViewById(R.id.lease_offer_card);
         productCard = view.findViewById(R.id.product_dashboard_card);
         paymentsCard = view.findViewById(R.id.lease_payments_card);

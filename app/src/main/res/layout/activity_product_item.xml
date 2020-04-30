@@ -16,6 +16,7 @@
         android:orientation="vertical">
 
         <ImageView
+            android:id="@+id/productimage_item_dash"
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:scaleType="centerCrop"

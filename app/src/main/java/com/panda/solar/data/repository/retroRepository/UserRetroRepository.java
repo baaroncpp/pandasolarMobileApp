@@ -46,14 +46,9 @@ public class UserRetroRepository implements UserDAO{
             @Override
             public void onResponse(Call<Token> call, Response<Token> response) {
                 if(!response.isSuccessful()){
-                    try {
-                        netResponse.setBody(new JSONObject(response.errorBody().string()).getString("error"));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    netResponse.setCode(response.code());
+                    //netResponse.setBody(response.message());
+
+                    //netResponse.setCode(response.code());
                     callBack.onError(netResponse);
                     return;
                 }

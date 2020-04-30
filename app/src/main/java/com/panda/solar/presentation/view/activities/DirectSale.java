@@ -1,9 +1,15 @@
 package com.panda.solar.presentation.view.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Looper;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
 import android.support.design.widget.TextInputEditText;
@@ -12,6 +18,14 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
+
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.panda.solar.Model.entities.Customer;
 import com.panda.solar.Model.entities.DirectSaleModel;
 import com.panda.solar.Model.entities.Product;
@@ -25,7 +39,7 @@ public class DirectSale extends AppCompatActivity {
 
     private MaterialButton productButtonView;
     private MaterialButton customerButtonView;
-    private MaterialButton locationButtonView;
+    //private MaterialButton locationButtonView;
     private MaterialButton directSaleSubmitBtn;
     private TextInputEditText directSaledescription;
     private TextInputLayout directSaleDescriptionWrapper;
@@ -35,6 +49,9 @@ public class DirectSale extends AppCompatActivity {
 
     private String customerName;
     private Product productResult;
+    private double latitude;
+    private double longitude;
+    private FusedLocationProviderClient fusedLocationProviderClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +86,7 @@ public class DirectSale extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(DirectSale.this, SaleReview.class);
-                if(validateProductBtn() && validateCustomerBtn() && validateDescriptionField() && validateLocationBtn()){
+                if(validateProductBtn() && validateCustomerBtn() && validateDescriptionField()){
 
                     directSaleModel = new DirectSaleModel();
                     directSaleModel.setAgentid(Utils.getSharedPreference(Constants.USER_ID));
@@ -77,8 +94,8 @@ public class DirectSale extends AppCompatActivity {
                     directSaleModel.setScannedserial(productResult.getSerialNumber());
                     directSaleModel.setCustomerid(customerResult.getUserid());
                     directSaleModel.setDescription(directSaledescription.getText().toString());
-                    directSaleModel.setLat(43);
-                    directSaleModel.setLong_(54);
+                    directSaleModel.setLat((float)latitude);
+                    directSaleModel.setLong_((float)longitude);
                     directSaleModel.setQuantity(1);
 
                     customerName = customerResult.getUser().getFirstname()+" "+customerResult.getUser().getLastname();
@@ -96,11 +113,13 @@ public class DirectSale extends AppCompatActivity {
     public void init(){
 
         customerButtonView = findViewById(R.id.add_customer_button);
-        locationButtonView = findViewById(R.id.set_location_button);
+        //locationButtonView = findViewById(R.id.set_location_button);
         directSaleSubmitBtn = findViewById(R.id.submit_direct_sale);
         directSaledescription = findViewById(R.id.direct_sale_description);
         directSaleDescriptionWrapper = findViewById(R.id.description_wrapper);
         productButtonView = findViewById(R.id.add_product_button);
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        getLastLocation();
     }
 
 
@@ -123,7 +142,7 @@ public class DirectSale extends AppCompatActivity {
         }
     }
 
-    public boolean validateLocationBtn(){
+    /*public boolean validateLocationBtn(){
         String text = locationButtonView.getText().toString();
 
         if(!text.equalsIgnoreCase("Set Location")){
@@ -140,7 +159,7 @@ public class DirectSale extends AppCompatActivity {
             Toast.makeText(this, "Please Set The Customer Location", Toast.LENGTH_SHORT).show();
             return true;
         }
-    }
+    }*/
 
     public boolean validateProductBtn(){
         String text = productButtonView.getText().toString();
@@ -160,7 +179,6 @@ public class DirectSale extends AppCompatActivity {
             return true;
         }
     }
-
 
     public boolean validateDescriptionField(){
         String text = directSaledescription.getText().toString();
@@ -233,4 +251,72 @@ public class DirectSale extends AppCompatActivity {
         return pm.hasSystemFeature(PackageManager.FEATURE_CAMERA);
     }
 
+    private boolean isLocationEnabled() {
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+    }
+
+    private LocationCallback locationCallback = new LocationCallback() {
+        @Override
+        public void onLocationResult(LocationResult locationResult) {
+            Location lastLocation = locationResult.getLastLocation();
+
+            latitude = lastLocation.getLatitude();
+            longitude = lastLocation.getLongitude();
+        }
+    };
+
+    private void getLastLocation(){
+        if (Utils.checkLocationPermissions(this)) {
+            if (isLocationEnabled()) {
+                fusedLocationProviderClient.getLastLocation().addOnCompleteListener(
+                        new OnCompleteListener<Location>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Location> task) {
+                                Location location = task.getResult();
+                                if (location == null) {
+                                    requestNewLocationData();
+                                } else {
+                                    latitude = location.getLatitude();
+                                    longitude = location.getLongitude();
+                                }
+                            }
+                        }
+                );
+            } else {
+                Toast.makeText(this, "Turn on location", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(intent);
+            }
+        } else {
+            Utils.requestLocationPermissions(this);
+        }
+    }
+
+    private void requestNewLocationData(){
+
+        LocationRequest mLocationRequest = new LocationRequest();
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mLocationRequest.setInterval(0);
+        mLocationRequest.setFastestInterval(0);
+        mLocationRequest.setNumUpdates(1);
+
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        fusedLocationProviderClient.requestLocationUpdates(
+                mLocationRequest, locationCallback,
+                Looper.myLooper()
+        );
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == Constants.LOCATION_PERMISSION_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                getLastLocation();
+            }
+        }
+    }
 }

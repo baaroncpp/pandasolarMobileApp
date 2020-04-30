@@ -9,6 +9,8 @@ import android.widget.TextView;
 import com.panda.solar.Model.entities.Customer;
 import com.panda.solar.activities.R;
 import com.panda.solar.utils.Utils;
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.CustomerViewHolder> {

@@ -97,7 +97,7 @@ public class ProductListDashBoard extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         productRecycler.setLayoutManager(layoutManager);
 
-        productAdapter = new ProductAdapter(products, Constants.PRODUCT_LIST_DASH);
+        productAdapter = new ProductAdapter(products, Constants.PRODUCT_LIST_DASH, this);
         productRecycler.setAdapter(productAdapter);
     }
 }

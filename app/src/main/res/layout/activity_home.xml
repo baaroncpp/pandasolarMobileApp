@@ -27,7 +27,6 @@
             android:clickable="true"
             android:fontFamily="sans-serif-medium"
             android:src="@drawable/ic_sell_panda"
-
             android:textSize="18sp"
             android:textStyle="bold"
             app:borderWidth="0dp" />

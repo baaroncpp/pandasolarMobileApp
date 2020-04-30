@@ -1,15 +1,18 @@
 package com.panda.solar.presentation.adapters;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.panda.solar.Model.entities.Product;
 import com.panda.solar.activities.R;
 import com.panda.solar.utils.Constants;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +22,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     private List<Product> products;
     private OnItemClickListener productClickListener;
     private static int productListConst;
+    private Context context;
 
     public interface OnItemClickListener{
         void onProductClick(int position);
@@ -28,9 +32,10 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         productClickListener = listener;
     }
 
-    public ProductAdapter(List<Product> product, int productListConst){        
+    public ProductAdapter(List<Product> product, int productListConst, Context context){
         this.products = product;
         this.productListConst = productListConst;
+        this.context = context;
     }
 
     public static class ProductViewHolder extends RecyclerView.ViewHolder{
@@ -44,6 +49,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         TextView dashProductContent;
         TextView dashProductLeasable;
         TextView dashProductAvailable;
+        ImageView dashProductImage;
 
 
         public ProductViewHolder(View itemView, final OnItemClickListener listener){
@@ -61,6 +67,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
                 dashProductContent = itemView.findViewById(R.id.product_content);
                 dashProductAvailable = itemView.findViewById(R.id.product_available);
                 dashProductLeasable = itemView.findViewById(R.id.product_leasable);
+                dashProductImage = itemView.findViewById(R.id.productimage_item_dash);
 
             }
 
@@ -111,6 +118,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             productViewHolder.dashProductContent.setText(currentProduct.getDescription());
             productViewHolder.dashProductLeasable.setText(isLeasable(currentProduct.getIsleasable()));
             productViewHolder.dashProductAvailable.setText("Available");
+
+            Picasso.with(context).load(currentProduct.getThumbnail()).fit().centerCrop().placeholder(R.drawable.ic_default_profile).error(R.drawable.ic_default_profile).into(productViewHolder.dashProductImage);
             
         }
 

@@ -27,11 +27,11 @@ import com.panda.solar.Model.constants.UserType;
 import com.panda.solar.Model.entities.CustomerMeta;
 import com.panda.solar.Model.entities.CustomerModel;
 import com.panda.solar.Model.entities.User;
+import com.panda.solar.Model.entities.Village;
 import com.panda.solar.activities.R;
 import com.panda.solar.utils.Constants;
 import com.panda.solar.utils.Utils;
 import com.panda.solar.viewModel.CustomerViewModel;
-import com.panda.solar.viewModel.UserViewModel;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -74,7 +74,7 @@ public class AddCustomer extends AppCompatActivity {
     private ProgressDialog dialog;
     private LiveData<String> responseMessage;
     private LiveData<CustomerMeta> liveCustomerMeta;
-
+    private List<Village> villages;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +82,7 @@ public class AddCustomer extends AppCompatActivity {
         setContentView(R.layout.activity_add_customer);
 
         init();
-
+        setVillages();
         initSpinner();
 
         dob.setOnTouchListener(new View.OnTouchListener() {
@@ -166,7 +166,37 @@ public class AddCustomer extends AppCompatActivity {
         });
     }
 
+    public void setVillages(){
+        LiveData<List<Village>> liveDataVillages = customerViewModel.getVillages();
+        liveDataVillages.observe(this, new Observer<List<Village>>() {
+            @Override
+            public void onChanged(@Nullable List<Village> villagez) {
+                villages = villagez;
+            }
+        });
+        observeResponse();
+    }
 
+    public void observeResponse(){
+        responseMessage = customerViewModel.getResponseMessage();
+        responseMessage.observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable String s) {
+                handleResponse(s);
+            }
+        });
+    }
+
+    public void handleResponse(String msg){
+
+        if(msg.equals(Constants.ERROR_RESPONSE)){
+            finish();
+            Toast.makeText(this,"TRY AGAIN", Toast.LENGTH_SHORT).show();
+        }else if(msg.equals(Constants.FAILURE_RESPONSE)){
+            finish();
+            Toast.makeText(this,"CONNECTION, TRY AGAIN", Toast.LENGTH_SHORT).show();
+        }
+    }
 
     public CustomerModel createCustomerUser(){
 
@@ -246,12 +276,20 @@ public class AddCustomer extends AppCompatActivity {
 
         customerViewModel = ViewModelProviders.of(this).get(CustomerViewModel.class);
         dialog = Utils.customerProgressBar(this);
+        villages = new ArrayList<>();
     }
 
     public void initSpinner(){
         List<String> villageNames = new ArrayList<>();
         villageNames.add("Choose Village");
         villageNames.add("Ntinda");
+
+        if(!villages.isEmpty()){
+            for(Village object : villages){
+                villageNames.add(object.getName());
+            }
+        }
+
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, villageNames);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         village.setAdapter(arrayAdapter);

@@ -6,6 +6,7 @@ import com.panda.solar.Model.entities.Customer;
 import com.panda.solar.Model.entities.CustomerMeta;
 import com.panda.solar.Model.entities.CustomerModel;
 import com.panda.solar.Model.entities.DirectSaleModel;
+import com.panda.solar.Model.entities.FileResponse;
 import com.panda.solar.Model.entities.LeaseOffer;
 import com.panda.solar.Model.entities.LeasePayment;
 import com.panda.solar.Model.entities.LeaseSale;
@@ -18,18 +19,24 @@ import com.panda.solar.Model.entities.Product;
 import com.panda.solar.Model.entities.Sale;
 import com.panda.solar.Model.entities.SaleList;
 import com.panda.solar.Model.entities.SaleModel;
+import com.panda.solar.Model.entities.StockProduct;
 import com.panda.solar.Model.entities.Token;
 import com.panda.solar.Model.entities.UploadLinks;
 import com.panda.solar.Model.entities.User;
+import com.panda.solar.Model.entities.Village;
 
 import java.util.List;
 import io.reactivex.Observable;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -64,7 +71,7 @@ public interface PandaCoreAPI {
 
     /* customer endpoint*/
     @GET("v1/customermeta/get/all")
-    Call<CustList> getAllCustomers(@Query("page") int page,
+    Call<List<Customer>> getAllCustomers(@Query("page") int page,
                                    @Query("size")int size,
                                    @Query("sortby")String sortby,
                                    @Query("sortorder")String sortorder);
@@ -98,6 +105,9 @@ public interface PandaCoreAPI {
 
     @POST("v1/paygoproduct/stock/add")
     Call<PayGoProduct> stockPayGoProduct(@Body PayGoProductModel payGoProductModel);
+
+    @GET("v1/paygoproduct/paygo/stock")
+    Call<List<StockProduct>> getStockValues();
 
     /*sales endpoint*/
     @POST("v1/sales/add/direct")
@@ -147,4 +157,11 @@ public interface PandaCoreAPI {
     /*file upload*/
     @GET("v1/uploadlink/{usertype}/{id}")
     Call<UploadLinks> getUploadLinks(@Path("usertype") String usertype, @Path("id") String id);
+
+    @Multipart
+    @POST("/v1/customermeta/uploads/{id}")
+    Call<FileResponse> uploadCustomerFile(@Path("id")String id, @Part MultipartBody.Part file, @Part("uploadType") RequestBody requestBody);
+
+    @GET("v1/region/village/get/all")
+    Call<List<Village>> getAllVillages();
 }

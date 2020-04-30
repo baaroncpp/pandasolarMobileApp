@@ -7,6 +7,7 @@ import android.arch.lifecycle.ViewModel;
 import com.panda.solar.Model.entities.Customer;
 import com.panda.solar.Model.entities.CustomerMeta;
 import com.panda.solar.Model.entities.CustomerModel;
+import com.panda.solar.Model.entities.Village;
 import com.panda.solar.data.network.NetworkResponse;
 import com.panda.solar.data.repository.PandaDAOFactory;
 import com.panda.solar.data.repository.retroRepository.CustomerDAO;
@@ -58,6 +59,26 @@ public class CustomerViewModel extends ViewModel {
                 responseMessage.postValue(Constants.ERROR_RESPONSE);
             }
         }, customerModel);
+    }
+
+    public LiveData<List<Village>> getVillages(){
+        return customerDAO.getAllVillages(new ResponseCallBack() {
+            @Override
+            public void onSuccess() {
+                responseMessage.postValue(Constants.SUCCESS_RESPONSE);
+            }
+
+            @Override
+            public void onFailure() {
+                responseMessage.postValue(Constants.FAILURE_RESPONSE);
+            }
+
+            @Override
+            public void onError(NetworkResponse response) {
+                responseMessage.postValue(Constants.ERROR_RESPONSE);
+                networkResponse.postValue(response);
+            }
+        });
     }
 
     public LiveData<String> getResponseMessage(){

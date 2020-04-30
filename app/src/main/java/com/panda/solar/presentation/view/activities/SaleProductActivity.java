@@ -64,7 +64,7 @@ public class SaleProductActivity extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         saleProductRecycler.setLayoutManager(layoutManager);
 
-        productAdapter = new ProductAdapter(products, Constants.PRODUCT_LIST_SALE);
+        productAdapter = new ProductAdapter(products, Constants.PRODUCT_LIST_SALE, this);
         saleProductRecycler.setAdapter(productAdapter);
 
         productAdapter.setOnItemClickListener(new ProductAdapter.OnItemClickListener() {

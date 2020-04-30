@@ -94,7 +94,7 @@ public class SalesList extends AppCompatActivity {
     public void buildRecycler(final List<SaleModel> sales){
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        salesAdapter = new SalesAdapter(sales);
+        salesAdapter = new SalesAdapter(sales, this);
         recyclerView.setAdapter(salesAdapter);
 
 

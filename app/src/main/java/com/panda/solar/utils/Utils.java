@@ -1,15 +1,20 @@
 package com.panda.solar.utils;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.Window;
@@ -185,4 +190,114 @@ public class Utils {
         SharedPreferences sharedPreferences = AppContext.getAppContext().getSharedPreferences(Constants.SHARED_PREF, MODE_PRIVATE);
         return sharedPreferences.getString(val, null);
     }
+
+    public static void appPermissions(Context context, int requestCode){
+
+        switch (requestCode){
+            case Constants.CAMERA_PERMISSION_CODE:
+                requestCameraPermission(context);
+                break;
+
+            case Constants.WRITE_STORAGE_PERMISSION_CODE:
+                requestWriteStoragePermission(context);
+                break;
+
+            case Constants.READ_STORAGE_PERMISSION_CODE:
+                requestReadStoragePermission(context);
+                break;
+
+            case Constants.LOCATION_PERMISSION_CODE:
+                requestLocationPermissions(context);
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    public static void requestWriteStoragePermission(final Context context){
+
+        if(ActivityCompat.shouldShowRequestPermissionRationale((Activity) context, Manifest.permission.WRITE_EXTERNAL_STORAGE)){
+            new AlertDialog.Builder(context)
+                    .setTitle("Permission needed")
+                    .setMessage("This permission is needed to write to device internal storage")
+                    .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            ActivityCompat.requestPermissions((Activity) context, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.WRITE_STORAGE_PERMISSION_CODE);
+                        }
+                    })
+                    .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .create().show();
+        }else{
+            ActivityCompat.requestPermissions((Activity) context, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.WRITE_STORAGE_PERMISSION_CODE);
+        }
+    }
+
+    public static void requestReadStoragePermission(final Context context){
+
+        if(ActivityCompat.shouldShowRequestPermissionRationale((Activity) context, Manifest.permission.READ_EXTERNAL_STORAGE)){
+            new AlertDialog.Builder(context)
+                    .setTitle("Permission needed")
+                    .setMessage("This permission is needed to access device internal storage")
+                    .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            ActivityCompat.requestPermissions((Activity) context, new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, Constants.READ_STORAGE_PERMISSION_CODE);
+                        }
+                    })
+                    .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .create().show();
+        }else{
+            ActivityCompat.requestPermissions((Activity) context, new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, Constants.READ_STORAGE_PERMISSION_CODE);
+        }
+    }
+
+    public static void requestCameraPermission(final Context context){
+
+        if(ActivityCompat.shouldShowRequestPermissionRationale((Activity) context, Manifest.permission.CAMERA)){
+            new AlertDialog.Builder(context)
+                    .setTitle("Permission needed")
+                    .setMessage("This permission is needed to access the device internal storage")
+                    .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            ActivityCompat.requestPermissions((Activity) context, new String[] {Manifest.permission.CAMERA}, Constants.CAMERA_PERMISSION_CODE);
+                        }
+                    })
+                    .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .create().show();
+        }else{
+            ActivityCompat.requestPermissions((Activity) context, new String[] {Manifest.permission.CAMERA}, Constants.CAMERA_PERMISSION_CODE);
+        }
+    }
+
+    public static void requestLocationPermissions(Context context) {
+        ActivityCompat.requestPermissions((Activity)context, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, Constants.LOCATION_PERMISSION_CODE);
+    }
+
+    public static boolean checkLocationPermissions(Context context) {
+        if (ActivityCompat.checkSelfPermission((Activity)context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission((Activity)context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            return true;
+        }
+        return false;
+    }
+
+
 }

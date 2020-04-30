@@ -7,6 +7,7 @@ import com.panda.solar.Model.entities.CustList;
 import com.panda.solar.Model.entities.Customer;
 import com.panda.solar.Model.entities.CustomerMeta;
 import com.panda.solar.Model.entities.CustomerModel;
+import com.panda.solar.Model.entities.Village;
 import com.panda.solar.data.network.NetworkResponse;
 import com.panda.solar.data.network.PandaCoreAPI;
 import com.panda.solar.data.network.RetroService;
@@ -27,16 +28,15 @@ public class CustomerRetroRepository implements CustomerDAO {
     private PandaCoreAPI pandaCoreAPI = RetroService.getPandaCoreAPI();
     NetworkResponse netResponse = new NetworkResponse();
 
-
     @Override
     public MutableLiveData<List<Customer>> getCustomers(final ResponseCallBack callBack, int page, int size, String sortby, String sortorder){
 
-        Call<CustList> call = pandaCoreAPI.getAllCustomers(page, size, sortby, sortorder);
+        Call<List<Customer>> call = pandaCoreAPI.getAllCustomers(page, size, sortby, sortorder);
         final MutableLiveData<List<Customer>> customers = new MutableLiveData<>();
 
-        call.enqueue(new Callback<CustList>() {
+        call.enqueue(new Callback<List<Customer>>() {
             @Override
-            public void onResponse(Call<CustList> call, Response<CustList> response) {
+            public void onResponse(Call<List<Customer>> call, Response<List<Customer>> response) {
                 if(!response.isSuccessful()){
                     netResponse.setBody(response.message());
                     netResponse.setCode(response.code());
@@ -46,17 +46,44 @@ public class CustomerRetroRepository implements CustomerDAO {
                 }
                 callBack.onSuccess();
                 Log.e("YES CONNECTION","successful");
-                customers.postValue(response.body().getCustomers());
+                customers.postValue(response.body());
             }
 
             @Override
-            public void onFailure(Call<CustList> call, Throwable t) {
+            public void onFailure(Call<List<Customer>> call, Throwable t) {
                 callBack.onFailure();
                 Log.e("NO CONNECTION",t.getMessage());
                 return;
             }
         });
         return customers;
+    }
+
+    @Override
+    public MutableLiveData<List<Village>> getAllVillages(final ResponseCallBack callBack) {
+
+        final MutableLiveData<List<Village>> dataResult = new MutableLiveData<>();
+        Call<List<Village>> call = pandaCoreAPI.getAllVillages();
+
+        call.enqueue(new Callback<List<Village>>() {
+            @Override
+            public void onResponse(Call<List<Village>> call, Response<List<Village>> response) {
+                if(!response.isSuccessful()){
+                    NetworkResponse networkResponse = new NetworkResponse();
+                    callBack.onError(networkResponse);
+                    return;
+                }
+                callBack.onSuccess();
+                dataResult.postValue(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<List<Village>> call, Throwable t) {
+                callBack.onFailure();
+                return;
+            }
+        });
+        return dataResult;
     }
 
     @Override

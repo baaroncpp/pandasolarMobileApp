@@ -67,7 +67,7 @@ public class ProfileFragment extends Fragment {
         phoneNumber.setText("+"+Utils.insertCharacterForEveryNDistance(3, user.getPrimaryphone(), ' '));
         profile_status.setText(accountStatus(user.isIsactive()));
 
-        Picasso.with(getActivity()).load("https://homepages.cae.wisc.edu/~ece533/images/girl.png").into(profileView);
+        Picasso.with(getActivity()).load(user.getProfilepath()).fit().centerCrop().placeholder(R.drawable.ic_default_profile).error(R.drawable.ic_default_profile).into(profileView);
     }
 
     public void init(View view){

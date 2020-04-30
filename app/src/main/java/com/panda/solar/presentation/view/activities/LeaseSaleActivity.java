@@ -4,9 +4,15 @@ import android.app.ProgressDialog;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
+import android.location.Location;
+import android.location.LocationManager;
+import android.os.Looper;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
 import android.support.design.widget.TextInputEditText;
@@ -17,6 +23,13 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.panda.solar.Model.entities.Customer;
 import com.panda.solar.Model.entities.LeaseOffer;
 import com.panda.solar.Model.entities.LeaseSaleModel;
@@ -32,7 +45,7 @@ public class LeaseSaleActivity extends AppCompatActivity {
 
     private MaterialButton scanSerialNumberViewBtn;
     private TextInputEditText serialNumberView;
-    private MaterialButton setLocationBtn;
+    //private MaterialButton setLocationBtn;
     private MaterialButton leaseCustomerBtn;
     private TextInputEditText leaseSaleDescriptionView;
     private TextInputLayout leaseDescriptionWrapper;
@@ -46,6 +59,9 @@ public class LeaseSaleActivity extends AppCompatActivity {
     private Boolean productExists;
     private LiveData<String> responseMessage;
     private ProgressDialog progressDialog;
+    private double latitude;
+    private double longitude;
+    private FusedLocationProviderClient fusedLocationProviderClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,16 +69,17 @@ public class LeaseSaleActivity extends AppCompatActivity {
         setContentView(R.layout.activity_lease_sale);
 
         init();
+        getLastLocation();
 
         scanSerialNumberViewBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isCameraAvailable()) {
-                    Intent intent = new Intent(LeaseSaleActivity.this, BarCodeScanner.class);
-                    startActivityForResult(intent, Constants.ZBAR_SCANNER_REQUEST);
-                } else {
-                    Toast.makeText(LeaseSaleActivity.this, "Rear Facing Camera Unavailable", Toast.LENGTH_SHORT).show();
-                }
+            if (isCameraAvailable()) {
+                Intent intent = new Intent(LeaseSaleActivity.this, BarCodeScanner.class);
+                startActivityForResult(intent, Constants.ZBAR_SCANNER_REQUEST);
+            } else {
+                Toast.makeText(LeaseSaleActivity.this, "Rear Facing Camera Unavailable", Toast.LENGTH_SHORT).show();
+            }
             }
         });
 
@@ -77,10 +94,11 @@ public class LeaseSaleActivity extends AppCompatActivity {
         makeLeaseSaleBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(validateCustomerBtn() && validateDescriptionField() && validateLocationBtn() && validateSerialEditView()){
+                if(validateCustomerBtn() && validateDescriptionField() && validateSerialEditView()){
                     leaseSaleModel = new LeaseSaleModel();
                     leaseSaleModel.setAgentid(Utils.getSharedPreference(Constants.USER_ID));
-                    leaseSaleModel.setCordlat(56);
+                    leaseSaleModel.setCordlat((float)latitude);
+                    leaseSaleModel.setCordlong((float)longitude);
                     leaseSaleModel.setCustomerid(customerResult.getUserid());
                     leaseSaleModel.setDeviceserial(serialNumberView.getText().toString());
                     leaseSaleModel.setLeaseoffer(payGoProd.getLeaseOffer().getId());
@@ -166,7 +184,7 @@ public class LeaseSaleActivity extends AppCompatActivity {
         }
     }
 
-    public boolean validateLocationBtn(){
+   /* public boolean validateLocationBtn(){
         String text = setLocationBtn.getText().toString();
 
         if(!text.equalsIgnoreCase("Set Location")){
@@ -183,7 +201,7 @@ public class LeaseSaleActivity extends AppCompatActivity {
             Toast.makeText(this, "Please Set The Customer Location", Toast.LENGTH_SHORT).show();
             return true;
         }
-    }
+    }*/
 
     public boolean validateDescriptionField(){
         String text = leaseSaleDescriptionView.getText().toString();
@@ -220,13 +238,13 @@ public class LeaseSaleActivity extends AppCompatActivity {
 
         scanSerialNumberViewBtn = findViewById(R.id.scanner_button);
         serialNumberView = findViewById(R.id.lease_sale_serialnumber);
-        setLocationBtn = findViewById(R.id.set_location_button);
+        //setLocationBtn = findViewById(R.id.set_location_button);
         leaseSaleDescriptionView = findViewById(R.id.lease_sale_description);
         leaseCustomerBtn = findViewById(R.id.add_lease_customer_button);
         leaseDescriptionWrapper = findViewById(R.id.description_text_wrapper);
         serialNumberTextWrapper = findViewById(R.id.serialnumber_text_wrapper);
         makeLeaseSaleBtn = findViewById(R.id.submit_lease_sale_btn);
-
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         progressDialog = Utils.customerProgressBar(this);
     }
 
@@ -278,5 +296,74 @@ public class LeaseSaleActivity extends AppCompatActivity {
     public boolean isCameraAvailable() {
         PackageManager pm = getPackageManager();
         return pm.hasSystemFeature(PackageManager.FEATURE_CAMERA);
+    }
+
+    private boolean isLocationEnabled() {
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+    }
+
+    private LocationCallback locationCallback = new LocationCallback() {
+        @Override
+        public void onLocationResult(LocationResult locationResult) {
+            Location lastLocation = locationResult.getLastLocation();
+
+            latitude = lastLocation.getLatitude();
+            longitude = lastLocation.getLongitude();
+        }
+    };
+
+    private void getLastLocation(){
+        if (Utils.checkLocationPermissions(this)) {
+            if (isLocationEnabled()) {
+                fusedLocationProviderClient.getLastLocation().addOnCompleteListener(
+                        new OnCompleteListener<Location>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Location> task) {
+                                Location location = task.getResult();
+                                if (location == null) {
+                                    requestNewLocationData();
+                                } else {
+                                    latitude = location.getLatitude();
+                                    longitude = location.getLongitude();
+                                }
+                            }
+                        }
+                );
+            } else {
+                Toast.makeText(this, "Turn on location", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(intent);
+            }
+        } else {
+            Utils.requestLocationPermissions(this);
+        }
+    }
+
+    private void requestNewLocationData(){
+
+        LocationRequest mLocationRequest = new LocationRequest();
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mLocationRequest.setInterval(0);
+        mLocationRequest.setFastestInterval(0);
+        mLocationRequest.setNumUpdates(1);
+
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        fusedLocationProviderClient.requestLocationUpdates(
+                mLocationRequest, locationCallback,
+                Looper.myLooper()
+        );
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == Constants.LOCATION_PERMISSION_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                getLastLocation();
+            }
+        }
     }
 }
