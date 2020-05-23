@@ -26,6 +26,8 @@ import com.panda.solar.Model.entities.User;
 import com.panda.solar.Model.entities.Village;
 
 import java.util.List;
+import java.util.Map;
+
 import io.reactivex.Observable;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -57,7 +59,7 @@ public interface PandaCoreAPI {
     Call<Token> bkLogin(@Body Login login);
 
     /*user endpoint*/
-    @GET("/v1/user/get/androiduser")
+    @GET("v1/user/get/androiduser")
     Call<User> getUser();
 
     @GET("/v1/user/get")
@@ -150,6 +152,13 @@ public interface PandaCoreAPI {
                                       @Query("sortby") String sortby,
                                       @Query("sortorder") String sortorder);
 
+    @GET("v1/sales/agent/salesum/{id}")
+    Call<Map<String, Integer>> agentSaleSum(@Path("id") String agentId);
+
+    @GET("v1/sales/customer/salesum/{id}")
+    Call<Map<String, Integer>> customerSaleSum(@Path("id") String customerId);
+
+
     /*Lease offer*/
     @GET("v1/leaseoffer/get")
     Call<List<LeaseOffer>> getLeaseOffers();
@@ -159,7 +168,7 @@ public interface PandaCoreAPI {
     Call<UploadLinks> getUploadLinks(@Path("usertype") String usertype, @Path("id") String id);
 
     @Multipart
-    @POST("/v1/customermeta/uploads/{id}")
+    @POST("v1/customermeta/uploads/{id}")
     Call<FileResponse> uploadCustomerFile(@Path("id")String id, @Part MultipartBody.Part file, @Part("uploadType") RequestBody requestBody);
 
     @GET("v1/region/village/get/all")

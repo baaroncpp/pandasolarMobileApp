@@ -38,6 +38,7 @@ public class UserViewModel extends ViewModel {
             @Override
             public void onError(NetworkResponse response) {
                 responseMessage.postValue(Constants.ERROR_RESPONSE);
+                networkResponse.postValue(response);
             }
         });
     }

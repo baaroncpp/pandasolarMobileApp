@@ -3,6 +3,9 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_login">LoginActivity</string>
 
+    <string name="main_notification_channel_name">panda_solar_notification_channel</string>
+    <string name="panda_sale">Panda Sale</string>
+
     <string name="customer">Customers</string>
     <string name="agent">Agent</string>
     <string name="email">Email</string>

@@ -10,20 +10,22 @@ import com.panda.solar.Model.entities.SaleModel;
 import com.panda.solar.utils.ResponseCallBack;
 
 import java.util.List;
-
-import retrofit2.Response;
-
+import java.util.Map;
 
 public interface SaleDAO {
 
-    public MutableLiveData<LeaseSale> makeLeaseSale(ResponseCallBack callBack, LeaseSaleModel leaseSaleModel);
+    MutableLiveData<LeaseSale> makeLeaseSale(ResponseCallBack callBack, LeaseSaleModel leaseSaleModel);
 
-    public MutableLiveData<Sale> makeDirectSale(ResponseCallBack callBack, DirectSaleModel directSaleModel);
+    MutableLiveData<Sale> makeDirectSale(ResponseCallBack callBack, DirectSaleModel directSaleModel);
 
-    public MutableLiveData<List<SaleModel>> getSalesByAgent(ResponseCallBack callBack, String id, int page, int size, String sortby, String sortorder);
+    MutableLiveData<List<SaleModel>> getSalesByAgent(ResponseCallBack callBack, String id, int page, int size, String sortby, String sortorder);
 
-    public MutableLiveData<List<SaleModel>> getAllSales(ResponseCallBack callBack, int page, int size, String sortby, String sortorder);
+    MutableLiveData<List<SaleModel>> getAllSales(ResponseCallBack callBack, int page, int size, String sortby, String sortorder);
 
-    public MutableLiveData<Sale> approveSale(ResponseCallBack callBack, String id, String approveStatus, String reviewDescription);
+    MutableLiveData<Sale> approveSale(ResponseCallBack callBack, String id, String approveStatus, String reviewDescription);
+
+    MutableLiveData<Map<String ,Integer>> agentSalesSum(ResponseCallBack callBack, String agentId);
+
+    MutableLiveData<Map<String ,Integer>> customerSalesSum(ResponseCallBack callBack, String customerId);
 
 }

@@ -50,6 +50,7 @@ public class LoginActivity extends AppCompatActivity/* implements View.OnClickLi
     private LiveData<NetworkResponse> networkResponseLiveData;
     private Token token;
     private boolean isTokenStored;
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,11 +64,6 @@ public class LoginActivity extends AppCompatActivity/* implements View.OnClickLi
             getSupportActionBar().hide();
         }
 
-        /*Utils.appPermissions(this, Constants.READ_STORAGE_PERMISSION_CODE);
-
-        Utils.appPermissions(this, Constants.WRITE_STORAGE_PERMISSION_CODE);
-
-        Utils.appPermissions(this, Constants.CAMERA_PERMISSION_CODE);*/
 
         int ALL_PERMISSIONS = 101;
 
@@ -88,7 +84,6 @@ public class LoginActivity extends AppCompatActivity/* implements View.OnClickLi
 
     public void init(){
 
-        //checkAppPermissions();
         progressDialog = Utils.customerProgressBar(this);
 
         loginButton = (Button)findViewById(R.id.login_button);
@@ -96,6 +91,9 @@ public class LoginActivity extends AppCompatActivity/* implements View.OnClickLi
         loginPasswordEditTxt = (EditText)findViewById(R.id.login_password);
         forgotPasswordTextView = (TextView)findViewById(R.id.forgot_password_text);
         userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
+
+        sharedPreferences = AppContext.getAppContext().getSharedPreferences(Constants.SHARED_PREF, MODE_PRIVATE);
+
 
         token = new Token();
     }
@@ -174,11 +172,15 @@ public class LoginActivity extends AppCompatActivity/* implements View.OnClickLi
 
     public void handleResponse(String msg){
         if(msg.equals(Constants.SUCCESS_RESPONSE) && token != null){
-            if(isTokenStored) {
-                startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+
+            if(!Utils.isSharedPreferenceSet(this) && isTokenStored){
+                getUserDetails();
+            }else{
                 progressDialog.dismiss();
-                //getUserDetails();
-            }else{progressDialog.dismiss();}
+                Toast.makeText(this,"FAILED, TRY AGAIN", Toast.LENGTH_LONG).show();
+            }
+
+
         }else if(msg.equals(Constants.ERROR_RESPONSE)){
             progressDialog.dismiss();
             Toast.makeText(this,"BAD CREDENTIALS TRY AGAIN", Toast.LENGTH_LONG).show();
@@ -206,7 +208,7 @@ public class LoginActivity extends AppCompatActivity/* implements View.OnClickLi
         liveUser.observe(this, new Observer<User>() {
             @Override
             public void onChanged(@Nullable User user) {
-                saveUserDetails(user);
+                Utils.saveUserDetails(user);
             }
         });
 
@@ -236,11 +238,11 @@ public class LoginActivity extends AppCompatActivity/* implements View.OnClickLi
     public boolean saveJWT(Token token){
 
         if(token != null){
-            SharedPreferences sharedPreferences = AppContext.getAppContext().getSharedPreferences(Constants.SHARED_PREF, MODE_PRIVATE);
+            //SharedPreferences sharedPreferences = AppContext.getAppContext().getSharedPreferences(Constants.SHARED_PREF, MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
 
             editor.putString(Constants.JWT_TOKEN, token.getToken());
-            editor.apply();
+            editor.commit();
 
             return true;
         }else {
@@ -248,20 +250,5 @@ public class LoginActivity extends AppCompatActivity/* implements View.OnClickLi
         }
     }
 
-    public void saveUserDetails(User user){
-        SharedPreferences sharedPreferences = AppContext.getAppContext().getSharedPreferences(Constants.SHARED_PREF, MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        editor.putString(Constants.USER_ID, user.getId());
-        editor.putString(Constants.USER_TYPE, user.getUsertype());
-        editor.apply();
-    }
-
-    public void clearJWT(){
-        SharedPreferences sharedPreferences = AppContext.getAppContext().getSharedPreferences(Constants.SHARED_PREF, MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-
-        editor.putString(Constants.JWT_TOKEN, "");
-        editor.apply();
-    }
 }

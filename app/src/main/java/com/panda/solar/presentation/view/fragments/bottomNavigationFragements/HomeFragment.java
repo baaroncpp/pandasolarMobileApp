@@ -10,7 +10,11 @@ import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
+import com.panda.solar.Model.entities.AgentMeta;
+import com.panda.solar.Model.entities.SaleModel;
+import com.panda.solar.Model.entities.User;
 import com.panda.solar.presentation.view.activities.AddCustomer;
 import com.panda.solar.presentation.view.activities.CustomerList;
 import com.panda.solar.activities.R;
@@ -20,6 +24,7 @@ import com.panda.solar.presentation.view.activities.PaymentsList;
 import com.panda.solar.presentation.view.activities.ProductListDashBoard;
 import com.panda.solar.presentation.view.activities.SalesList;
 import com.panda.solar.presentation.view.activities.StockManagementActivity;
+import com.panda.solar.utils.NotificationsUtil;
 
 public class HomeFragment extends Fragment {
 
@@ -29,6 +34,7 @@ public class HomeFragment extends Fragment {
     private CardView paymentsCard;
     private CardView customerCard;
     private CardView leaseOfferCard;
+    private Button notify;
 
     public HomeFragment() { }
 
@@ -85,6 +91,28 @@ public class HomeFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), PaymentsList.class);
                 startActivity(intent);
+            }
+        });
+
+        notify = view.findViewById(R.id.notify_btn);
+
+
+        User user = new User();
+        user.setFirstname("Bukenya");
+        user.setLastname("Aaron");
+
+        AgentMeta agentMeta = new AgentMeta();
+        agentMeta.setUser(user);
+
+        final SaleModel saleModel = new SaleModel();
+
+        saleModel.setAgent(agentMeta);
+        saleModel.setSaletype("Lease");
+
+        notify.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NotificationsUtil.notifyOnNewSale(getActivity(), saleModel);
             }
         });
 

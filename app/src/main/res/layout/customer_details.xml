@@ -250,12 +250,13 @@
                         </RelativeLayout>
 
                         <TextView
+                            android:id="@+id/customer_leasesales_sum"
                             android:layout_width="1dp"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
                             android:fontFamily="sans-serif"
                             android:gravity="center_vertical"
-                            android:text="4 lease sales"
+                            android:text="0 lease sales"
                             android:textColor="@color/dark_grey"
                             android:textSize="14sp" />
 
@@ -281,12 +282,13 @@
 
 
                         <TextView
+                            android:id="@+id/customer_directsales_sum"
                             android:layout_width="1dp"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
                             android:fontFamily="sans-serif"
                             android:gravity="center_vertical"
-                            android:text="2 direct sales"
+                            android:text="0 direct sales"
                             android:textColor="@color/dark_grey"
                             android:textSize="14sp" />
 

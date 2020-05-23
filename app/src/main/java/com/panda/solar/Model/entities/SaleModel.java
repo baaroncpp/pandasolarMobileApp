@@ -144,4 +144,68 @@ public class SaleModel implements Parcelable {
     public CustomerMeta getCustomer() {
         return customer;
     }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setSaletype(String saletype) {
+        this.saletype = saletype;
+    }
+
+    public void setAmount(float amount) {
+        this.amount = amount;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setScannedserial(String scannedserial) {
+        this.scannedserial = scannedserial;
+    }
+
+    public void setAgentcommission(float agentcommission) {
+        this.agentcommission = agentcommission;
+    }
+
+    public void setAgent(AgentMeta agent) {
+        this.agent = agent;
+    }
+
+    public void setLong_(float long_) {
+        this.long_ = long_;
+    }
+
+    public void setLat(float lat) {
+        this.lat = lat;
+    }
+
+    public void setIsreviewed(boolean isreviewed) {
+        this.isreviewed = isreviewed;
+    }
+
+    public void setSalestatus(short salestatus) {
+        this.salestatus = salestatus;
+    }
+
+    public void setCreatedon(Date createdon) {
+        this.createdon = createdon;
+    }
+
+    public void setCompletedon(Date completedon) {
+        this.completedon = completedon;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public void setCustomer(CustomerMeta customer) {
+        this.customer = customer;
+    }
 }

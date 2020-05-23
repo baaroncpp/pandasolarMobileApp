@@ -15,10 +15,12 @@ import com.panda.solar.utils.Constants;
 import com.panda.solar.utils.ResponseCallBack;
 
 import java.util.List;
+import java.util.Map;
 
 public class SaleViewModel extends ViewModel {
 
     private MutableLiveData<String> responseMessage = new MutableLiveData<>();
+    private MutableLiveData<NetworkResponse> networkResponse = new MutableLiveData<>();
     SaleDAO saleDAO = PandaDAOFactory.getSaleDAO();
 
     public LiveData<Sale> makeDirectPayGoSale(DirectSaleModel directSaleModel){
@@ -116,8 +118,50 @@ public class SaleViewModel extends ViewModel {
         }, saleId, approveStatus, reviewDescription);
     }
 
+    public LiveData<Map<String, Integer>> getCustomerSalesSum(String customerId){
+        return saleDAO.customerSalesSum(new ResponseCallBack() {
+            @Override
+            public void onSuccess() {
+                responseMessage.postValue(Constants.SUCCESS_RESPONSE);
+            }
+
+            @Override
+            public void onFailure() {
+                responseMessage.postValue(Constants.FAILURE_RESPONSE);
+            }
+
+            @Override
+            public void onError(NetworkResponse response) {
+                responseMessage.postValue(Constants.ERROR_RESPONSE);
+                networkResponse.postValue(response);
+            }
+        }, customerId);
+    }
+
+    public LiveData<Map<String, Integer>> getAgentSalesSum(String agentId){
+        return saleDAO.agentSalesSum(new ResponseCallBack() {
+            @Override
+            public void onSuccess() {
+                responseMessage.postValue(Constants.SUCCESS_RESPONSE);
+            }
+
+            @Override
+            public void onFailure() {
+                responseMessage.postValue(Constants.FAILURE_RESPONSE);
+            }
+
+            @Override
+            public void onError(NetworkResponse response) {
+                responseMessage.postValue(Constants.ERROR_RESPONSE);
+                networkResponse.postValue(response);
+            }
+        }, agentId);
+    }
+
     public LiveData<String> getResponseMessage(){
         return responseMessage;
     }
+
+    public LiveData<NetworkResponse> getNetworkResponse(){return networkResponse;}
 
 }

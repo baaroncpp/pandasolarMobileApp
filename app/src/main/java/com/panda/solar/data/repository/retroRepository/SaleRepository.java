@@ -6,15 +6,15 @@ import com.panda.solar.Model.entities.DirectSaleModel;
 import com.panda.solar.Model.entities.LeaseSale;
 import com.panda.solar.Model.entities.LeaseSaleModel;
 import com.panda.solar.Model.entities.Sale;
-import com.panda.solar.Model.entities.SaleList;
 import com.panda.solar.Model.entities.SaleModel;
 import com.panda.solar.data.network.NetworkResponse;
 import com.panda.solar.data.network.PandaCoreAPI;
 import com.panda.solar.data.network.RetroService;
-import com.panda.solar.utils.Constants;
 import com.panda.solar.utils.ResponseCallBack;
 
 import java.util.List;
+import java.util.Map;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -180,5 +180,63 @@ public class SaleRepository implements SaleDAO{
             }
         });
         return dataResult;
+    }
+
+    @Override
+    public MutableLiveData<Map<String, Integer>> agentSalesSum(final ResponseCallBack callBack, String agentId) {
+
+        final MutableLiveData<Map<String, Integer>> resultData = new MutableLiveData<>();
+        Call<Map<String, Integer>> call = pandaCoreAPI.agentSaleSum(agentId);
+
+        call.enqueue(new Callback<Map<String, Integer>>() {
+            @Override
+            public void onResponse(Call<Map<String, Integer>> call, Response<Map<String, Integer>> response) {
+                if(!response.isSuccessful()){
+                    NetworkResponse netResponse = new NetworkResponse();
+                    netResponse.setBody(response.errorBody().toString());
+                    netResponse.setCode(response.code());
+                    callBack.onError(netResponse);
+                    return;
+                }
+                resultData.postValue(response.body());
+                callBack.onSuccess();
+            }
+
+            @Override
+            public void onFailure(Call<Map<String, Integer>> call, Throwable t) {
+                callBack.onFailure();
+                return;
+            }
+        });
+        return resultData;
+    }
+
+    @Override
+    public MutableLiveData<Map<String, Integer>> customerSalesSum(final ResponseCallBack callBack, String customerId) {
+
+        final MutableLiveData<Map<String, Integer>> resultData = new MutableLiveData<>();
+        Call<Map<String, Integer>> call = pandaCoreAPI.customerSaleSum(customerId);
+
+        call.enqueue(new Callback<Map<String, Integer>>() {
+            @Override
+            public void onResponse(Call<Map<String, Integer>> call, Response<Map<String, Integer>> response) {
+                if(!response.isSuccessful()){
+                    NetworkResponse netResponse = new NetworkResponse();
+                    netResponse.setCode(response.code());
+                    netResponse.setBody(response.errorBody().toString());
+                    callBack.onError(netResponse);
+                    return;
+                }
+                resultData.postValue(response.body());
+                callBack.onSuccess();
+            }
+
+            @Override
+            public void onFailure(Call<Map<String, Integer>> call, Throwable t) {
+                callBack.onFailure();
+                return;
+            }
+        });
+        return resultData;
     }
 }

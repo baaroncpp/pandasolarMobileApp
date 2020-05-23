@@ -20,10 +20,11 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class RetroService {
 
-    private static final String BASE_URL = "http://10.42.0.1:8993";
-    private static String token = getToken();
+    private static String token;// = getToken();
 
     private static Retrofit getRetroInstance(){
+
+        token = getToken();
 
         OkHttpClient client = new OkHttpClient.Builder()
                 .connectTimeout(20, TimeUnit.SECONDS)
@@ -31,16 +32,16 @@ public class RetroService {
                 .readTimeout(30, TimeUnit.SECONDS)
                 .addInterceptor(new Interceptor() {
 
-            @Override
-            public Response intercept(Chain chain) throws IOException {
-                Request newRequest  = chain.request().newBuilder()
-                        .addHeader("Authorization", "Bearer " + token)
-                        .build();
-                return chain.proceed(newRequest);
-            }
-        }).build();
+                    @Override
+                    public Response intercept(Chain chain) throws IOException {
+                        Request newRequest  = chain.request().newBuilder()
+                                .addHeader("Authorization", "Bearer " + token)
+                                .build();
+                        return chain.proceed(newRequest);
+                    }
+                }).build();
 
-        return new Retrofit.Builder().baseUrl(BASE_URL)
+        return new Retrofit.Builder().baseUrl(Constants.BASE_URL)
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
@@ -52,7 +53,7 @@ public class RetroService {
 
     public static String getToken(){
         SharedPreferences sharedPreferences = AppContext.getAppContext().getSharedPreferences(Constants.SHARED_PREF, MODE_PRIVATE);
-        return sharedPreferences.getString(Constants.JWT_TOKEN, null);
+        return sharedPreferences.getString(Constants.JWT_TOKEN, "");
     }
 
 }

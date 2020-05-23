@@ -19,8 +19,11 @@ import com.panda.solar.activities.R;
 import com.panda.solar.presentation.view.activities.HomeActivity;
 import com.panda.solar.utils.Constants;
 import com.panda.solar.utils.Utils;
+import com.panda.solar.viewModel.SaleViewModel;
 import com.panda.solar.viewModel.UserViewModel;
 import com.squareup.picasso.Picasso;
+
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -34,6 +37,8 @@ public class ProfileFragment extends Fragment {
     private TextView email;
     private TextView phoneNumber;
     private TextView profile_status;
+    private TextView directSales;
+    private TextView leaseSales;
     private CircleImageView profileView;
     private TextView userType;
     private LiveData<String> responseMessage;
@@ -68,6 +73,8 @@ public class ProfileFragment extends Fragment {
         profile_status.setText(accountStatus(user.isIsactive()));
 
         Picasso.with(getActivity()).load(user.getProfilepath()).fit().centerCrop().placeholder(R.drawable.ic_default_profile).error(R.drawable.ic_default_profile).into(profileView);
+
+        setSaleValues(user.getId());
     }
 
     public void init(View view){
@@ -78,6 +85,8 @@ public class ProfileFragment extends Fragment {
         profile_status = view.findViewById(R.id.profile_status);
         dialog = Utils.customerProgressBar(getActivity());
         profileView = view.findViewById(R.id.user_profile_view);
+        leaseSales = view.findViewById(R.id.agent_leasesale_sum);
+        directSales = view.findViewById(R.id.agent_directsale_sum);
     }
 
     public void observeResponse(){
@@ -108,5 +117,18 @@ public class ProfileFragment extends Fragment {
         }else{
             return "Not Active";
         }
+    }
+
+    public void setSaleValues(String agentId){
+        SaleViewModel saleViewModel = ViewModelProviders.of(this).get(SaleViewModel.class);
+        LiveData<Map<String, Integer>> salesValues = saleViewModel.getAgentSalesSum(agentId);
+
+        salesValues.observe(this, new Observer<Map<String, Integer>>() {
+            @Override
+            public void onChanged(@Nullable Map<String, Integer> stringIntegerMap) {
+                leaseSales.setText(stringIntegerMap.get("LEASE").toString());
+                directSales.setText(stringIntegerMap.get("DIRECT").toString());
+            }
+        });
     }
 }

@@ -63,7 +63,7 @@ public class HomeActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        dialog = Utils.customerProgressBar(this);
+        /*dialog = Utils.customerProgressBar(this);
         dialog.show();
 
         userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
@@ -73,7 +73,7 @@ public class HomeActivity extends AppCompatActivity
             public void onChanged(@Nullable User user) {
                 saveUserDetails(user);
             }
-        });
+        });*/
 
         fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -83,7 +83,7 @@ public class HomeActivity extends AppCompatActivity
             }
         });
 
-        observeResponse();
+        //observeResponse();
 
         BottomNavigationView bottomNav = (BottomNavigationView)findViewById(R.id.bottom_navigation_bar);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
@@ -92,7 +92,7 @@ public class HomeActivity extends AppCompatActivity
 
     }
 
-    public void observeResponse(){
+    /*public void observeResponse(){
         responseMessage = userViewModel.getResponseMessage();
         responseMessage.observe(this, new Observer<String>() {
             @Override
@@ -114,7 +114,7 @@ public class HomeActivity extends AppCompatActivity
             dialog.dismiss();
             Toast.makeText(this,"CONNECTION ERROR, TRY AGAIN", Toast.LENGTH_LONG).show();
         }
-    }
+    }*/
 
     private void saleTypeProductDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -320,7 +320,7 @@ public class HomeActivity extends AppCompatActivity
         }
     }
 
-    public void saveUserDetails(User user){
+    /*public void saveUserDetails(User user){
         SharedPreferences sharedPreferences = AppContext.getAppContext().getSharedPreferences(Constants.SHARED_PREF, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
@@ -328,5 +328,5 @@ public class HomeActivity extends AppCompatActivity
         editor.putString(Constants.USER_TYPE, user.getUsertype());
         editor.apply();
     }
-
+*/
 }

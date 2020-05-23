@@ -73,29 +73,11 @@ public class UploadLinkReposotory implements UploadLinkDAO {
         return dataResult;
     }
 
-    /*public String getPath(Uri uri) {
-        String[] projection = { MediaStore.Images.Media.DATA };
-        Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
-        if (cursor == null) return null;
-        int column_index =             cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        cursor.moveToFirst();
-        String s=cursor.getString(column_index);
-        cursor.close();
-        return s;
-    }
-*/
     @Override
-    public MutableLiveData<FileResponse> uploadFile(final ResponseCallBack callBack, String id, Uri uri, String uploadType) {
-
-        File file = new File(uri.getPath());
-
-        final RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), file);
-        MultipartBody.Part part = MultipartBody.Part.createFormData("upload", file.getName(), requestBody);
-
-        RequestBody ut = RequestBody.create(MediaType.parse("text/plain"), uploadType);
+    public MutableLiveData<FileResponse> uploadFile(final ResponseCallBack callBack, String id, MultipartBody.Part fileBody, RequestBody uploadType) {
 
         final MutableLiveData<FileResponse> dataResult = new MutableLiveData<>();
-        Call<FileResponse> call = pandaCoreAPI.uploadCustomerFile(id, part, ut);
+        Call<FileResponse> call = pandaCoreAPI.uploadCustomerFile(id, fileBody, uploadType);
 
         call.enqueue(new Callback<FileResponse>() {
             @Override

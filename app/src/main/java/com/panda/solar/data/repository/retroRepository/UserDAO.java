@@ -13,16 +13,16 @@ import retrofit2.Response;
 
 public interface UserDAO {
 
-    public MutableLiveData<Token> authenticateUser(ResponseCallBack callBack, Login login);
+    MutableLiveData<Token> authenticateUser(ResponseCallBack callBack, Login login);
 
-    public MutableLiveData<User> addUser(ResponseCallBack callBack, User user);
+    MutableLiveData<User> addUser(ResponseCallBack callBack, User user);
 
-    public MutableLiveData<User> getUserById(String id);
+    MutableLiveData<User> getUserById(String id);
 
-    public MutableLiveData<User> getUser(ResponseCallBack callBack);
+    MutableLiveData<User> getUser(ResponseCallBack callBack);
 
-    public MutableLiveData<List<User>> getUsers(String userType, int page, int size, String sortby, String sortorder);
+    MutableLiveData<List<User>> getUsers(String userType, int page, int size, String sortby, String sortorder);
 
-    public MutableLiveData<User> updateUser(User user);
+    MutableLiveData<User> updateUser(User user);
 
 }

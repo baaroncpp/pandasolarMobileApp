@@ -175,4 +175,88 @@ public class AgentMeta implements Parcelable {
         dest.writeString(coipath);
         dest.writeString(idnumber);
     }
+
+    public void setUserid(String userid) {
+        this.userid = userid;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setProfilepath(String profilepath) {
+        this.profilepath = profilepath;
+    }
+
+    public void setContractdocpath(String contractdocpath) {
+        this.contractdocpath = contractdocpath;
+    }
+
+    public void setVillageid(int villageid) {
+        this.villageid = villageid;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public void setCreatedon(Date createdon) {
+        this.createdon = createdon;
+    }
+
+    public void setAgentcommissionrate(float agentcommissionrate) {
+        this.agentcommissionrate = agentcommissionrate;
+    }
+
+    public void setIsdeactivated(boolean isdeactivated) {
+        this.isdeactivated = isdeactivated;
+    }
+
+    public void setDeactivatedon(Date deactivatedon) {
+        this.deactivatedon = deactivatedon;
+    }
+
+    public void setIsactive(boolean isactive) {
+        this.isactive = isactive;
+    }
+
+    public void setActivatedon(Date activatedon) {
+        this.activatedon = activatedon;
+    }
+
+    public void setShoplong(float shoplong) {
+        this.shoplong = shoplong;
+    }
+
+    public void setShoplat(float shoplat) {
+        this.shoplat = shoplat;
+    }
+
+    public void setCompanyname(String companyname) {
+        this.companyname = companyname;
+    }
+
+    public void setPostaladdress(String postaladdress) {
+        this.postaladdress = postaladdress;
+    }
+
+    public void setTinnumber(String tinnumber) {
+        this.tinnumber = tinnumber;
+    }
+
+    public void setCoipath(String coipath) {
+        this.coipath = coipath;
+    }
+
+    public void setAgenttype(AgentType agenttype) {
+        this.agenttype = agenttype;
+    }
+
+    public void setIdtype(IdType idtype) {
+        this.idtype = idtype;
+    }
+
+    public void setIdnumber(String idnumber) {
+        this.idnumber = idnumber;
+    }
 }

@@ -17,11 +17,13 @@ import android.widget.Toast;
 
 import com.panda.solar.Model.entities.Sale;
 import com.panda.solar.Model.entities.SaleModel;
+import com.panda.solar.Model.entities.User;
 import com.panda.solar.activities.R;
 import com.panda.solar.presentation.adapters.SalesAdapter;
 import com.panda.solar.utils.Constants;
 import com.panda.solar.utils.Utils;
 import com.panda.solar.viewModel.SaleViewModel;
+import com.panda.solar.viewModel.UserViewModel;
 
 import java.util.List;
 
@@ -36,6 +38,7 @@ public class SalesList extends AppCompatActivity {
     private TextView errorView;
     private ProgressDialog progressDialog;
     private LiveData<String> errorMsgLive;
+    private String userType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +55,11 @@ public class SalesList extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        String userType = Utils.getSharedPreference(Constants.USER_TYPE);
+        if(Utils.getSharedPreference(Constants.USER_TYPE).equals("")){
+            getUserDetails();
+        }
+
+        userType = Utils.getSharedPreference(Constants.USER_TYPE);
 
         saleViewModel = ViewModelProviders.of(this).get(SaleViewModel.class);
 
@@ -130,5 +137,36 @@ public class SalesList extends AppCompatActivity {
 
             Toast.makeText(this,"CONNECTION FAILURE", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void getUserDetails(){
+
+        UserViewModel uViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
+        LiveData<User> liveUser = uViewModel.getUser();
+        liveUser.observe(this, new Observer<User>() {
+            @Override
+            public void onChanged(@Nullable User user) {
+                Utils.saveUserDetails(user);
+            }
+        });
+
+        LiveData<String> response2 = uViewModel.getResponseMessage();
+        response2.observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable String s) {
+
+                if(s.equals(Constants.ERROR_RESPONSE)){
+                    finish();
+                    Toast.makeText(SalesList.this,"BAD CREDENTIALS TRY AGAIN", Toast.LENGTH_LONG).show();
+                }else if(s.equals(Constants.FAILURE_RESPONSE)){
+                    finish();
+                    Toast.makeText(SalesList.this,"CONNECTION FAILURE", Toast.LENGTH_LONG).show();
+                }else{
+                    finish();
+                    Toast.makeText(SalesList.this,"TRY AGAIN LATER", Toast.LENGTH_LONG).show();
+                }
+
+            }
+        });
     }
 }

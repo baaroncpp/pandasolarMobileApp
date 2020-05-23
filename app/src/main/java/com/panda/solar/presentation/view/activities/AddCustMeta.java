@@ -6,11 +6,12 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -21,13 +22,19 @@ import com.panda.solar.Model.entities.FileResponse;
 import com.panda.solar.activities.R;
 import com.panda.solar.data.network.NetworkResponse;
 import com.panda.solar.utils.Constants;
+import com.panda.solar.utils.FileUtil;
 import com.panda.solar.utils.Utils;
 import com.panda.solar.viewModel.UploadLinkViewModel;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 
 public class AddCustMeta extends AppCompatActivity {
 
@@ -99,6 +106,14 @@ public class AddCustMeta extends AppCompatActivity {
                 String upload = object.getKey();
                 Uri uri = object.getValue();
 
+                File file = null;
+
+                try {
+                    file  = FileUtil.from(this, uri);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
                 if(upload.equals(Constants.CUSTOMER_PROFILE_PATH)){
                     customerUploadType = CustomerUploadType.PROFILE.name();
                 }else if(upload.equals(Constants.CUSTOMER_COI_PATH)){
@@ -107,7 +122,12 @@ public class AddCustMeta extends AppCompatActivity {
                     customerUploadType = CustomerUploadType.ID_COPY.name();
                 }
 
-                fileResponseLiveData = uploadLinkViewModel.uploadFile(uri, customerUploadType, customerId);
+                RequestBody requestFile = RequestBody.create(MediaType.parse(getContentResolver().getType(uri)), file);
+                MultipartBody.Part fileBody = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
+
+                RequestBody uploadType = RequestBody.create(MultipartBody.FORM, customerUploadType);
+
+                fileResponseLiveData = uploadLinkViewModel.uploadFile(customerId, fileBody, uploadType);
                 fileResponseLiveData.observe(this, new Observer<FileResponse>() {
                     @Override
                     public void onChanged(@Nullable FileResponse fileResponse) {
@@ -181,6 +201,29 @@ public class AddCustMeta extends AppCompatActivity {
                 idFileName.setText(data.getData().getLastPathSegment());
             }
 
+        }
+    }
+
+    private class FileUploadTask extends AsyncTask<Map<String, Uri>, Integer, Void>{
+
+        @Override
+        protected Void doInBackground(Map<String, Uri>... maps) {
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
         }
     }
 }

@@ -121,8 +121,8 @@ public class UserRetroRepository implements UserDAO{
         Log.e("userRepository", "accessed");
         final MutableLiveData<User> pandaUser = new MutableLiveData<>();
 
-        Call<User> user = pandaCoreAPI.getUser();
-        user.enqueue(new Callback<User>() {
+        Call<User> call = pandaCoreAPI.getUser();
+        call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if(!response.isSuccessful()){

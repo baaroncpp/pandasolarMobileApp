@@ -10,9 +10,9 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
@@ -21,8 +21,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.app.ProgressDialog;
 
+import com.panda.solar.Model.entities.User;
 import com.panda.solar.activities.R;
-import com.panda.solar.presentation.view.activities.CustomerList;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -191,6 +191,20 @@ public class Utils {
         return sharedPreferences.getString(val, null);
     }
 
+    public static boolean isSharedPreferenceSet(Context context){
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        return (sharedPref.getAll().size() >= 1);
+    }
+
+    public static void saveUserDetails(User user){
+        SharedPreferences sharedPreferences = AppContext.getAppContext().getSharedPreferences(Constants.SHARED_PREF, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putString(Constants.USER_ID, user.getId());
+        editor.putString(Constants.USER_TYPE, user.getUsertype());
+        editor.commit();
+    }
+
     public static void appPermissions(Context context, int requestCode){
 
         switch (requestCode){
@@ -298,6 +312,4 @@ public class Utils {
         }
         return false;
     }
-
-
 }

@@ -45,9 +45,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/user_profile"
             android:layout_centerHorizontal="true"
-            android:text="Bukenya Aaron"
+            android:text=""
             android:textColor="#ffffff"
-            android:textSize="32sp" />
+            android:textSize="30sp" />
 
         <TextView
             android:id="@+id/user_type"
@@ -86,10 +86,11 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/agent_directsale_sum"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="#ffffff"
-                    android:text="456"
+                    android:text="0"
                     android:textSize="25sp"
                     android:fontFamily="sans-serif-light"/>
 
@@ -123,10 +124,11 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/agent_leasesale_sum"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="#ffffff"
-                    android:text="456"
+                    android:text="0"
                     android:textSize="25sp"
                     android:fontFamily="sans-serif-light"/>
 

@@ -48,7 +48,7 @@ public class Constants {
     public static final int PRODUCT_LIST_SALE = 4;
     public static final int PRODUCT_LIST_DASH = 5;
 
-    public static final String SHARED_PREF = "shared_pref";
+    public static final String SHARED_PREF = "com.pandasolar.shared_pref_key";
     public static final String JWT_TOKEN = "jwt_token";
     public static final String USER_ID = "user_id";
     public static final String USER_TYPE = "user_type";
