@@ -4,9 +4,11 @@ import android.app.ProgressDialog;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -22,6 +24,7 @@ import com.panda.solar.Model.entities.PayGoProduct;
 import com.panda.solar.Model.entities.Product;
 import com.panda.solar.Model.entities.Sale;
 import com.panda.solar.activities.R;
+import com.panda.solar.data.network.NetworkResponse;
 import com.panda.solar.utils.Constants;
 import com.panda.solar.utils.Utils;
 import com.panda.solar.viewModel.SaleViewModel;
@@ -86,19 +89,19 @@ public class SaleReview extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                //sweetAlertDialog.show();
                 progressDialog.show();
-                leaseSaleLive = saleViewModel.makeLeaseSale(leaseSaleModel);
+                LiveData<LeaseSale> leaseSaleLive = saleViewModel.makeLeaseSale(leaseSaleModel);
 
                 leaseSaleLive.observe(SaleReview.this, new Observer<LeaseSale>() {
                     @Override
                     public void onChanged(@Nullable LeaseSale leaseSale) {
                         leaseSaleResult = leaseSale;
                         if(leaseSale != null){
-                            observeResponse();
+                            //observeResponse();
                         }
                     }
                 });
+                observeResponse();
             }
         });
     }
@@ -121,14 +124,15 @@ public class SaleReview extends AppCompatActivity {
             public void onClick(View v) {
 
                 progressDialog.show();
-                saleLiveData = saleViewModel.makeDirectPayGoSale(directSaleModel);
+                LiveData<Sale> saleLiveData = saleViewModel.makeDirectPayGoSale(directSaleModel);
 
                 saleLiveData.observe(SaleReview.this, new Observer<Sale>() {
                     @Override
                     public void onChanged(@Nullable Sale sale) {
-                        observeResponse();
+                        //observeResponse();
                     }
                 });
+                observeResponse();
             }
         });
     }
@@ -144,7 +148,7 @@ public class SaleReview extends AppCompatActivity {
     }
 
     public void observeResponse(){
-        liveResponseMsg = saleViewModel.getResponseMessage();
+        LiveData<String> liveResponseMsg = saleViewModel.getResponseMessage();
         liveResponseMsg.observe(this, new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
@@ -160,11 +164,33 @@ public class SaleReview extends AppCompatActivity {
             progressDialog.dismiss();
             Toast.makeText(this,"SALE SUCCESSFULL", Toast.LENGTH_SHORT).show();
         }else if(message.equals(Constants.ERROR_RESPONSE)){
-            startActivity(intent);
+
+            LiveData<NetworkResponse> networkResponse = saleViewModel.getNetworkResponse();
+
+            networkResponse.observe(this, new Observer<NetworkResponse>() {
+                @Override
+                public void onChanged(@Nullable NetworkResponse response) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(SaleReview.this);
+                    builder.setTitle("Error");
+                    builder.setMessage(response.getBody());
+                    builder.setCancelable(false);
+                    builder.setPositiveButton("Ok", new DialogInterface.OnClickListener(){
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    });
+
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                }
+            });
+
             progressDialog.dismiss();
             Toast.makeText(this,"SOMETHING WENT WRONG !!!", Toast.LENGTH_SHORT).show();
         }else if(message.equals(Constants.FAILURE_RESPONSE)){
-            startActivity(intent);
+            //startActivity(intent);
             progressDialog.dismiss();
             Toast.makeText(this,"CONNECTION FAILURE", Toast.LENGTH_SHORT).show();
         }

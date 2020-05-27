@@ -12,6 +12,10 @@ import com.panda.solar.data.network.PandaCoreAPI;
 import com.panda.solar.data.network.RetroService;
 import com.panda.solar.utils.ResponseCallBack;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -37,7 +41,7 @@ public class SaleRepository implements SaleDAO{
 
         final MutableLiveData<LeaseSale> resultData = new MutableLiveData<>();
         Call<LeaseSale> leaseSale = pandaCoreAPI.makeLeaseSale(leaseSaleModel.getLeaseoffer(),
-                                                               leaseSaleModel.getAgentid(),
+                                                               //leaseSaleModel.getAgentid(),
                                                                leaseSaleModel.getCustomerid(),
                                                                leaseSaleModel.getCordlat(),
                                                                leaseSaleModel.getCordlong(),
@@ -47,7 +51,13 @@ public class SaleRepository implements SaleDAO{
             @Override
             public void onResponse(Call<LeaseSale> call, Response<LeaseSale> response) {
                 if(!response.isSuccessful()){
-                    netResponse.setBody(response.message());
+                    try {
+                        netResponse.setBody(new JSONObject(response.errorBody().string()).getString("error"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     netResponse.setCode(response.code());
                     callBack.onError(netResponse);
                     return;
@@ -77,7 +87,13 @@ public class SaleRepository implements SaleDAO{
             @Override
             public void onResponse(Call<Sale> call, Response<Sale> response) {
                 if(!response.isSuccessful()){
-                    netResponse.setBody(response.message());
+                    try {
+                        netResponse.setBody(new JSONObject(response.errorBody().string()).getString("error"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     netResponse.setCode(response.code());
                     callBack.onError(netResponse);
                     return;
@@ -164,7 +180,13 @@ public class SaleRepository implements SaleDAO{
             @Override
             public void onResponse(Call<Sale> call, Response<Sale> response) {
                 if(!response.isSuccessful()){
-                    netResponse.setBody(response.message());
+                    try {
+                        netResponse.setBody(new JSONObject(response.errorBody().string()).getString("error"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     netResponse.setCode(response.code());
                     callBack.onError(netResponse);
                     return;

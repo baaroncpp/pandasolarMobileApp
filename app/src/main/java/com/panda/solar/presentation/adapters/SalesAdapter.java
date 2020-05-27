@@ -14,6 +14,7 @@ import com.panda.solar.activities.R;
 import com.panda.solar.utils.Utils;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -85,15 +86,15 @@ public class SalesAdapter extends RecyclerView.Adapter<SalesAdapter.SalesViewHol
 
         //salesViewHolder.agentPic.setImageURI(null);
         salesViewHolder.productName.setText(currentSale.getProduct().getName());
-        salesViewHolder.agentName.setText(currentSale.getAgent().getUser().getFirstname()+" "+currentSale.getAgent().getUser().getLastname());
+        salesViewHolder.agentName.setText(currentSale.getCustomer().getUser().getFirstname()+" "+currentSale.getCustomer().getUser().getLastname());
         salesViewHolder.saleDetail.setText(currentSale.getSaletype()+" Sale");
         salesViewHolder.saleDate.setText(Utils.readableShortDate(currentSale.getCreatedon()));
         salesViewHolder.saleStatus.setText(Utils.saleStatus(currentSale.getSalestatus()));
 
         Picasso.with(context).load(currentSale.getAgent().getProfilepath()).fit().centerCrop().placeholder(R.drawable.ic_default_profile).error(R.drawable.ic_default_profile).into(salesViewHolder.agentPic);
 
-        if(currentSale.getSalestatus() == 2){
-            //salesViewHolder.saleStatus.setTextColor(android.R.color.holo_orange_light);
+        if(position == sales.size() - 1){
+            salesViewHolder.itemView.setPadding(0, 0, 0, 15);
         }
 
     }
@@ -101,6 +102,11 @@ public class SalesAdapter extends RecyclerView.Adapter<SalesAdapter.SalesViewHol
     @Override
     public int getItemCount() {
         return sales.size();
+    }
+
+    public void filterList(List<SaleModel> filteredList){
+        sales = filteredList;
+        notifyDataSetChanged();
     }
 
 }

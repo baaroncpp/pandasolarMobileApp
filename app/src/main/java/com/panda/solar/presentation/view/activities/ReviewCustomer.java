@@ -133,8 +133,6 @@ public class ReviewCustomer extends AppCompatActivity {
                 }
             });
 
-
-
             dialog.dismiss();
             Toast.makeText(this,"SOMETHING WENT WRONG !!!", Toast.LENGTH_SHORT).show();
         }else if(msg.equals(Constants.FAILURE_RESPONSE)){

@@ -24,9 +24,9 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomerListRecyclerViewAdapter extends RecyclerView.Adapter<CustomerListRecyclerViewAdapter.ViewHolder> implements Filterable {
+public class CustomerListRecyclerViewAdapter extends RecyclerView.Adapter<CustomerListRecyclerViewAdapter.CustomerViewHolder> /*implements Filterable*/ {
 
-    private List<Customer> customers = new ArrayList<>();
+    /*private List<Customer> customers = new ArrayList<>();
     private List<Customer> customerCopy = new ArrayList<>();
     private Context context;
     private OnCustomerListener onCustomerListener;
@@ -62,6 +62,9 @@ public class CustomerListRecyclerViewAdapter extends RecyclerView.Adapter<Custom
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
         ((ViewHolder)viewHolder).bindView(position);
+        if(position == customers.size() - 1){
+            viewHolder.itemView.setPadding(0, 0, 0, 15);
+        }
     }
 
     @Override
@@ -116,7 +119,6 @@ public class CustomerListRecyclerViewAdapter extends RecyclerView.Adapter<Custom
 
         }
 
-
         @Override
         public void onCustomerClick(Customer customer) {
             //Toast.makeText(, "Open the list of numbers", Toast.LENGTH_SHORT).show();
@@ -129,8 +131,9 @@ public class CustomerListRecyclerViewAdapter extends RecyclerView.Adapter<Custom
 
     public void setOnCustomerListener(OnCustomerListener onCustomerListener){
         this.onCustomerListener = onCustomerListener;
-    }
+    }*/
 
+    /*
     @Override
     public Filter getFilter(){
         return customerFilter;
@@ -167,6 +170,85 @@ public class CustomerListRecyclerViewAdapter extends RecyclerView.Adapter<Custom
             notifyDataSetChanged();
         }
     };
+*/
+    private List<Customer> customers;
+    private List<Customer> customerCopy = new ArrayList<>();
+    private Context context;
+    private OnCustomerClickListener customerClickListener;
 
+    public interface OnCustomerClickListener{
+        void onCustomerClick(int position);
+    }
+
+    public CustomerListRecyclerViewAdapter(List<Customer> customers, Context context){
+        this.customers = customers;
+        this.context = context;
+    }
+
+    public void setOnCustomerClickListener(OnCustomerClickListener customerClickListener){
+        this.customerClickListener = customerClickListener;
+    }
+
+    @NonNull
+    @Override
+    public CustomerViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.customer_list_item, viewGroup,false);
+        CustomerViewHolder customerViewHolder = new CustomerViewHolder(view, customerClickListener);
+        return customerViewHolder;
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull CustomerViewHolder customerViewHolder, int position) {
+
+        Customer currentCustomer = customers.get(position);
+
+        customerViewHolder.customerName.setText(currentCustomer.getUser().getLastname()+", "+currentCustomer.getUser().getFirstname());
+        customerViewHolder.customerAddress.setText(currentCustomer.getAddress());
+        customerViewHolder.phoneNumber.setText("+"+ Utils.insertCharacterForEveryNDistance(3,currentCustomer.getUser().getPrimaryphone(), ' '));
+
+        Picasso.with(context).load(currentCustomer.getProfilephotopath()).fit().centerCrop().placeholder(R.drawable.ic_default_profile).error(R.drawable.ic_default_profile).into(customerViewHolder.image);
+
+        if(position == customers.size() - 1){
+            customerViewHolder.itemView.setPadding(0, 0, 0, 15);
+        }
+    }
+
+    @Override
+    public int getItemCount() {
+        return customers.size();
+    }
+
+    public static class CustomerViewHolder extends RecyclerView.ViewHolder{
+
+        ImageView image;
+        TextView customerName;
+        TextView customerAddress;
+        TextView phoneNumber;
+
+        public CustomerViewHolder(@NonNull View itemView, final OnCustomerClickListener customerClickListener) {
+            super(itemView);
+            image = itemView.findViewById(R.id.profile_customer_list_item);
+            customerName = itemView.findViewById(R.id.customer_name);
+            customerAddress = itemView.findViewById(R.id.customer_address);
+            phoneNumber = itemView.findViewById(R.id.customer_phone_number);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(customerClickListener != null){
+                        int position = getAdapterPosition();
+                        if(position != RecyclerView.NO_POSITION){
+                            customerClickListener.onCustomerClick(position);
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    public void filterList(ArrayList<Customer> filteredList){
+        customers = filteredList;
+        notifyDataSetChanged();
+    }
 
 }

@@ -44,6 +44,8 @@ public class CustomerList extends AppCompatActivity {
     private TextView errorView;
     private LiveData<String> responseMsgLive;
     private FloatingActionButton registerCustomer;
+    private ArrayList<Customer> filteredCustomer;
+    private List<Customer> customers2;
 
     @Nullable
     @Override
@@ -67,6 +69,7 @@ public class CustomerList extends AppCompatActivity {
         customerList.observe(this, new Observer<List<Customer>>() {
             @Override
             public void onChanged(@Nullable List<Customer> customers) {
+                customers2.addAll(customers);
                 buildRecycler(customers);
             }
         });
@@ -80,7 +83,6 @@ public class CustomerList extends AppCompatActivity {
             }
         });
 
-
     }
 
     public void init(){
@@ -88,14 +90,32 @@ public class CustomerList extends AppCompatActivity {
         dialog = Utils.customerProgressBar(this);
         errorView = findViewById(R.id.customer_error_view);
         recyclerView = findViewById(R.id.customer_list_recycler);
+        filteredCustomer = new ArrayList<>();
+        customers2 = new ArrayList<>();
     }
 
-    public void buildRecycler(List<Customer> customers){
+    public void buildRecycler(final List<Customer> customers){
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        customerAdapter = new CustomerListRecyclerViewAdapter(this);
+        customerAdapter = new CustomerListRecyclerViewAdapter(customers,this);
         onClickCustomers.addAll(customers);
-        customerAdapter.setCustomers(customers);
         recyclerView.setAdapter(customerAdapter);
+
+        customerAdapter.setOnCustomerClickListener(new CustomerListRecyclerViewAdapter.OnCustomerClickListener() {
+            @Override
+            public void onCustomerClick(int position) {
+
+                Customer customer = customers.get(position);
+                Intent intent = new Intent(CustomerList.this, CustomerDetails.class);
+
+                if(!filteredCustomer.isEmpty()){
+                    intent.putExtra(Constants.CUSTOMER_OBJECT,filteredCustomer.get(position));
+                }else{
+                    intent.putExtra(Constants.CUSTOMER_OBJECT,customer);
+                }
+
+                startActivity(intent);
+            }
+        });
     }
 
     public void observeResponse(){
@@ -130,11 +150,23 @@ public class CustomerList extends AppCompatActivity {
         }
     }
 
+    private void filter(String text){
+
+        if(!filteredCustomer.isEmpty()){
+            filteredCustomer.clear();
+        }
+
+        for(Customer item : customers2){
+            if(item.getUser().getLastname().toLowerCase().contains(text.toLowerCase()) || item.getUser().getFirstname().toLowerCase().contains(text.toLowerCase())){
+                filteredCustomer.add(item);
+            }
+        }
+        customerAdapter.filterList(filteredCustomer);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.customer_search, menu);
-
 
         SearchView searchView = (SearchView)menu.findItem(R.id.search).getActionView();
 
@@ -146,7 +178,7 @@ public class CustomerList extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                customerAdapter.getFilter().filter(newText);
+                filter(newText);
                 return false;
             }
         });

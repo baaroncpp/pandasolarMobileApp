@@ -19,46 +19,36 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="10dp">
-                <!--android:background="@drawable/grad"-->
 
 
-                <RelativeLayout
-                    android:id="@+id/user_profile"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/circle_border">
+                    android:orientation="vertical">
+<!--
 
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/customer_profile_view"
-                        android:layout_width="110dp"
-                        android:layout_height="110dp"
-                        android:layout_margin="4dp"
-                        android:background="@drawable/circle"
-                        android:src="@drawable/aaron"
-                        app:civ_border_color="@color/circleBorder"
-                        app:civ_border_width="4dp" />
+                    <ImageView
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/panda_icon_circle"/>
+-->
 
-                </RelativeLayout>
+                    <!--<TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:gravity="center"
+                        android:fontFamily="sans-serif-light"
+                        android:textColor="@color/dark_grey"
+                        android:textSize="16sp"
+                        android:text="Only PayGo Products are stocked by mobile, Ensure that a PayGo serial number is used or scanned not the product serial number"
+                        android:layout_gravity="center"/>-->
 
-                <android.support.design.button.MaterialButton
-                    android:id="@+id/add_cust_profile_btn"
-                    style="@style/Widget.MaterialComponents.Button"
-                    app:icon="@drawable/ic_add_circle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/user_profile"
-                    android:layout_centerHorizontal="true"
-                    app:backgroundTint="@color/colorPrimary"
-                    android:fontFamily="sans-serif"
-                    android:textAllCaps="false"
-                    android:text="Add Customer Profile "
-                    android:textColor="#ffffff"
-                    app:cornerRadius="5dp"
-                    android:textSize="16sp" />
-
-
+                </LinearLayout>
             </RelativeLayout>
 
             <LinearLayout
@@ -79,9 +69,134 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="12dp"
                     android:orientation="vertical">
+
+                    <android.support.v7.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?android:attr/selectableItemBackground"
+                        app:cardElevation="@dimen/flat_card_elevation"
+                        app:cardCornerRadius="5dp"
+                        app:cardUseCompatPadding="true">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_weight="4"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="5dp"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Profile"
+                                    android:textColor="@color/gradStart"
+                                    android:textSize="13sp" />
+
+                                <View
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="1dp"
+                                    android:layout_marginTop="8dp"
+                                    android:layout_marginBottom="4dp"
+                                    android:background="@color/grey" />
+
+                                <TextView
+                                    android:id="@+id/profilename_view"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center_vertical"
+                                    android:fontFamily="sans-serif-light"
+                                    android:text="Profile"
+                                    android:textColor="#616161"
+                                    android:textSize="14sp" />
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal">
+
+                                    <LinearLayout
+                                        android:layout_width="0dp"
+                                        android:layout_weight="2"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="end"
+                                        android:orientation="horizontal">
+
+                                        <android.support.design.button.MaterialButton
+                                            android:id="@+id/cust_profileview_btn"
+                                            android:padding="0dp"
+                                            android:layout_margin="2dp"
+                                            android:layout_weight="1"
+                                            android:layout_width="0dp"
+                                            android:maxLines="1"
+                                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                            android:layout_height="50dp"
+                                            app:iconTint="@color/colorPrimary"
+                                            android:textSize="13sp"
+                                            android:textColor="@color/dark_grey"
+                                            app:strokeWidth="2dp"
+                                            app:strokeColor="@color/grey"
+                                            android:text="View"
+                                            android:textAllCaps="false"/>
+
+                                        <android.support.design.button.MaterialButton
+                                            android:id="@+id/add_cust_profile_btn"
+                                            android:layout_margin="2dp"
+                                            android:layout_weight="1"
+                                            android:layout_width="0dp"
+                                            android:maxLines="1"
+                                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                            android:layout_height="50dp"
+                                            app:iconTint="@color/colorPrimary"
+                                            android:textSize="13sp"
+                                            android:textColor="@color/dark_grey"
+                                            app:strokeWidth="2dp"
+                                            app:strokeColor="@color/grey"
+                                            android:text="File"
+                                            android:textAllCaps="false"/>
+
+                                        <android.support.design.button.MaterialButton
+                                            android:id="@+id/cust_profileupload_btn"
+                                            android:layout_margin="2dp"
+                                            android:layout_weight="1"
+                                            android:layout_width="0dp"
+                                            android:maxLines="1"
+                                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                            android:layout_height="50dp"
+                                            app:iconTint="@color/colorPrimary"
+                                            android:textSize="13sp"
+                                            android:textColor="@color/dark_grey"
+                                            app:strokeWidth="2dp"
+                                            app:strokeColor="@color/grey"
+                                            android:textAllCaps="false"
+                                            android:textAlignment="center"
+                                            android:text="Save"/>
+
+                                    </LinearLayout>
+
+                                </LinearLayout>
+
+                            </LinearLayout>
+
+                            <ImageView
+                                android:id="@+id/customer_profile_view"
+                                android:layout_width="90dp"
+                                android:layout_height="match_parent"
+                                android:src="@drawable/aaron"
+                                android:scaleType="centerCrop"/>
+
+                        </LinearLayout>
+
+                    </android.support.v7.widget.CardView>
 
                     <android.support.v7.widget.CardView
                         android:id="@+id/sale_card"
@@ -97,92 +212,122 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_margin="8dp"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Consent form"
-                                android:textColor="@color/gradStart"
-                                android:textSize="13sp" />
-
-                            <View
-                                android:layout_width="wrap_content"
-                                android:layout_height="1dp"
-                                android:layout_marginTop="8dp"
-                                android:layout_marginBottom="4dp"
-                                android:background="@color/grey" />
+                            android:orientation="horizontal">
 
                             <LinearLayout
-                                android:layout_width="match_parent"
+                                android:layout_width="0dp"
+                                android:layout_weight="4"
                                 android:layout_height="wrap_content"
-                                android:orientation="horizontal">
+                                android:layout_margin="5dp"
+                                android:orientation="vertical">
 
-                                <ImageView
-                                    android:layout_width="0dp"
-                                    android:layout_weight="1"
-                                    android:gravity="center_vertical"
-                                    android:layout_height="45dp"
-                                    android:src="@drawable/ic_file_add"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Consent form"
+                                    android:textColor="@color/gradStart"
+                                    android:textSize="13sp" />
+
+                                <View
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="1dp"
+                                    android:layout_marginTop="8dp"
+                                    android:layout_marginBottom="4dp"
+                                    android:background="@color/grey" />
 
                                 <TextView
                                     android:id="@+id/coi_file_name"
-                                    android:layout_width="0dp"
-                                    android:layout_weight="7"
-                                    android:layout_height="45dp"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
                                     android:gravity="center_vertical"
                                     android:fontFamily="sans-serif-light"
-                                    android:text="Add consent form"
+                                    android:text="Consent form"
                                     android:textColor="#616161"
                                     android:textSize="14sp" />
 
                                 <LinearLayout
-                                    android:layout_width="0dp"
-                                    android:layout_weight="2"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:gravity="end"
                                     android:orientation="horizontal">
 
-                                    <android.support.design.widget.FloatingActionButton
-                                        android:id="@+id/add_coi_btn"
-                                        android:layout_width="wrap_content"
+                                    <LinearLayout
+                                        android:layout_width="0dp"
+                                        android:layout_weight="2"
                                         android:layout_height="wrap_content"
-                                        android:gravity="center_vertical|center_horizontal"
-                                        android:elevation="0dp"
-                                        app:borderWidth="0dp"
-                                        android:layout_marginRight="5dp"
-                                        android:layout_marginBottom="5dp"
-                                        android:backgroundTint="@color/grey"
-                                        android:src="@drawable/ic_attach_file"
-                                        app:fabSize="mini"/>
+                                        android:gravity="end"
+                                        android:orientation="horizontal">
+
+                                        <android.support.design.button.MaterialButton
+                                            android:id="@+id/cust_coiview_btn"
+                                            android:padding="0dp"
+                                            android:layout_margin="2dp"
+                                            android:layout_weight="1"
+                                            android:layout_width="0dp"
+                                            android:maxLines="1"
+                                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                            android:layout_height="50dp"
+                                            app:iconTint="@color/colorPrimary"
+                                            android:textSize="13sp"
+                                            android:textColor="@color/dark_grey"
+                                            app:strokeWidth="2dp"
+                                            app:strokeColor="@color/grey"
+                                            android:text="View"
+                                            android:textAllCaps="false"/>
+
+                                        <android.support.design.button.MaterialButton
+                                            android:id="@+id/add_coi_btn"
+                                            android:layout_margin="2dp"
+                                            android:layout_weight="1"
+                                            android:layout_width="0dp"
+                                            android:maxLines="1"
+                                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                            android:layout_height="50dp"
+                                            app:iconTint="@color/colorPrimary"
+                                            android:textSize="13sp"
+                                            android:textColor="@color/dark_grey"
+                                            app:strokeWidth="2dp"
+                                            app:strokeColor="@color/grey"
+                                            android:text="File"
+                                            android:textAllCaps="false"/>
+
+                                        <android.support.design.button.MaterialButton
+                                            android:id="@+id/cust_coiupload_btn"
+                                            android:layout_margin="2dp"
+                                            android:layout_weight="1"
+                                            android:layout_width="0dp"
+                                            android:maxLines="1"
+                                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                            android:layout_height="50dp"
+                                            app:iconTint="@color/colorPrimary"
+                                            android:textSize="13sp"
+                                            android:textColor="@color/dark_grey"
+                                            app:strokeWidth="2dp"
+                                            app:strokeColor="@color/grey"
+                                            android:textAllCaps="false"
+                                            android:textAlignment="center"
+                                            android:text="Save"/>
+
+                                    </LinearLayout>
 
                                 </LinearLayout>
 
                             </LinearLayout>
 
-                            <ProgressBar
-                                android:id="@+id/coi_progressBar"
-                                style="?android:attr/progressBarStyleHorizontal"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentLeft="true"
-                                android:layout_alignParentTop="true"
-                                android:layout_marginTop="4dp"
-                                android:indeterminate="false"
-                                android:max="100"
-                                android:minHeight="50dp"
-                                android:minWidth="200dp"
-                                android:progress="1" />
-
+                            <ImageView
+                                android:id="@+id/cust_coi_image"
+                                android:layout_width="90dp"
+                                android:layout_height="match_parent"
+                                android:src="@drawable/aaron"
+                                android:scaleType="centerCrop"/>
 
                         </LinearLayout>
+
+
 
 
                     </android.support.v7.widget.CardView>
 
                     <android.support.v7.widget.CardView
-                        android:layout_marginTop="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:clickable="true"
@@ -195,121 +340,119 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_margin="8dp"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Identification"
-                                android:textColor="@color/gradStart"
-                                android:textSize="13sp" />
-
-                            <View
-                                android:layout_width="wrap_content"
-                                android:layout_height="1dp"
-                                android:layout_marginTop="8dp"
-                                android:layout_marginBottom="4dp"
-                                android:background="@color/grey"/>
-
-                            <!--<Spinner
-                                android:id="@+id/id_type_spinner"
-                                android:layout_width="match_parent"
-                                style="@style/Widget.AppCompat.Spinner.Underlined"
-                                android:outlineAmbientShadowColor="@color/grey"
-                                android:outlineProvider="background"
-                                android:layout_height="40dp"
-                                android:layout_marginTop="8dp"
-                                android:layout_marginBottom="8dp"
-                                android:layout_marginLeft="4dp"
-                                android:layout_marginRight="4dp"/>-->
-
-                            <TextView
-                                android:id="@+id/idtype_name"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:textColor="@color/dark_grey"
-                                android:textSize="16sp"
-                                android:text="NATIONALID"/>
+                            android:orientation="horizontal">
 
                             <LinearLayout
-                                android:layout_width="match_parent"
+                                android:layout_width="0dp"
+                                android:layout_weight="4"
                                 android:layout_height="wrap_content"
-                                android:orientation="horizontal">
-
-                                <ImageView
-                                    android:layout_width="0dp"
-                                    android:layout_weight="1"
-                                    android:gravity="center_vertical"
-                                    android:layout_height="45dp"
-                                    android:src="@drawable/ic_file_add"/>
+                                android:layout_margin="5dp"
+                                android:orientation="vertical">
 
                                 <TextView
-                                    android:id="@+id/id_file_name"
-                                    android:layout_width="0dp"
-                                    android:layout_weight="7"
-                                    android:layout_height="45dp"
+                                    android:id="@+id/cust_idtype_name"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Identification"
+                                    android:textColor="@color/gradStart"
+                                    android:textSize="13sp" />
+
+                                <View
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="1dp"
+                                    android:layout_marginTop="8dp"
+                                    android:layout_marginBottom="4dp"
+                                    android:background="@color/grey" />
+
+                                <TextView
+                                    android:id="@+id/cust_idfile_name"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
                                     android:gravity="center_vertical"
                                     android:fontFamily="sans-serif-light"
-                                    android:text="Add Identification Card"
+                                    android:text="NATIONALID"
                                     android:textColor="#616161"
                                     android:textSize="14sp" />
 
                                 <LinearLayout
-                                    android:layout_width="0dp"
-                                    android:layout_weight="2"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:gravity="end"
                                     android:orientation="horizontal">
 
-                                    <android.support.design.widget.FloatingActionButton
-                                        android:id="@+id/add_id_btn"
-                                        android:layout_width="wrap_content"
+                                    <LinearLayout
+                                        android:layout_width="0dp"
+                                        android:layout_weight="2"
                                         android:layout_height="wrap_content"
-                                        android:gravity="center_vertical|center_horizontal"
-                                        android:elevation="0dp"
-                                        app:borderWidth="0dp"
-                                        android:layout_marginRight="5dp"
-                                        android:layout_marginBottom="5dp"
-                                        android:backgroundTint="@color/grey"
-                                        android:src="@drawable/ic_attach_file"
-                                        app:fabSize="mini"/>
+                                        android:gravity="end"
+                                        android:orientation="horizontal">
+
+                                        <android.support.design.button.MaterialButton
+                                            android:id="@+id/cust_idview_btn"
+                                            android:padding="0dp"
+                                            android:layout_margin="2dp"
+                                            android:layout_weight="1"
+                                            android:layout_width="0dp"
+                                            android:maxLines="1"
+                                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                            android:layout_height="50dp"
+                                            app:iconTint="@color/colorPrimary"
+                                            android:textSize="13sp"
+                                            android:textColor="@color/dark_grey"
+                                            app:strokeWidth="2dp"
+                                            app:strokeColor="@color/grey"
+                                            android:text="View"
+                                            android:textAllCaps="false"/>
+
+                                        <android.support.design.button.MaterialButton
+                                            android:id="@+id/add_id_btn"
+                                            android:layout_margin="2dp"
+                                            android:layout_weight="1"
+                                            android:layout_width="0dp"
+                                            android:maxLines="1"
+                                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                            android:layout_height="50dp"
+                                            app:iconTint="@color/colorPrimary"
+                                            android:textSize="13sp"
+                                            android:textColor="@color/dark_grey"
+                                            app:strokeWidth="2dp"
+                                            app:strokeColor="@color/grey"
+                                            android:text="File"
+                                            android:textAllCaps="false"/>
+
+                                        <android.support.design.button.MaterialButton
+                                            android:id="@+id/cust_idupload_btn"
+                                            android:layout_margin="2dp"
+                                            android:layout_weight="1"
+                                            android:layout_width="0dp"
+                                            android:maxLines="1"
+                                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                            android:layout_height="50dp"
+                                            app:iconTint="@color/colorPrimary"
+                                            android:textSize="13sp"
+                                            android:textColor="@color/dark_grey"
+                                            app:strokeWidth="2dp"
+                                            app:strokeColor="@color/grey"
+                                            android:textAllCaps="false"
+                                            android:textAlignment="center"
+                                            android:text="Save"/>
+
+                                    </LinearLayout>
 
                                 </LinearLayout>
 
                             </LinearLayout>
 
-                            <ProgressBar
-                                android:id="@+id/progressBar_id"
-                                style="?android:attr/progressBarStyleHorizontal"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentLeft="true"
-                                android:layout_alignParentTop="true"
-                                android:layout_marginTop="4dp"
-                                android:indeterminate="false"
-                                android:max="100"
-                                android:minHeight="50dp"
-                                android:minWidth="200dp"
-                                android:progress="1" />
+                            <ImageView
+                                android:id="@+id/cust_idImage_view"
+                                android:layout_width="90dp"
+                                android:layout_height="match_parent"
+                                android:src="@drawable/aaron"
+                                android:scaleType="centerCrop"/>
 
                         </LinearLayout>
 
-
                     </android.support.v7.widget.CardView>
 
-                    <android.support.design.button.MaterialButton
-                        android:id="@+id/upload_cust_files_btn"
-                        android:layout_marginTop="8dp"
-                        android:layout_gravity="center"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:icon="@drawable/ic_file_upload"
-                        android:textAllCaps="true"
-                        android:text="Upload Files"
-                        android:fontFamily="sans-serif-light"
-                        android:textStyle="bold"
-                        app:backgroundTint="@color/gradStart"/>
 
                 </LinearLayout>
 

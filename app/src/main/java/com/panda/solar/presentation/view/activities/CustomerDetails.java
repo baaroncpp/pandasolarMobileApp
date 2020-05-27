@@ -37,8 +37,7 @@ public class CustomerDetails extends AppCompatActivity {
         setContentView(R.layout.customer_details);
 
         initializeActivity();
-
-        final Customer customer = getIntent().getExtras().getParcelable(Constants.CUSTOMER_OBJECT);
+         final Customer customer = getIntent().getExtras().getParcelable(Constants.CUSTOMER_OBJECT);
 
         customerName.setText(customer.getUser().getLastname()+", "+customer.getUser().getFirstname());
         customerPhone.setText(customer.getUser().getPrimaryphone());
@@ -52,7 +51,7 @@ public class CustomerDetails extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(CustomerDetails.this, AddCustMeta.class);
-                intent.putExtra(Constants.CUSTOMER_ID, customer.getUser().getId());
+                intent.putExtra(Constants.CUSTOMER_OBJECT, customer);
                 startActivity(intent);
             }
         });

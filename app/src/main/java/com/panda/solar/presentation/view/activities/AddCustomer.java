@@ -5,7 +5,14 @@ import android.app.ProgressDialog;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
+import android.os.Looper;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
 import android.support.design.widget.TextInputEditText;
@@ -22,6 +29,13 @@ import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.panda.solar.Model.constants.IdType;
 import com.panda.solar.Model.constants.UserType;
 import com.panda.solar.Model.entities.CustomerMeta;
@@ -54,8 +68,8 @@ public class AddCustomer extends AppCompatActivity {
     private TextInputEditText email;
     private TextInputLayout phoneWrapper;
     private TextInputEditText phone;
-    private TextInputLayout villageWrapper;
-    private Spinner village;
+    //private TextInputLayout villageWrapper;
+    //private Spinner village;
     private TextInputLayout addressWrapper;
     private TextInputEditText address;
     private TextInputLayout secPhoneWrapper;
@@ -69,12 +83,18 @@ public class AddCustomer extends AppCompatActivity {
     private Spinner idType;
     private TextInputLayout idTypeWrapper;
     private CustomerModel user;
+    private MaterialButton addVillageBtn;
+
+    private double latitude;
+    private double longitude;
+    private FusedLocationProviderClient fusedLocationProviderClient;
 
     private CustomerViewModel customerViewModel;
     private ProgressDialog dialog;
     private LiveData<String> responseMessage;
     private LiveData<CustomerMeta> liveCustomerMeta;
     private List<Village> villages;
+    private Village villageResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,24 +102,21 @@ public class AddCustomer extends AppCompatActivity {
         setContentView(R.layout.activity_add_customer);
 
         init();
-        setVillages();
+        //setVillages();
         initSpinner();
+        setCalendar();
+
+        addVillageBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AddCustomer.this, VillageList.class);
+                startActivityForResult(intent, Constants.VILLAGE_OBJECT_CODE);
+            }
+        });
 
         dob.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-
-                Calendar c = Calendar.getInstance();
-                int cYear = c.get(Calendar.YEAR);
-                int cMonth = c.get(Calendar.MONTH);
-                int cDay = c.get(Calendar.DAY_OF_MONTH);
-
-                datePickerDialog = new DatePickerDialog(AddCustomer.this, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        dob.setText(Integer.toString(dayOfMonth)+"-"+Integer.toString(month)+"-"+Integer.toString(year));
-                    }
-                }, cYear, cMonth, cDay);
                 datePickerDialog.show();
                 return true;
             }
@@ -166,12 +183,26 @@ public class AddCustomer extends AppCompatActivity {
         });
     }
 
+    public void setCalendar(){
+        Calendar c = Calendar.getInstance();
+        int cYear = c.get(Calendar.YEAR);
+        int cMonth = c.get(Calendar.MONTH);
+        int cDay = c.get(Calendar.DAY_OF_MONTH);
+
+        datePickerDialog = new DatePickerDialog(AddCustomer.this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                dob.setText(Integer.toString(dayOfMonth)+"-"+Integer.toString(month)+"-"+Integer.toString(year));
+            }
+        }, cYear, cMonth, cDay);
+    }
+
     public void setVillages(){
         LiveData<List<Village>> liveDataVillages = customerViewModel.getVillages();
         liveDataVillages.observe(this, new Observer<List<Village>>() {
             @Override
             public void onChanged(@Nullable List<Village> villagez) {
-                villages = villagez;
+                villages.addAll(villagez);
             }
         });
         observeResponse();
@@ -216,13 +247,14 @@ public class AddCustomer extends AppCompatActivity {
         user.setTitle("MRS");
         user.setAddress(address.getText().toString());
         user.setConsentformpath("");
-        user.setHomelat(45);
-        user.setHomelong(45);
+        user.setHomelat((float)latitude);
+        user.setHomelong((float)longitude);
         user.setIdtype(getIdType(idType.getSelectedItem().toString()));
         user.setIdnumber(idNumber.getText().toString());
         user.setProfilephotopath("");
         user.setSecondaryemail(secEmail.getText().toString());
         user.setSecondaryphone(secPhone.getText().toString());
+        user.setVillageid((short)villageResult.getId());
 
         return user;
     }
@@ -261,8 +293,8 @@ public class AddCustomer extends AppCompatActivity {
         phone = findViewById(R.id.cust_phone);
         phoneWrapper = findViewById(R.id.phone_wrapper);
         nextBtn = findViewById(R.id.cust_next_btn);
-        village = findViewById(R.id.cust_village);
-        villageWrapper = findViewById(R.id.village_wrapper);
+        //village = findViewById(R.id.cust_village);
+        //villageWrapper = findViewById(R.id.village_wrapper);
         address = findViewById(R.id.cust_address);
         addressWrapper = findViewById(R.id.address_wrapper);
         secEmail = findViewById(R.id.cust_secondarymail);
@@ -273,14 +305,18 @@ public class AddCustomer extends AppCompatActivity {
         idNumberWrapper = findViewById(R.id.idnumber_wrapper);
         idType = findViewById(R.id.cust_id_type);
         idTypeWrapper = findViewById(R.id.idtype_wrapper);
+        addVillageBtn = findViewById(R.id.cust_add_village_btn);
 
         customerViewModel = ViewModelProviders.of(this).get(CustomerViewModel.class);
         dialog = Utils.customerProgressBar(this);
         villages = new ArrayList<>();
+
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        getLastLocation();
     }
 
     public void initSpinner(){
-        List<String> villageNames = new ArrayList<>();
+        /*List<String> villageNames = new ArrayList<>();
         villageNames.add("Choose Village");
         villageNames.add("Ntinda");
 
@@ -290,9 +326,11 @@ public class AddCustomer extends AppCompatActivity {
             }
         }
 
+        villageNames.add("Other");
+
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, villageNames);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        village.setAdapter(arrayAdapter);
+        village.setAdapter(arrayAdapter);*/
 
         List<String> idTypes = new ArrayList<>();
         idTypes.add("Select ID Type");
@@ -316,7 +354,7 @@ public class AddCustomer extends AppCompatActivity {
     }
 
     public boolean validateVillage(){
-        String inputText = village.getSelectedItem().toString();
+        String inputText = addVillageBtn.getText().toString();//village.getSelectedItem().toString();
 
         if(inputText.equals("Choose Village")){
             Toast.makeText(this, "select village", Toast.LENGTH_SHORT).show();
@@ -532,31 +570,87 @@ public class AddCustomer extends AppCompatActivity {
         }
     }
 
-    /*public boolean validatePassword(){
-        String pass = password.getText().toString();
-        String comfPass = confirmPassword.getText().toString();
-
-        if(pass.isEmpty()){
-            passwordWrapper.setBoxStrokeColor(getResources().getColor(R.color.error));
-            passwordWrapper.setErrorEnabled(true);
-            passwordWrapper.setError(Constants.FIELD_REQUIRED);
-            return false;
-        }else if(comfPass.isEmpty()){
-            confirmWrapper.setBoxStrokeColor(getResources().getColor(R.color.error));
-            confirmWrapper.setErrorEnabled(true);
-            confirmWrapper.setError(Constants.FIELD_REQUIRED);
-            return false;
-        }else if(!pass.equals(comfPass)){
-            confirmWrapper.setBoxStrokeColor(getResources().getColor(R.color.error));
-            confirmWrapper.setErrorEnabled(true);
-            confirmWrapper.setError("Passwords do nor match");
-            return false;
-        }else{
-            confirmWrapper.setErrorEnabled(false);
-            passwordWrapper.setErrorEnabled(false);
-            confirmWrapper.setBoxStrokeColor(getResources().getColor(R.color.dark_grey));
-           return true;
+    private void getLastLocation(){
+        if (Utils.checkLocationPermissions(this)) {
+            if (isLocationEnabled()) {
+                fusedLocationProviderClient.getLastLocation().addOnCompleteListener(
+                        new OnCompleteListener<Location>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Location> task) {
+                                Location location = task.getResult();
+                                if (location == null) {
+                                    requestNewLocationData();
+                                } else {
+                                    latitude = location.getLatitude();
+                                    longitude = location.getLongitude();
+                                }
+                            }
+                        }
+                );
+            } else {
+                Toast.makeText(this, "Turn on location", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(intent);
+            }
+        } else {
+            Utils.requestLocationPermissions(this);
         }
-    }*/
+    }
+
+    private boolean isLocationEnabled() {
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+    }
+
+    private LocationCallback locationCallback = new LocationCallback() {
+        @Override
+        public void onLocationResult(LocationResult locationResult) {
+            Location lastLocation = locationResult.getLastLocation();
+
+            latitude = lastLocation.getLatitude();
+            longitude = lastLocation.getLongitude();
+        }
+    };
+
+    private void requestNewLocationData(){
+
+        LocationRequest mLocationRequest = new LocationRequest();
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mLocationRequest.setInterval(0);
+        mLocationRequest.setFastestInterval(0);
+        mLocationRequest.setNumUpdates(1);
+
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        fusedLocationProviderClient.requestLocationUpdates(
+                mLocationRequest, locationCallback,
+                Looper.myLooper()
+        );
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == Constants.VILLAGE_OBJECT_CODE){
+            if(resultCode == RESULT_OK){
+                villageResult = data.getParcelableExtra(Constants.VILLAGE_RESULT);
+                addVillageBtn.setText(villageResult.getName());
+            }else if(resultCode == RESULT_CANCELED) {
+                Toast.makeText(this, "No Village selected", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == Constants.LOCATION_PERMISSION_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                getLastLocation();
+            }
+        }
+    }
 
 }

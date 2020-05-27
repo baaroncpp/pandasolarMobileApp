@@ -1,7 +1,6 @@
 package com.panda.solar.presentation.view.activities;
 
 import android.Manifest;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
@@ -23,17 +22,17 @@ import android.widget.Toast;
 
 import com.panda.solar.Model.entities.Login;
 import com.panda.solar.Model.entities.Token;
-import com.panda.solar.Model.entities.User;
+
 import com.panda.solar.activities.R;
 
-import com.panda.solar.data.network.NetworkResponse;
+import com.panda.solar.services.PandaFirebaseInstanceIDService;
 import com.panda.solar.utils.AppContext;
 import com.panda.solar.utils.Constants;
 import com.panda.solar.utils.Utils;
 
 import com.panda.solar.viewModel.UserViewModel;
 
-public class LoginActivity extends AppCompatActivity/* implements View.OnClickListener, TextWatcher, NetworkCallback*/ {
+public class LoginActivity extends AppCompatActivity{
 
     private Button loginButton;
     private EditText loginPhoneNumberEditTxt;
@@ -45,12 +44,11 @@ public class LoginActivity extends AppCompatActivity/* implements View.OnClickLi
 
     private ProgressDialog progressDialog;
     private UserViewModel userViewModel;
-    private LiveData<Token> liveToken;
-    private LiveData<String> responseMessage;
-    private LiveData<NetworkResponse> networkResponseLiveData;
-    private Token token;
-    private boolean isTokenStored;
+
     private SharedPreferences sharedPreferences;
+    private boolean isTokenStored;
+    private boolean instanseState;
+    private String responseString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,14 +62,13 @@ public class LoginActivity extends AppCompatActivity/* implements View.OnClickLi
             getSupportActionBar().hide();
         }
 
-
         int ALL_PERMISSIONS = 101;
-
-        final String[] permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE ,Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
+        final String[] permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION ,Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
 
         ActivityCompat.requestPermissions(this, permissions, ALL_PERMISSIONS);
 
         init();
+        observeResponse();
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,16 +83,14 @@ public class LoginActivity extends AppCompatActivity/* implements View.OnClickLi
 
         progressDialog = Utils.customerProgressBar(this);
 
-        loginButton = (Button)findViewById(R.id.login_button);
-        loginPhoneNumberEditTxt = (EditText)findViewById(R.id.login_phone_number);
-        loginPasswordEditTxt = (EditText)findViewById(R.id.login_password);
-        forgotPasswordTextView = (TextView)findViewById(R.id.forgot_password_text);
-        userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
+        loginButton = findViewById(R.id.login_button);
+        loginPhoneNumberEditTxt = findViewById(R.id.login_phone_number);
+        loginPasswordEditTxt = findViewById(R.id.login_password);
+        forgotPasswordTextView = findViewById(R.id.forgot_password_text);
 
         sharedPreferences = AppContext.getAppContext().getSharedPreferences(Constants.SHARED_PREF, MODE_PRIVATE);
-
-
-        token = new Token();
+        userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
+        instanseState = false;
     }
 
     public void checkAppPermissions(){
@@ -146,41 +141,35 @@ public class LoginActivity extends AppCompatActivity/* implements View.OnClickLi
 
             Login log = new Login(phoneNumber, password);
 
-            liveToken = userViewModel.authenticateUser(log);
+            LiveData<Token> liveToken = userViewModel.authenticateUser(log);
             progressDialog.show();
             liveToken.observe(this, new Observer<Token>() {
                 @Override
                 public void onChanged(@Nullable Token t) {
-                    token = t;
                     isTokenStored = saveJWT(t);
-                    observeResponse();
+                    //observeResponse();
                 }
             });
-            //observeResponse();
+
         }
     }
 
     public void observeResponse(){
-        responseMessage = userViewModel.getResponseMessage();
+        final LiveData<String> responseMessage = userViewModel.getResponseMessage();
         responseMessage.observe(this, new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
+                responseString = s;
                 handleResponse(s);
             }
         });
     }
 
+
     public void handleResponse(String msg){
-        if(msg.equals(Constants.SUCCESS_RESPONSE) && token != null){
-
-            if(!Utils.isSharedPreferenceSet(this) && isTokenStored){
-                getUserDetails();
-            }else{
-                progressDialog.dismiss();
-                Toast.makeText(this,"FAILED, TRY AGAIN", Toast.LENGTH_LONG).show();
-            }
-
-
+        if(msg.equals(Constants.SUCCESS_RESPONSE) /*&& isTokenStored*/){
+            startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+            progressDialog.dismiss();
         }else if(msg.equals(Constants.ERROR_RESPONSE)){
             progressDialog.dismiss();
             Toast.makeText(this,"BAD CREDENTIALS TRY AGAIN", Toast.LENGTH_LONG).show();
@@ -201,46 +190,10 @@ public class LoginActivity extends AppCompatActivity/* implements View.OnClickLi
         return true;
     }
 
-    public void getUserDetails(){
-
-        UserViewModel uViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
-        LiveData<User> liveUser = uViewModel.getUser();
-        liveUser.observe(this, new Observer<User>() {
-            @Override
-            public void onChanged(@Nullable User user) {
-                Utils.saveUserDetails(user);
-            }
-        });
-
-        LiveData<String> response2 = uViewModel.getResponseMessage();
-        response2.observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-
-                if(s.equals(Constants.SUCCESS_RESPONSE)){
-                    startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-                    progressDialog.dismiss();
-                }else if(s.equals(Constants.ERROR_RESPONSE)){
-                    progressDialog.dismiss();
-                    Toast.makeText(LoginActivity.this,"BAD CREDENTIALS TRY AGAIN", Toast.LENGTH_LONG).show();
-                }else if(s.equals(Constants.FAILURE_RESPONSE)){
-                    progressDialog.dismiss();
-                    Toast.makeText(LoginActivity.this,"CONNECTION FAILURE", Toast.LENGTH_LONG).show();
-                }else{
-                    progressDialog.dismiss();
-                    Toast.makeText(LoginActivity.this,"TRY AGAIN LATER", Toast.LENGTH_LONG).show();
-                }
-
-            }
-        });
-    }
-
     public boolean saveJWT(Token token){
 
         if(token != null){
-            //SharedPreferences sharedPreferences = AppContext.getAppContext().getSharedPreferences(Constants.SHARED_PREF, MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
-
             editor.putString(Constants.JWT_TOKEN, token.getToken());
             editor.commit();
 
@@ -249,6 +202,5 @@ public class LoginActivity extends AppCompatActivity/* implements View.OnClickLi
             return false;
         }
     }
-
 
 }

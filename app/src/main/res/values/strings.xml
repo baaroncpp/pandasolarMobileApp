@@ -5,6 +5,7 @@
 
     <string name="main_notification_channel_name">panda_solar_notification_channel</string>
     <string name="panda_sale">Panda Sale</string>
+    <string name="panda_payment">Panda Lease Payment</string>
 
     <string name="customer">Customers</string>
     <string name="agent">Agent</string>
@@ -79,7 +80,7 @@
     <string name="search_location">Search location</string>
     <string name="take_pic_house">Take a picture of the house which you going to make the installation.</string>
     <string name="repair">Repair</string>
-    <string name="title_activity_stock_management">StockManagementActivity</string>
+    <string name="title_activity_stock_management">Stock Management</string>
     <string name="total_commission">Total Commission</string>
     <string name="stock_management">Stock Mag\'mt</string>
     <string name="title_activity_customer">CustomerActivity</string>
@@ -96,5 +97,11 @@
 
     <string name="customer_reg_msg">Add a new customer before making a sale to that specific customer, if the customer has not been registered before</string>
 
+
+    <string name="pref_sale_notification_key">show_sale_notifications</string>
+    <string name="pref_payment_notification_key">show_payment_notifications</string>
+
+    <string name="url_about_us">https://www.google.com</string>
+    <string name="reset_password">Reset Password</string>
 
 </resources>

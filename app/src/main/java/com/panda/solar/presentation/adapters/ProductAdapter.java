@@ -123,6 +123,10 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             
         }
 
+        if(position == products.size() - 1){
+            productViewHolder.itemView.setPadding(0, 0, 0, 15);
+        }
+
     }
 
     @Override

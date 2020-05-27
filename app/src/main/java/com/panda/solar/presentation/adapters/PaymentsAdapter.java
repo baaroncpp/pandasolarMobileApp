@@ -11,6 +11,7 @@ import com.panda.solar.Model.entities.LeasePayment;
 import com.panda.solar.activities.R;
 import com.panda.solar.utils.Utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PaymentsAdapter extends RecyclerView.Adapter<PaymentsAdapter.PaymentViewHolder> {
@@ -47,6 +48,10 @@ public class PaymentsAdapter extends RecyclerView.Adapter<PaymentsAdapter.Paymen
         paymentViewHolder.paymentChannel.setText(currentPayment.getPaymentchannel());
         paymentViewHolder.paymentAmount.setText(Utils.moneyFormatter(currentPayment.getAmount()));
         paymentViewHolder.paymentDate.setText(Utils.readableDate(currentPayment.getCreatedon()));
+
+        if(position == leasePaymentList.size() - 1){
+            paymentViewHolder.itemView.setPadding(0, 0, 0, 15);
+        }
     }
 
     @Override
@@ -61,6 +66,7 @@ public class PaymentsAdapter extends RecyclerView.Adapter<PaymentsAdapter.Paymen
         TextView paymentAmount;
         TextView paymentPayee;
         TextView paymentPayeeNumber;
+        View paymentView;
 
         public PaymentViewHolder(@NonNull View itemView, final OnPaymentClickListener onPaymentClickListener){
             super(itemView);
@@ -69,6 +75,7 @@ public class PaymentsAdapter extends RecyclerView.Adapter<PaymentsAdapter.Paymen
             paymentChannel = itemView.findViewById(R.id.payment_item_channel);
             paymentPayee = itemView.findViewById(R.id.payment_item_payee);
             paymentPayeeNumber = itemView.findViewById(R.id.payment_item_payee_number);
+            paymentView = itemView.findViewById(R.id.payment_item_hor_view);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -82,5 +89,10 @@ public class PaymentsAdapter extends RecyclerView.Adapter<PaymentsAdapter.Paymen
                 }
             });
         }
+    }
+
+    public void filterList(List<LeasePayment> filteredList){
+        leasePaymentList = filteredList;
+        notifyDataSetChanged();
     }
 }

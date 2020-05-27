@@ -10,7 +10,9 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.app.ProgressDialog;
+import android.view.Menu;
 import android.view.View;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +23,7 @@ import com.panda.solar.utils.Constants;
 import com.panda.solar.utils.Utils;
 import com.panda.solar.viewModel.PaymentViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PaymentsList extends AppCompatActivity {
@@ -34,6 +37,8 @@ public class PaymentsList extends AppCompatActivity {
     private LiveData<List<LeasePayment>> listPaymentLiveData;
     private ProgressDialog progressDialog;
     private TextView errorView;
+    private List<LeasePayment> filteredPayment;
+    private List<LeasePayment> payments;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,18 +51,21 @@ public class PaymentsList extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        payments = new ArrayList<>();
+        filteredPayment = new ArrayList<>();
         errorView = findViewById(R.id.payment_error_view);
         recyclerView = findViewById(R.id.payments_recyclerview);
         paymentViewModel = ViewModelProviders.of(this).get(PaymentViewModel.class);
         progressDialog = Utils.customerProgressBar(this);
 
         responseMeassage = paymentViewModel.getResponseMessage();
-        listPaymentLiveData = paymentViewModel.getAllLeasePayment(0, 10, "DESC");
+        listPaymentLiveData = paymentViewModel.getAllLeasePayment(0, 100, "DESC");
 
         progressDialog.show();
         listPaymentLiveData.observe(this, new Observer<List<LeasePayment>>() {
             @Override
             public void onChanged(@Nullable List<LeasePayment> leasePayments) {
+                payments.addAll(leasePayments);
                 buildRecycler(leasePayments);
             }
         });
@@ -83,7 +91,7 @@ public class PaymentsList extends AppCompatActivity {
         }else{
             recyclerView.setVisibility(View.GONE);
             errorView.setVisibility(View.VISIBLE);
-            errorView.setText("No Items Found");
+            errorView.setText("No Payments");
         }
 
     }
@@ -97,7 +105,7 @@ public class PaymentsList extends AppCompatActivity {
 
             recyclerView.setVisibility(View.GONE);
             errorView.setVisibility(View.VISIBLE);
-            errorView.setText("No Items Fetched");
+            errorView.setText("No Payments Fetched");
 
             Toast.makeText(this,"SOMETHING WENT WRONG !!!", Toast.LENGTH_SHORT).show();
         }else if(msg.equals(Constants.FAILURE_RESPONSE)){
@@ -105,9 +113,46 @@ public class PaymentsList extends AppCompatActivity {
 
             recyclerView.setVisibility(View.GONE);
             errorView.setVisibility(View.VISIBLE);
-            errorView.setText("NO CONNECTION");
+            errorView.setText("Connection Error");
 
-            Toast.makeText(this,"CONNECTION FAILURE", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,"Connection Error", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void filter(String text){
+
+        if(!filteredPayment.isEmpty()){
+            filteredPayment.clear();
+        }
+
+        for(LeasePayment item : payments){
+            if(item.getPayeename().toLowerCase().contains(text.toLowerCase()) || item.getPayeemobilenumber().toLowerCase().contains(text.toLowerCase())){
+                filteredPayment.add(item);
+            }
+        }
+        paymentsAdapter.filterList(filteredPayment);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.payment_search, menu);
+
+        SearchView searchView = (SearchView)menu.findItem(R.id.search_payment).getActionView();
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                filter(newText);
+                return false;
+            }
+        });
+
+        return true;
     }
 }

@@ -11,6 +11,7 @@ import com.panda.solar.activities.R;
 import com.panda.solar.utils.Utils;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.CustomerViewHolder> {
@@ -46,6 +47,10 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.Custom
         customerViewHolder.customerNameView.setText(currentCustomer.getUser().getFirstname()+" "+currentCustomer.getUser().getLastname());
         customerViewHolder.customerLocationView.setText(currentCustomer.getAddress());
         customerViewHolder.customerRegDateView.setText(Utils.readableDate(currentCustomer.getCreatedon()));
+
+        if(position == customers.size() - 1){
+            customerViewHolder.itemView.setPadding(0, 0, 0, 15);
+        }
     }
 
     @Override
@@ -77,5 +82,10 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.Custom
                 }
             });
         }
+    }
+
+    public void filterList(ArrayList<Customer> filteredList){
+        customers = filteredList;
+        notifyDataSetChanged();
     }
 }

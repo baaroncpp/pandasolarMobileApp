@@ -43,8 +43,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="80dp"
-            android:gravity="center"
-            >
+            android:gravity="center">
 
             <EditText
                 android:id="@+id/login_phone_number"

@@ -19,7 +19,7 @@
 
         <TextView
             android:id="@+id/payment_item_payee"
-            android:textColor="@color/dark_grey"
+            android:textColor="@color/colorPrimary"
             android:textStyle="bold"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -81,9 +81,10 @@
         android:gravity="end"/>
 
     <View
+        android:id="@+id/payment_item_hor_view"
         android:layout_width="wrap_content"
         android:layout_height="1dp"
         android:layout_marginTop="5dp"
-        android:background="@color/grey"/>
+        android:background="@color/colorPrimary"/>
 
 </LinearLayout>

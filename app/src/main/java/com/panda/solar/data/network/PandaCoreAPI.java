@@ -1,6 +1,7 @@
 package com.panda.solar.data.network;
 
 import com.google.gson.JsonObject;
+import com.panda.solar.Model.entities.AndroidTokens;
 import com.panda.solar.Model.entities.CustList;
 import com.panda.solar.Model.entities.Customer;
 import com.panda.solar.Model.entities.CustomerMeta;
@@ -38,6 +39,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -52,24 +54,28 @@ public interface PandaCoreAPI {
     @POST("/token/get")
     Observable<NetworkResponse> login(@Body JsonObject body);
 
-    @POST("/token/refresh")
+    @POST("v1/android/token/{token}")
+    Call<AndroidTokens> registerDevice(@Path("token")String deviceToken);
+
+    @POST("token/refresh")
     Call<Token> refreshJWT(@Body Token tokens);
 
-    @POST("/token/get")
+    @POST("token/get")
     Call<Token> bkLogin(@Body Login login);
 
     /*user endpoint*/
     @GET("v1/user/get/androiduser")
     Call<User> getUser();
 
-    @GET("/v1/user/get")
+    @GET("v1/user/get")
     Call<User> getUserById(@Query("id") String id);
 
     @POST("v1/user/add")
     Call<User> addUser(@Body User user);
 
-    @GET("")
-    Call<List<User>> getUsers();
+    @PUT("v1/user/changepassword")
+    Call<User> changepassword(@Query("old") String oldPassword,
+                              @Query("new") String newPassword);
 
     /* customer endpoint*/
     @GET("v1/customermeta/get/all")
@@ -117,7 +123,7 @@ public interface PandaCoreAPI {
 
     @POST("v1/sales/add/lease")
     Call<LeaseSale> makeLeaseSale(@Query("leaseoffer")int leaseoffer,
-                                  @Query("agentid")String agentid,
+                                  //@Query("agentid")String agentid,
                                   @Query("customerid")String customerid,
                                   @Query("cordlat")float cordlat,
                                   @Query("cordlong")float cordlong,
@@ -130,13 +136,13 @@ public interface PandaCoreAPI {
                                  @Query("sortby") String sortby,
                                  @Query("sortorder") String sortorder);
 
-    @GET("v1/payments/get")
-    Call<PaymentList> getAllLeasePayments(@Query("page") int page,
+    @GET("v1/payments/get/mobile")
+    Call<List<LeasePayment>> getAllLeasePayments(@Query("page") int page,
                                           @Query("size") int size,
                                           @Query("direction") String direction);
 
-    @GET("v1/payments/get/{id}")
-    Call<PaymentList> getAllAgentLeasePayments(@Path("id") String id,
+    @GET("v1/payments/get/mobile")
+    Call<List<LeasePayment>> getAllAgentLeasePayments(
                                                @Query("page") int page,
                                                @Query("size") int size,
                                                @Query("direction") String direction);
@@ -146,11 +152,11 @@ public interface PandaCoreAPI {
                            @Query("approvestatus")String approveStatus,
                            @Query("reviewdescription")String reviewDescription);
 
-    @GET("v1/sales/get/allsales")
+    @GET("v1/sales/mobileuser")
     Call<List<SaleModel>> getAllSales(@Query("page") int page,
-                                      @Query("size") int size,
-                                      @Query("sortby") String sortby,
-                                      @Query("sortorder") String sortorder);
+                             @Query("size") int size,
+                             @Query("sortby") String sortby,
+                             @Query("sortorder") String sortorder);
 
     @GET("v1/sales/agent/salesum/{id}")
     Call<Map<String, Integer>> agentSaleSum(@Path("id") String agentId);

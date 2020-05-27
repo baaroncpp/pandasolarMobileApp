@@ -4,11 +4,14 @@ import android.app.ProgressDialog;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -17,6 +20,7 @@ import android.widget.Toast;
 import com.panda.solar.Model.entities.User;
 import com.panda.solar.activities.R;
 import com.panda.solar.presentation.view.activities.HomeActivity;
+import com.panda.solar.presentation.view.activities.SettingsActivity;
 import com.panda.solar.utils.Constants;
 import com.panda.solar.utils.Utils;
 import com.panda.solar.viewModel.SaleViewModel;
@@ -29,7 +33,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileFragment extends Fragment {
 
-    private LiveData<User> liveUser;
     private ProgressDialog dialog;
     private UserViewModel userViewModel;
     private TextView username;
@@ -41,7 +44,6 @@ public class ProfileFragment extends Fragment {
     private TextView leaseSales;
     private CircleImageView profileView;
     private TextView userType;
-    private LiveData<String> responseMessage;
 
     @Nullable
     @Override
@@ -49,11 +51,28 @@ public class ProfileFragment extends Fragment {
         View view = inflater.inflate(R.layout.profile_fragement, container, false);
         super.onViewCreated(view, savedInstanceState);
 
+        Toolbar toolbar = view.findViewById(R.id.home_toolbar_pro);
+        toolbar.inflateMenu(R.menu.appmenu);
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                if (item.getItemId() == R.id.appmenu_logout) {
+                    Utils.logoutUtil(getActivity());
+
+                    startActivity(new Intent(getActivity(), HomeActivity.class));
+                    getActivity().finish();
+                }else if(item.getItemId() == R.id.appmenu_settings){
+                    startActivity(new Intent(getActivity(), SettingsActivity.class));
+                }
+                return false;
+            }
+        });
+
         init(view);
 
         userViewModel = ViewModelProviders.of(getActivity()).get(UserViewModel.class);
 
-        liveUser = userViewModel.getUser();
+        LiveData<User> liveUser = userViewModel.getUser();
         dialog.show();
         liveUser.observe(getActivity(), new Observer<User>() {
             @Override
@@ -71,6 +90,7 @@ public class ProfileFragment extends Fragment {
         email.setText(user.getEmail());
         phoneNumber.setText("+"+Utils.insertCharacterForEveryNDistance(3, user.getPrimaryphone(), ' '));
         profile_status.setText(accountStatus(user.isIsactive()));
+        userType.setText(user.getUsertype());
 
         Picasso.with(getActivity()).load(user.getProfilepath()).fit().centerCrop().placeholder(R.drawable.ic_default_profile).error(R.drawable.ic_default_profile).into(profileView);
 
@@ -87,10 +107,11 @@ public class ProfileFragment extends Fragment {
         profileView = view.findViewById(R.id.user_profile_view);
         leaseSales = view.findViewById(R.id.agent_leasesale_sum);
         directSales = view.findViewById(R.id.agent_directsale_sum);
+        userType = view.findViewById(R.id.user_type);
     }
 
     public void observeResponse(){
-        responseMessage = userViewModel.getResponseMessage();
+        LiveData<String> responseMessage = userViewModel.getResponseMessage();
         responseMessage.observe(getActivity(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
@@ -104,10 +125,10 @@ public class ProfileFragment extends Fragment {
             dialog.dismiss();
         }else if(msg.equals(Constants.ERROR_RESPONSE)){
             dialog.dismiss();
-            Toast.makeText(getActivity(),"SOMETHING WENT WRONG !!!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(),"SOMETHING WENT WRONG !!!", Toast.LENGTH_SHORT).show();
         }else if(msg.equals(Constants.FAILURE_RESPONSE)){
             dialog.dismiss();
-            Toast.makeText(getActivity(),"CONNECTION FAILURE", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(),"CONNECTION FAILURE", Toast.LENGTH_SHORT).show();
         }
     }
 

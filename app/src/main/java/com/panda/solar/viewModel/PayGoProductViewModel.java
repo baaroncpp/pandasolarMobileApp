@@ -55,6 +55,7 @@ public class PayGoProductViewModel extends ViewModel {
 
             @Override
             public void onError(NetworkResponse response) {
+                networkResponseMutableLiveData.postValue(response);
                 responseMessage.postValue(Constants.ERROR_RESPONSE);
             }
         }, serial);

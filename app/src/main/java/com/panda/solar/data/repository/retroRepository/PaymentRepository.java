@@ -32,11 +32,11 @@ public class PaymentRepository implements PaymentDAO {
     public MutableLiveData<List<LeasePayment>> getAllPayments(final ResponseCallBack callBack, int page, int size, String direction) {
 
         final MutableLiveData<List<LeasePayment>> dataResult = new MutableLiveData<>();
-        Call<PaymentList> call = pandaCoreAPI.getAllLeasePayments(page, size, direction);
+        Call<List<LeasePayment>> call = pandaCoreAPI.getAllLeasePayments(page, size, direction);
 
-        call.enqueue(new Callback<PaymentList>() {
+        call.enqueue(new Callback<List<LeasePayment>>() {
             @Override
-            public void onResponse(Call<PaymentList> call, Response<PaymentList> response) {
+            public void onResponse(Call<List<LeasePayment>> call, Response<List<LeasePayment>> response) {
                 if(!response.isSuccessful()){
                     netResponse.setBody(response.message());
                     netResponse.setCode(response.code());
@@ -45,12 +45,12 @@ public class PaymentRepository implements PaymentDAO {
                     return;
                 }
                 callBack.onSuccess();
-                dataResult.postValue(response.body().getPaymentList());
+                dataResult.postValue(response.body());
                 Log.e("success","good req");
             }
 
             @Override
-            public void onFailure(Call<PaymentList> call, Throwable t) {
+            public void onFailure(Call<List<LeasePayment>> call, Throwable t) {
                 callBack.onFailure();
                 Log.e("failure",t.getMessage());
                 return;
@@ -60,14 +60,14 @@ public class PaymentRepository implements PaymentDAO {
     }
 
     @Override
-    public MutableLiveData<List<LeasePayment>> getAllPaymentsByAgentSales(final ResponseCallBack callBack, String agentId, int page, int size, String direction) {
+    public MutableLiveData<List<LeasePayment>> getAllPaymentsByAgentSales(final ResponseCallBack callBack, int page, int size, String direction) {
 
         final MutableLiveData<List<LeasePayment>> dataResult = new MutableLiveData<>();
-        Call<PaymentList> call = pandaCoreAPI.getAllAgentLeasePayments(agentId, page, size, direction);
+        Call<List<LeasePayment>> call = pandaCoreAPI.getAllAgentLeasePayments( page, size, direction);
 
-        call.enqueue(new Callback<PaymentList>() {
+        call.enqueue(new Callback<List<LeasePayment>>() {
             @Override
-            public void onResponse(Call<PaymentList> call, Response<PaymentList> response) {
+            public void onResponse(Call<List<LeasePayment>> call, Response<List<LeasePayment>> response) {
                 if(!response.isSuccessful()){
                     netResponse.setBody(response.message());
                     netResponse.setCode(response.code());
@@ -75,11 +75,11 @@ public class PaymentRepository implements PaymentDAO {
                     return;
                 }
                 callBack.onSuccess();
-                dataResult.postValue(response.body().getPaymentList());
+                dataResult.postValue(response.body());
             }
 
             @Override
-            public void onFailure(Call<PaymentList> call, Throwable t) {
+            public void onFailure(Call<List<LeasePayment>> call, Throwable t) {
                 callBack.onFailure();
                 return;
             }

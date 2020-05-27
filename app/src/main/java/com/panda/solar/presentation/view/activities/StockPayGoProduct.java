@@ -114,11 +114,10 @@ public class StockPayGoProduct extends AppCompatActivity {
             @Override
             public void onChanged(@Nullable List<LeaseOffer> leaseOffers) {
                 resultLeaseOffers.addAll(leaseOffers);
-                observeProductReq();
                 initSpinner();
             }
         });
-
+        observeProductReq();
     }
 
     public void init(){

@@ -90,6 +90,8 @@ public class UploadLinkReposotory implements UploadLinkDAO {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+                    netResponse.setCode(response.code());
+                    callBack.onError(netResponse);
                     return;
                 }
                 callBack.onSuccess();

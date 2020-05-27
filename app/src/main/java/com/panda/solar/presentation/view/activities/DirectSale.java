@@ -39,7 +39,6 @@ public class DirectSale extends AppCompatActivity {
 
     private MaterialButton productButtonView;
     private MaterialButton customerButtonView;
-    //private MaterialButton locationButtonView;
     private MaterialButton directSaleSubmitBtn;
     private TextInputEditText directSaledescription;
     private TextInputLayout directSaleDescriptionWrapper;
@@ -89,7 +88,7 @@ public class DirectSale extends AppCompatActivity {
                 if(validateProductBtn() && validateCustomerBtn() && validateDescriptionField()){
 
                     directSaleModel = new DirectSaleModel();
-                    directSaleModel.setAgentid(Utils.getSharedPreference(Constants.USER_ID));
+                    //directSaleModel.setAgentid(Utils.getSharedPreference(Constants.USER_ID));
                     directSaleModel.setCreatedon(new Date());
                     directSaleModel.setScannedserial(productResult.getSerialNumber());
                     directSaleModel.setCustomerid(customerResult.getUserid());

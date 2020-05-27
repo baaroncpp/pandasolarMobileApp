@@ -35,7 +35,7 @@ public class PaymentViewModel extends ViewModel {
         }, page, size, direction);
     }
 
-    public LiveData<List<LeasePayment>> getAllAgentLeasePayment(String agentId, int page, int size, String direction){
+    public LiveData<List<LeasePayment>> getAllAgentLeasePayment(int page, int size, String direction){
         return paymentDAO.getAllPaymentsByAgentSales(new ResponseCallBack() {
             @Override
             public void onSuccess() {responseMessage.postValue(Constants.SUCCESS_RESPONSE);}
@@ -45,7 +45,7 @@ public class PaymentViewModel extends ViewModel {
 
             @Override
             public void onError(NetworkResponse response) {responseMessage.postValue(Constants.ERROR_RESPONSE);}
-        }, agentId, page, size, direction);
+        }, page, size, direction);
     }
 
 }

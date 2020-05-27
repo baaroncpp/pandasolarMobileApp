@@ -11,5 +11,5 @@ public interface PaymentDAO {
 
     MutableLiveData<List<LeasePayment>> getAllPayments(ResponseCallBack responseWrapper, int page, int size, String direction);
 
-    MutableLiveData<List<LeasePayment>> getAllPaymentsByAgentSales(ResponseCallBack responseWrapper, String agentId, int page, int size, String direction);
+    MutableLiveData<List<LeasePayment>> getAllPaymentsByAgentSales(ResponseCallBack responseWrapper, int page, int size, String direction);
 }

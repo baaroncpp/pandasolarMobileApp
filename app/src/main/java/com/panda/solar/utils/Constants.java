@@ -20,6 +20,7 @@ public class Constants {
     public static final String DIRECT_SALE = "direct_sale";
     public static final String SALE_TYPE = "sale_type";
 
+    public static final String VILLAGE_RESULT ="villageObjectResult";
     public final static String PRODUCT_RESULT = "saleProductResult";
     public final static String SCAN_RESULT = "barcodeScanResult";
     public final static String CUSTOMER_RESULT = "customerResult";
@@ -79,5 +80,6 @@ public class Constants {
     public static final int CAMERA_PERMISSION_CODE = 11;
     public static final int READ_STORAGE_PERMISSION_CODE = 12;
     public static final int LOCATION_PERMISSION_CODE = 13;
+    public static final int VILLAGE_OBJECT_CODE = 14;
 }
 

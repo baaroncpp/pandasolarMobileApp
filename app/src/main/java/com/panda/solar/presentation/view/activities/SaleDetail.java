@@ -4,19 +4,21 @@ import android.app.ProgressDialog;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.DialogInterface;
 import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.panda.solar.Model.entities.CustomerMeta;
 import com.panda.solar.Model.entities.Sale;
 import com.panda.solar.Model.entities.SaleModel;
 import com.panda.solar.activities.R;
+import com.panda.solar.data.network.NetworkResponse;
 import com.panda.solar.utils.Constants;
 import com.panda.solar.utils.Utils;
 import com.panda.solar.viewModel.SaleViewModel;
@@ -83,16 +85,17 @@ public class SaleDetail extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 progressDialog.show();
-                Sale sale = approveSale(saleModel.getId());
-                if(sale != null){
-                    saleStatus.setText(Utils.saleStatus(sale.getSalestatus()));
+                approveSale(saleModel.getId());
+                if(saleResult != null){
+                    saleStatus.setText(Utils.saleStatus(saleResult.getSalestatus()));
                     //Toast.makeText(SaleDetail.this,"APPROVED SUCCESSFULLY", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+        observeResponse();
     }
 
-    public Sale approveSale(String saleId){
+    public void approveSale(String saleId){
         saleResult = new Sale();
         LiveData<Sale> sale = saleViewModel.approveSale(saleId, "approved", "Mobile approved");
         sale.observe(this, new Observer<Sale>() {
@@ -101,8 +104,7 @@ public class SaleDetail extends AppCompatActivity {
                 saleResult = sale;
             }
         });
-        observeResponse();
-        return saleResult;
+
     }
 
     public void observeResponse(){
@@ -119,11 +121,34 @@ public class SaleDetail extends AppCompatActivity {
         if(msg.equals(Constants.SUCCESS_RESPONSE)){
             progressDialog.dismiss();
         }else if(msg.equals(Constants.ERROR_RESPONSE)){
+
+            LiveData<NetworkResponse> networkResponse = saleViewModel.getNetworkResponse();
+
+            networkResponse.observe(this, new Observer<NetworkResponse>() {
+                @Override
+                public void onChanged(@Nullable NetworkResponse response) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(SaleDetail.this);
+                    builder.setTitle("Error");
+                    builder.setMessage(response.getBody());
+                    builder.setCancelable(false);
+                    builder.setPositiveButton("Ok", new DialogInterface.OnClickListener(){
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    });
+
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                }
+            });
+
             progressDialog.dismiss();
             Toast.makeText(this,"SOMETHING WENT WRONG, APPROVAL FAILED!!!", Toast.LENGTH_SHORT).show();
         }else if(msg.equals(Constants.FAILURE_RESPONSE)){
             progressDialog.dismiss();
-            Toast.makeText(this,"CONNECTION FAILURE, NOT APPROVED", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,"Connection Error, NOT APPROVED", Toast.LENGTH_SHORT).show();
         }
     }
 

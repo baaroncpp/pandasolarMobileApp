@@ -3,8 +3,8 @@ package com.panda.solar.viewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
-import android.util.Log;
 
+import com.panda.solar.Model.entities.AndroidTokens;
 import com.panda.solar.Model.entities.Login;
 import com.panda.solar.Model.entities.Token;
 import com.panda.solar.Model.entities.User;
@@ -23,7 +23,7 @@ public class UserViewModel extends ViewModel {
     private MutableLiveData<NetworkResponse> networkResponse = new MutableLiveData<>();
 
     public LiveData<User> getUser(){
-        Log.e("userViewModel","accessed");
+
         return userDAO.getUser(new ResponseCallBack() {
             @Override
             public void onSuccess() {
@@ -63,6 +63,26 @@ public class UserViewModel extends ViewModel {
         }, login);
     }
 
+    public LiveData<AndroidTokens> registerDevice(String token){
+        return userDAO.registerDeviceFCM(new ResponseCallBack() {
+            @Override
+            public void onSuccess() {
+                responseMessage.postValue(Constants.SUCCESS_RESPONSE);
+            }
+
+            @Override
+            public void onFailure() {
+                responseMessage.postValue(Constants.FAILURE_RESPONSE);
+            }
+
+            @Override
+            public void onError(NetworkResponse response) {
+                networkResponse.postValue(response);
+                responseMessage.postValue(Constants.ERROR_RESPONSE);
+            }
+        }, token);
+    }
+
     public LiveData<List<User>> getAllUser(String userType, int page, int size, String sortby, String sortorder){
         return userDAO.getUsers(userType, page, size, sortby, sortorder);
     }
@@ -85,6 +105,26 @@ public class UserViewModel extends ViewModel {
                 responseMessage.postValue(Constants.ERROR_RESPONSE);
             }
         }, user);
+    }
+
+    public LiveData<User> changePassword(String newPassword, String oldPassword){
+        return userDAO.changePassword(new ResponseCallBack() {
+            @Override
+            public void onSuccess() {
+                responseMessage.postValue(Constants.SUCCESS_RESPONSE);
+            }
+
+            @Override
+            public void onFailure() {
+                responseMessage.postValue(Constants.FAILURE_RESPONSE);
+            }
+
+            @Override
+            public void onError(NetworkResponse response) {
+                networkResponse.postValue(response);
+                responseMessage.postValue(Constants.ERROR_RESPONSE);
+            }
+        }, newPassword, oldPassword);
     }
 
     public LiveData<String> getResponseMessage(){

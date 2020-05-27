@@ -37,6 +37,7 @@ public class SaleViewModel extends ViewModel {
 
             @Override
             public void onError(NetworkResponse response) {
+                networkResponse.postValue(response);
                 responseMessage.postValue(Constants.ERROR_RESPONSE);
             }
         }, directSaleModel);
@@ -56,6 +57,7 @@ public class SaleViewModel extends ViewModel {
 
             @Override
             public void onError(NetworkResponse response) {
+                networkResponse.postValue(response);
                 responseMessage.postValue(Constants.ERROR_RESPONSE);
             }
         }, leaseSaleModel);
@@ -75,6 +77,7 @@ public class SaleViewModel extends ViewModel {
 
             @Override
             public void onError(NetworkResponse response) {
+                networkResponse.postValue(response);
                 responseMessage.postValue(Constants.ERROR_RESPONSE);
             }
         }, page, size, sortby, sortorder);
@@ -94,6 +97,7 @@ public class SaleViewModel extends ViewModel {
 
             @Override
             public void onError(NetworkResponse response) {
+                networkResponse.postValue(response);
                 responseMessage.postValue(Constants.ERROR_RESPONSE);
             }
         }, id, page, size, sortby, sortorder);
@@ -114,6 +118,7 @@ public class SaleViewModel extends ViewModel {
             @Override
             public void onError(NetworkResponse response) {
                 responseMessage.postValue(Constants.ERROR_RESPONSE);
+                networkResponse.postValue(response);
             }
         }, saleId, approveStatus, reviewDescription);
     }

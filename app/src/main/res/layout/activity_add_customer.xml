@@ -302,30 +302,24 @@
 
                 </LinearLayout>
 
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <android.support.design.widget.TextInputLayout
-                        android:id="@+id/village_wrapper"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    <android.support.design.button.MaterialButton
+                        android:id="@+id/cust_add_village_btn"
+                        app:strokeWidth="1dp"
+                        app:strokeColor="@color/dark_grey"
+                        android:textSize="14sp"
+                        android:textColor="@color/dark_grey"
                         android:layout_width="match_parent"
-                        android:layout_height="55dp"
-                        android:layout_marginBottom="8dp"
-                        app:boxStrokeColor="@color/dark_grey"
-                        app:boxStrokeWidth="2dp">
-
-                        <Spinner
-                            android:id="@+id/cust_village"
-                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:outlineAmbientShadowColor="@color/dark_grey"
-                            android:outlineSpotShadowColor="@color/dark_grey"
-                            android:textSize="14sp" />
-                    </android.support.design.widget.TextInputLayout>
+                        android:textAlignment="textStart"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_height="60dp"
+                        android:textAllCaps="false"
+                        android:outlineSpotShadowColor="@color/grey"
+                        android:text="Choose Village"/>
 
                 </LinearLayout>
 

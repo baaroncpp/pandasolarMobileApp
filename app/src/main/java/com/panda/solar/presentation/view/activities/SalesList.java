@@ -11,7 +11,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
 import android.view.View;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +27,7 @@ import com.panda.solar.utils.Utils;
 import com.panda.solar.viewModel.SaleViewModel;
 import com.panda.solar.viewModel.UserViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SalesList extends AppCompatActivity {
@@ -39,12 +42,15 @@ public class SalesList extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private LiveData<String> errorMsgLive;
     private String userType;
+    private List<SaleModel> filteredSale;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sales_list);
 
+        filteredSale = new ArrayList<>();
+        salesList = new ArrayList<>();
         errorView = findViewById(R.id.sales_error_view);
         recyclerView = findViewById(R.id.sale_list_recycler);
         progressDialog = Utils.customerProgressBar(this);
@@ -55,11 +61,11 @@ public class SalesList extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        if(Utils.getSharedPreference(Constants.USER_TYPE).equals("")){
+        /*if(Utils.getSharedPreference(Constants.USER_TYPE).equals("")){
             getUserDetails();
-        }
+        }*/
 
-        userType = Utils.getSharedPreference(Constants.USER_TYPE);
+        //userType = Utils.getSharedPreference(Constants.USER_TYPE);
 
         saleViewModel = ViewModelProviders.of(this).get(SaleViewModel.class);
 
@@ -71,49 +77,54 @@ public class SalesList extends AppCompatActivity {
             }
         });
         progressDialog.show();
-        getSalesList(userType);
+        getSalesList();
     }
 
-    public void getSalesList(String userType){
-        if(userType.equalsIgnoreCase("ADMIN")){
+    public void getSalesList(){
 
-            liveSales = saleViewModel.getAllSales(0,10, "createdon", "DESC");
+        liveSales = saleViewModel.getAllSales(0,100, "createdon", "DESC");
+        liveSales.observe(this, new Observer<List<SaleModel>>() {
+            @Override
+            public void onChanged(@Nullable List<SaleModel> sales) {
+                salesList.addAll(sales);
+                buildRecycler(sales);
+            }
+        });
 
-            liveSales.observe(this, new Observer<List<SaleModel>>() {
+    }
+
+    public void buildRecycler(final List<SaleModel> sales){
+
+        if(!sales.isEmpty()){
+
+            layoutManager = new LinearLayoutManager(this);
+            recyclerView.setLayoutManager(layoutManager);
+            salesAdapter = new SalesAdapter(sales, this);
+            recyclerView.setAdapter(salesAdapter);
+
+            salesAdapter.setSaleOnClickListener(new SalesAdapter.SaleOnClickListener() {
                 @Override
-                public void onChanged(@Nullable List<SaleModel> sales) {
-                    buildRecycler(sales);
+                public void onSaleItemClick(int position) {
+                    Intent intent = new Intent(SalesList.this, SaleDetail.class);
+
+                    if(!filteredSale.isEmpty()){
+                        intent.putExtra(Constants.SALE_OBJ, filteredSale.get(position));
+                        intent.putExtra("saleDate", Utils.readableDate(filteredSale.get(position).getCreatedon()));
+                    }else{
+                        intent.putExtra(Constants.SALE_OBJ, sales.get(position));
+                        intent.putExtra("saleDate", Utils.readableDate(sales.get(position).getCreatedon()));
+                    }
+
+                    startActivity(intent);
                 }
             });
 
         }else{
-            liveSales = saleViewModel.getAgentSales(Utils.getSharedPreference(Constants.USER_ID),0,10, "createdon", "DESC");
-
-            liveSales.observe(this, new Observer<List<SaleModel>>() {
-                @Override
-                public void onChanged(@Nullable List<SaleModel> sales) {
-                    buildRecycler(sales);
-                }
-            });
+            recyclerView.setVisibility(View.GONE);
+            errorView.setVisibility(View.VISIBLE);
+            errorView.setText("No Sales");
         }
-    }
 
-    public void buildRecycler(final List<SaleModel> sales){
-        layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-        salesAdapter = new SalesAdapter(sales, this);
-        recyclerView.setAdapter(salesAdapter);
-
-
-        salesAdapter.setSaleOnClickListener(new SalesAdapter.SaleOnClickListener() {
-            @Override
-            public void onSaleItemClick(int position) {
-                Intent intent = new Intent(SalesList.this, SaleDetail.class);
-                intent.putExtra(Constants.SALE_OBJ, sales.get(position));
-                intent.putExtra("saleDate", Utils.readableDate(sales.get(position).getCreatedon()));
-                startActivity(intent);
-            }
-        });
     }
 
     public void handleResponse(String msg){
@@ -133,10 +144,47 @@ public class SalesList extends AppCompatActivity {
 
             recyclerView.setVisibility(View.GONE);
             errorView.setVisibility(View.VISIBLE);
-            errorView.setText("NO CONNECTION");
+            errorView.setText("Connection Error");
 
             Toast.makeText(this,"CONNECTION FAILURE", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void filter(String text){
+
+        if(!filteredSale.isEmpty()){
+            filteredSale.clear();
+        }
+
+        for(SaleModel item : salesList){
+            if(item.getCustomer().getUser().getFirstname().toLowerCase().contains(text.toLowerCase()) || item.getCustomer().getUser().getLastname().toLowerCase().contains(text.toLowerCase())){
+                filteredSale.add(item);
+            }
+        }
+        salesAdapter.filterList(filteredSale);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.sale_search, menu);
+
+        SearchView searchView = (SearchView)menu.findItem(R.id.search_sale).getActionView();
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                filter(newText);
+                return false;
+            }
+        });
+
+        return true;
     }
 
     public void getUserDetails(){

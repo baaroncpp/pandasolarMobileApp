@@ -5,6 +5,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
@@ -17,10 +18,10 @@ import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -31,21 +32,18 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.panda.solar.Model.entities.Customer;
-import com.panda.solar.Model.entities.LeaseOffer;
 import com.panda.solar.Model.entities.LeaseSaleModel;
 import com.panda.solar.Model.entities.PayGoProduct;
-import com.panda.solar.Model.entities.Product;
 import com.panda.solar.activities.R;
+import com.panda.solar.data.network.NetworkResponse;
 import com.panda.solar.utils.Constants;
 import com.panda.solar.utils.Utils;
 import com.panda.solar.viewModel.PayGoProductViewModel;
-import com.panda.solar.viewModel.SaleViewModel;
 
 public class LeaseSaleActivity extends AppCompatActivity {
 
     private MaterialButton scanSerialNumberViewBtn;
     private TextInputEditText serialNumberView;
-    //private MaterialButton setLocationBtn;
     private MaterialButton leaseCustomerBtn;
     private TextInputEditText leaseSaleDescriptionView;
     private TextInputLayout leaseDescriptionWrapper;
@@ -62,6 +60,7 @@ public class LeaseSaleActivity extends AppCompatActivity {
     private double latitude;
     private double longitude;
     private FusedLocationProviderClient fusedLocationProviderClient;
+    private LiveData<Boolean> existsLive;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,24 +94,46 @@ public class LeaseSaleActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(validateCustomerBtn() && validateDescriptionField() && validateSerialEditView()){
-                    leaseSaleModel = new LeaseSaleModel();
-                    leaseSaleModel.setAgentid(Utils.getSharedPreference(Constants.USER_ID));
-                    leaseSaleModel.setCordlat((float)latitude);
-                    leaseSaleModel.setCordlong((float)longitude);
-                    leaseSaleModel.setCustomerid(customerResult.getUserid());
-                    leaseSaleModel.setDeviceserial(serialNumberView.getText().toString());
-                    leaseSaleModel.setLeaseoffer(payGoProd.getLeaseOffer().getId());
 
-                    Intent intent = new Intent(LeaseSaleActivity.this, SaleReview.class);
-                    intent.putExtra(Constants.SALE_REVIEW, Constants.LEASE_SALE_REVIEW);
-                    intent.putExtra(Constants.SALE_CUSTOMER, customerResult);
-                    intent.putExtra(Constants.SALE_PRODCUT, payGoProd);
-                    intent.putExtra(Constants.LEASE_SALE_OBJ, leaseSaleModel);
-                    startActivity(intent);
+                    //getPayGoProduct(serialNumberView.getText().toString());
 
+                    if(payGoProd == null) {
+                        String sn = serialNumberView.getText().toString();
+
+                        progressDialog.show();
+                        getPayGoProduct(sn);
+                        //saleReview();
+                       /* productExists(sn);
+
+                        if(productExists){
+                            saleReview();
+                        }else{
+                            Toast.makeText(LeaseSaleActivity.this, "Product not registered by PANDASOLAR", Toast.LENGTH_SHORT).show();
+                        }*/
+                    }else{
+                        saleReview();
+                    }
                 }
             }
         });
+
+    }
+
+    public void saleReview(){
+        leaseSaleModel = new LeaseSaleModel();
+        //leaseSaleModel.setAgentid(Utils.getSharedPreference(Constants.USER_ID));
+        leaseSaleModel.setCordlat((float)latitude);
+        leaseSaleModel.setCordlong((float)longitude);
+        leaseSaleModel.setCustomerid(customerResult.getUserid());
+        leaseSaleModel.setDeviceserial(serialNumberView.getText().toString());
+        leaseSaleModel.setLeaseoffer(payGoProd.getLeaseOffer().getId());
+
+        Intent intent = new Intent(LeaseSaleActivity.this, SaleReview.class);
+        intent.putExtra(Constants.SALE_REVIEW, Constants.LEASE_SALE_REVIEW);
+        intent.putExtra(Constants.SALE_CUSTOMER, customerResult);
+        intent.putExtra(Constants.SALE_PRODCUT, payGoProd);
+        intent.putExtra(Constants.LEASE_SALE_OBJ, leaseSaleModel);
+        startActivity(intent);
     }
 
     public void getPayGoResponse(){
@@ -130,7 +151,32 @@ public class LeaseSaleActivity extends AppCompatActivity {
     public void handleResponse(String msg){
         if(msg.equals(Constants.SUCCESS_RESPONSE)){
             progressDialog.dismiss();
+            saleReview();
         }else if(msg.equals(Constants.ERROR_RESPONSE)){
+
+            LiveData<NetworkResponse> networkResponse = payGoProductViewModel.getNetworkResponse();
+
+            networkResponse.observe(this, new Observer<NetworkResponse>() {
+                @Override
+                public void onChanged(@Nullable NetworkResponse response) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(LeaseSaleActivity.this);
+                    builder.setTitle("Error");
+                    builder.setMessage(response.getBody());
+                    builder.setCancelable(false);
+                    builder.setPositiveButton("Ok", new DialogInterface.OnClickListener(){
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            //finish();
+                            dialog.dismiss();
+                        }
+                    });
+
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                }
+            });
+
             progressDialog.dismiss();
             Toast.makeText(this,"SOMETHING WENT WRONG, TRY AGAIN", Toast.LENGTH_SHORT).show();
         }else if(msg.equals(Constants.FAILURE_RESPONSE)){
@@ -138,21 +184,23 @@ public class LeaseSaleActivity extends AppCompatActivity {
             Toast.makeText(this,"CONNECTION FAILURE", Toast.LENGTH_SHORT).show();
         }
     }
-
     public void getPayGoProduct(String scannedserial){
         LiveData<PayGoProduct> payGoProduct = payGoProductViewModel.getPayGoProduct(scannedserial);
         payGoProduct.observe(this, new Observer<PayGoProduct>() {
             @Override
             public void onChanged(@Nullable PayGoProduct payGoProduct) {
                 payGoProd = payGoProduct;
+                getPayGoResponse();
             }
         });
+
     }
 
-    public void productExists(final String scannedSerial){
+   /* public boolean productExists(final String scannedSerial){
+
         final String serial = scannedSerial;
 
-        LiveData<Boolean> existsLive = payGoProductViewModel.payGoProductIsAvailable(scannedSerial);
+        existsLive = payGoProductViewModel.payGoProductIsAvailable(scannedSerial);
         existsLive.observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(@Nullable Boolean aBoolean) {
@@ -163,7 +211,9 @@ public class LeaseSaleActivity extends AppCompatActivity {
             }
         });
         getPayGoResponse();
-    }
+        return productExists;
+    }*/
+
 
     public boolean validateCustomerBtn(){
         String text = leaseCustomerBtn.getText().toString();
@@ -183,25 +233,6 @@ public class LeaseSaleActivity extends AppCompatActivity {
             return false;
         }
     }
-
-   /* public boolean validateLocationBtn(){
-        String text = setLocationBtn.getText().toString();
-
-        if(!text.equalsIgnoreCase("Set Location")){
-            setLocationBtn.setStrokeColor(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary)));
-            setLocationBtn.setTextColor(getResources().getColor(R.color.colorPrimary));
-            setLocationBtn.setIcon(getResources().getDrawable(R.drawable.ic_panda_location_yellow));
-            setLocationBtn.setAllCaps(false);
-            return true;
-        }else{
-            setLocationBtn.setStrokeColor(ColorStateList.valueOf(getResources().getColor(R.color.dark_grey)));
-            setLocationBtn.setTextColor(getResources().getColor(R.color.dark_grey));
-            setLocationBtn.setIcon(getResources().getDrawable(R.drawable.ic_panda_location_black));
-            setLocationBtn.setAllCaps(false);
-            Toast.makeText(this, "Please Set The Customer Location", Toast.LENGTH_SHORT).show();
-            return true;
-        }
-    }*/
 
     public boolean validateDescriptionField(){
         String text = leaseSaleDescriptionView.getText().toString();
@@ -233,12 +264,10 @@ public class LeaseSaleActivity extends AppCompatActivity {
 
     public void init(){
 
-        productExists = Boolean.FALSE;
         payGoProductViewModel = ViewModelProviders.of(this).get(PayGoProductViewModel.class);
 
         scanSerialNumberViewBtn = findViewById(R.id.scanner_button);
         serialNumberView = findViewById(R.id.lease_sale_serialnumber);
-        //setLocationBtn = findViewById(R.id.set_location_button);
         leaseSaleDescriptionView = findViewById(R.id.lease_sale_description);
         leaseCustomerBtn = findViewById(R.id.add_lease_customer_button);
         leaseDescriptionWrapper = findViewById(R.id.description_text_wrapper);
@@ -246,6 +275,8 @@ public class LeaseSaleActivity extends AppCompatActivity {
         makeLeaseSaleBtn = findViewById(R.id.submit_lease_sale_btn);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         progressDialog = Utils.customerProgressBar(this);
+
+        productExists = true;
     }
 
     @Override
@@ -259,14 +290,21 @@ public class LeaseSaleActivity extends AppCompatActivity {
                 {
                     String serialNumberResult = data.getStringExtra(Constants.SCAN_RESULT);
                     progressDialog.show();
-                    productExists(serialNumberResult);
 
-                    if(productExists){
+                    if(!serialNumberResult.isEmpty()){
+                        serialNumberView.setText(serialNumberResult);
+                        progressDialog.dismiss();
+                    }else{
+                        progressDialog.dismiss();
+                        Toast.makeText(this, "Serial Number not captured, Try again", Toast.LENGTH_SHORT).show();
+                    }
+
+                    /*if(productExists(serialNumberResult)){
                         serialNumberView.setText(serialNumberResult);
                         validateSerialEditView();
                     }else{
                         Toast.makeText(this, "Product not registered by PANDASOLAR", Toast.LENGTH_SHORT).show();
-                    }
+                    }*/
                 } else if(resultCode == RESULT_CANCELED) {
                     Toast.makeText(this, "Camera unavailable", Toast.LENGTH_SHORT).show();
                 }

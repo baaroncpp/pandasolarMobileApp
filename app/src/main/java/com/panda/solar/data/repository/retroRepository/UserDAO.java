@@ -2,6 +2,7 @@ package com.panda.solar.data.repository.retroRepository;
 
 import android.arch.lifecycle.MutableLiveData;
 
+import com.panda.solar.Model.entities.AndroidTokens;
 import com.panda.solar.Model.entities.Login;
 import com.panda.solar.Model.entities.Token;
 import com.panda.solar.Model.entities.User;
@@ -24,5 +25,9 @@ public interface UserDAO {
     MutableLiveData<List<User>> getUsers(String userType, int page, int size, String sortby, String sortorder);
 
     MutableLiveData<User> updateUser(User user);
+
+    MutableLiveData<AndroidTokens> registerDeviceFCM(ResponseCallBack callBack, String deviceToken);
+
+    MutableLiveData<User> changePassword(ResponseCallBack callBack, String oldPassword, String newPassword);
 
 }

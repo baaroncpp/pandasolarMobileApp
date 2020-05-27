@@ -3,6 +3,8 @@ package com.panda.solar.presentation.view.activities;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.panda.solar.activities.R;
+
 public class TermsAndConditions extends AppCompatActivity {
 
     @Override

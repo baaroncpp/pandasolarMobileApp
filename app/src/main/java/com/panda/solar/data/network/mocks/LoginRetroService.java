@@ -34,7 +34,7 @@ public class LoginRetroService {
 
         return new Retrofit.Builder().baseUrl(Constants.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
-                //.client(client)
+                .client(client)
                 .build();
     }
 

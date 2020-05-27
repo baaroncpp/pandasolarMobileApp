@@ -18,6 +18,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,6 +34,7 @@ import com.panda.solar.presentation.view.fragments.bottomNavigationFragements.Ad
 import com.panda.solar.presentation.view.fragments.bottomNavigationFragements.HomeFragment;
 import com.panda.solar.presentation.view.fragments.bottomNavigationFragements.ProfileFragment;
 import com.panda.solar.presentation.view.fragments.bottomNavigationFragements.SettingsFragment;
+import com.panda.solar.services.UserDetailsService;
 import com.panda.solar.utils.AppContext;
 import com.panda.solar.utils.Constants;
 import com.panda.solar.utils.Utils;
@@ -62,9 +64,31 @@ public class HomeActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+/*
+        Toolbar toolbar = findViewById(R.id.home_toolbar);
+        toolbar.setTitle("Toolbar");
+        toolbar.inflateMenu(R.menu.appmenu);
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_menu_icon));
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                if (item.getItemId() == R.id.appmenu_logout) {
+                    Utils.logoutUtil(HomeActivity.this);
 
-        /*dialog = Utils.customerProgressBar(this);
-        dialog.show();
+                    startActivity(new Intent(HomeActivity.this, HomeActivity.class));
+                    finish();
+                }else if(item.getItemId() == R.id.appmenu_settings){
+                    startActivity(new Intent(HomeActivity.this, SettingsActivity.class));
+                }
+                return false;
+            }
+        });*/
+
+        Intent userIntentService = new Intent(this, UserDetailsService.class);
+        startService(userIntentService);
+
+        //dialog = Utils.customerProgressBar(this);
+        //dialog.show();
 
         userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
         LiveData<User> user = userViewModel.getUser();
@@ -73,7 +97,7 @@ public class HomeActivity extends AppCompatActivity
             public void onChanged(@Nullable User user) {
                 saveUserDetails(user);
             }
-        });*/
+        });
 
         fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -92,29 +116,6 @@ public class HomeActivity extends AppCompatActivity
 
     }
 
-    /*public void observeResponse(){
-        responseMessage = userViewModel.getResponseMessage();
-        responseMessage.observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                handleResponse(s);
-            }
-        });
-    }
-
-    public void handleResponse(String msg){
-        if(msg.equals(Constants.SUCCESS_RESPONSE)){
-            dialog.dismiss();
-        }else if(msg.equals(Constants.ERROR_RESPONSE)){
-            finish();
-            dialog.dismiss();
-            Toast.makeText(this,"SORRY TRY AGAIN", Toast.LENGTH_LONG).show();
-        }else if(msg.equals(Constants.FAILURE_RESPONSE)){
-            finish();
-            dialog.dismiss();
-            Toast.makeText(this,"CONNECTION ERROR, TRY AGAIN", Toast.LENGTH_LONG).show();
-        }
-    }*/
 
     private void saleTypeProductDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -189,6 +190,8 @@ public class HomeActivity extends AppCompatActivity
         }
     }
 
+
+
     private BottomNavigationView.OnNavigationItemSelectedListener navListener = new BottomNavigationView.OnNavigationItemSelectedListener(){
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -248,7 +251,8 @@ public class HomeActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.home, menu);
+        getMenuInflater().inflate(R.menu.appmenu, menu);
+
         return true;
     }
 
@@ -258,12 +262,21 @@ public class HomeActivity extends AppCompatActivity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        //int id = item.getItemId();
+
+        if (item.getItemId() == R.id.appmenu_logout) {
+            Utils.logoutUtil(this);
+
+            startActivity(new Intent(this, HomeActivity.class));
+            finish();
+        }else if(item.getItemId() == R.id.appmenu_settings){
+            startActivity(new Intent(this, SettingsActivity.class));
+        }
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        /*if (id == R.id.action_settings) {
             return true;
-        }
+        }*/
 
         return super.onOptionsItemSelected(item);
     }
@@ -320,7 +333,7 @@ public class HomeActivity extends AppCompatActivity
         }
     }
 
-    /*public void saveUserDetails(User user){
+    public void saveUserDetails(User user){
         SharedPreferences sharedPreferences = AppContext.getAppContext().getSharedPreferences(Constants.SHARED_PREF, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
@@ -328,5 +341,5 @@ public class HomeActivity extends AppCompatActivity
         editor.putString(Constants.USER_TYPE, user.getUsertype());
         editor.apply();
     }
-*/
+
 }

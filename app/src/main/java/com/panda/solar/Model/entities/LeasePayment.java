@@ -129,4 +129,52 @@ public class LeasePayment implements Parcelable {
         dest.writeString(channelmessage);
         dest.writeString(paymentchannel);
     }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setLeaseid(String leaseid) {
+        this.leaseid = leaseid;
+    }
+
+    public void setAmount(float amount) {
+        this.amount = amount;
+    }
+
+    public void setPayeename(String payeename) {
+        this.payeename = payeename;
+    }
+
+    public void setPayeemobilenumber(String payeemobilenumber) {
+        this.payeemobilenumber = payeemobilenumber;
+    }
+
+    public void setPaymentchannel(String paymentchannel) {
+        this.paymentchannel = paymentchannel;
+    }
+
+    public void setPaymentstatus(short paymentstatus) {
+        this.paymentstatus = paymentstatus;
+    }
+
+    public void setTransactionid(String transactionid) {
+        this.transactionid = transactionid;
+    }
+
+    public void setChanneltransactionid(String channeltransactionid) {
+        this.channeltransactionid = channeltransactionid;
+    }
+
+    public void setChannelstatuscode(String channelstatuscode) {
+        this.channelstatuscode = channelstatuscode;
+    }
+
+    public void setChannelmessage(String channelmessage) {
+        this.channelmessage = channelmessage;
+    }
+
+    public void setCreatedon(Date createdon) {
+        this.createdon = createdon;
+    }
 }
