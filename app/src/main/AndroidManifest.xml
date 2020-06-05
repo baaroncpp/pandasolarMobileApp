@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <uses-feature android:name="android.hardware.camera" />
 
@@ -23,16 +24,19 @@
         android:roundIcon="@drawable/panda_icon_circle"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.panda.solar.presentation.view.activities.AppInfo"
+        <activity android:name="com.panda.solar.presentation.view.activities.InternetError"
+                  android:theme="@style/AppFormTheme"></activity>
+        <activity
+            android:name="com.panda.solar.presentation.view.activities.AppInfo"
             android:label="App Information"
             android:parentActivityName="com.panda.solar.presentation.view.activities.SettingsActivity"
             android:theme="@style/AppTheme.ActionBar.Transparent">
             <intent-filter>
                 <action android:name="com.panda.solar.presentation.view.activities.AppInfo" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
         <activity
             android:name="com.panda.solar.presentation.view.activities.TermsAndConditions"
             android:label="Terms And Conditions"
@@ -112,7 +116,8 @@
         <activity
             android:name="com.panda.solar.presentation.view.activities.PaymentsList"
             android:label="Customer Lease Payments"
-            android:parentActivityName="com.panda.solar.presentation.view.activities.HomeActivity" />
+            android:parentActivityName="com.panda.solar.presentation.view.activities.HomeActivity"
+            android:theme="@style/AppThemeMaterial" />
         <activity
             android:name="com.panda.solar.presentation.view.activities.SaleDetail"
             android:label="Sale Details"
@@ -122,17 +127,20 @@
         <activity
             android:name="com.panda.solar.presentation.view.activities.SalesList"
             android:label="Sales"
-            android:parentActivityName="com.panda.solar.presentation.view.activities.HomeActivity" />
+            android:parentActivityName="com.panda.solar.presentation.view.activities.HomeActivity"
+            android:theme="@style/AppThemeMaterial" />
         <activity
             android:name="com.panda.solar.presentation.view.activities.ProductListDashBoard"
             android:label="Products"
-            android:parentActivityName="com.panda.solar.presentation.view.activities.HomeActivity" />
+            android:parentActivityName="com.panda.solar.presentation.view.activities.HomeActivity"
+            android:theme="@style/AppThemeMaterial" />
         <activity android:name="com.panda.solar.presentation.view.activities.ProductItem" />
         <activity android:name="com.panda.solar.presentation.view.activities.SaleLeaseOffer" />
         <activity
             android:name="com.panda.solar.presentation.view.activities.LeaseOfferList"
             android:label="Panda lease offers"
-            android:parentActivityName="com.panda.solar.presentation.view.activities.HomeActivity" />
+            android:parentActivityName="com.panda.solar.presentation.view.activities.HomeActivity"
+            android:theme="@style/AppThemeMaterial" />
         <activity android:name="com.panda.solar.presentation.view.activities.LeaseOfferItem" />
         <activity
             android:name="com.panda.solar.presentation.view.activities.SaleReview"
@@ -195,7 +203,7 @@
             android:label=""
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar" /> <!-- android:noHistory="true" -->
         <activity
             android:name="com.panda.solar.presentation.view.activities.NewSaleActivity"
             android:configChanges="orientation"
@@ -224,7 +232,8 @@
             android:label="@string/title_activity_register_customer"
             android:parentActivityName="com.panda.solar.presentation.view.activities.HomeActivity"
             android:theme="@style/AppThemeMaterial">
-            <!--android:theme="@style/AppTheme"-->
+
+            <!-- android:theme="@style/AppTheme" -->
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />

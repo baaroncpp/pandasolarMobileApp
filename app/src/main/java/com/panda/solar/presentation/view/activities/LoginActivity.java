@@ -28,6 +28,7 @@ import com.panda.solar.activities.R;
 import com.panda.solar.services.PandaFirebaseInstanceIDService;
 import com.panda.solar.utils.AppContext;
 import com.panda.solar.utils.Constants;
+import com.panda.solar.utils.InternetConnection;
 import com.panda.solar.utils.Utils;
 
 import com.panda.solar.viewModel.UserViewModel;
@@ -62,6 +63,10 @@ public class LoginActivity extends AppCompatActivity{
             getSupportActionBar().hide();
         }
 
+        if(!InternetConnection.checkConnection(this)){
+            startActivity(new Intent(this, InternetError.class));
+        }
+
         int ALL_PERMISSIONS = 101;
         final String[] permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION ,Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
 
@@ -77,6 +82,23 @@ public class LoginActivity extends AppCompatActivity{
             }
         });
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+        homeIntent.addCategory( Intent.CATEGORY_HOME );
+        homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(homeIntent);
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        if(!InternetConnection.checkConnection(this)){
+            startActivity(new Intent(this, InternetError.class));
+        }
     }
 
     public void init(){

@@ -19,6 +19,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,9 +28,13 @@ import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.panda.solar.Model.entities.AndroidTokens;
 import com.panda.solar.Model.entities.SaleProduct;
 import com.panda.solar.Model.entities.User;
 import com.panda.solar.activities.R;
+import com.panda.solar.data.network.NetworkResponse;
+import com.panda.solar.data.repository.PandaDAOFactory;
+import com.panda.solar.data.repository.retroRepository.UserDAO;
 import com.panda.solar.presentation.view.fragments.bottomNavigationFragements.AdminFragment;
 import com.panda.solar.presentation.view.fragments.bottomNavigationFragements.HomeFragment;
 import com.panda.solar.presentation.view.fragments.bottomNavigationFragements.ProfileFragment;
@@ -37,6 +42,7 @@ import com.panda.solar.presentation.view.fragments.bottomNavigationFragements.Se
 import com.panda.solar.services.UserDetailsService;
 import com.panda.solar.utils.AppContext;
 import com.panda.solar.utils.Constants;
+import com.panda.solar.utils.ResponseCallBack;
 import com.panda.solar.utils.Utils;
 import com.panda.solar.viewModel.UserViewModel;
 
@@ -60,35 +66,16 @@ public class HomeActivity extends AppCompatActivity
     private LiveData<String> responseMessage;
     private ProgressDialog dialog;
 
+    private static final String TAG = "FCM Token Registration";
+    private UserDAO userDAO = PandaDAOFactory.getUserDAO();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-/*
-        Toolbar toolbar = findViewById(R.id.home_toolbar);
-        toolbar.setTitle("Toolbar");
-        toolbar.inflateMenu(R.menu.appmenu);
-        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_menu_icon));
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                if (item.getItemId() == R.id.appmenu_logout) {
-                    Utils.logoutUtil(HomeActivity.this);
-
-                    startActivity(new Intent(HomeActivity.this, HomeActivity.class));
-                    finish();
-                }else if(item.getItemId() == R.id.appmenu_settings){
-                    startActivity(new Intent(HomeActivity.this, SettingsActivity.class));
-                }
-                return false;
-            }
-        });*/
 
         Intent userIntentService = new Intent(this, UserDetailsService.class);
         startService(userIntentService);
-
-        //dialog = Utils.customerProgressBar(this);
-        //dialog.show();
 
         userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
         LiveData<User> user = userViewModel.getUser();
@@ -99,6 +86,31 @@ public class HomeActivity extends AppCompatActivity
             }
         });
 
+        try{
+
+            LiveData<AndroidTokens> liveFCMToken = userDAO.registerDeviceFCM(new ResponseCallBack() {
+                @Override
+                public void onSuccess() {
+                    Log.d(TAG, Constants.SUCCESS_RESPONSE);
+                }
+
+                @Override
+                public void onFailure() {
+                    Log.d(TAG, Constants.FAILURE_RESPONSE);
+                }
+
+                @Override
+                public void onError(NetworkResponse response) {
+                    Log.d(TAG, Constants.ERROR_RESPONSE);
+                    Log.d("RESPONSE", response.getBody());
+                }
+            }, getTokenSharedPreference(Constants.FCM_DEVICE_TOKEN));
+
+        }catch(Exception e){
+            Log.e("FCM_TOKEN error", e.getMessage());
+        }
+
+
         fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,8 +118,6 @@ public class HomeActivity extends AppCompatActivity
                 saleTypeProductDialog();
             }
         });
-
-        //observeResponse();
 
         BottomNavigationView bottomNav = (BottomNavigationView)findViewById(R.id.bottom_navigation_bar);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
@@ -157,6 +167,10 @@ public class HomeActivity extends AppCompatActivity
         builder.setTitle(R.string.choose_sale_type);
         builder.setCancelable(false);
         builder.show();
+    }
+
+    public void getUserDetails(){
+
     }
 
     @Override
@@ -340,6 +354,11 @@ public class HomeActivity extends AppCompatActivity
         editor.putString(Constants.USER_ID, user.getId());
         editor.putString(Constants.USER_TYPE, user.getUsertype());
         editor.apply();
+    }
+
+    public static String getTokenSharedPreference(String val){
+        SharedPreferences sharedPreferences = AppContext.getAppContext().getSharedPreferences(Constants.FCM_DEVICE_TOKEN, MODE_PRIVATE);
+        return sharedPreferences.getString(val, null);
     }
 
 }

@@ -1,22 +1,17 @@
 package com.panda.solar.services;
 
-import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
-import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
-import com.panda.solar.Model.entities.AndroidTokens;
-import com.panda.solar.viewModel.UserViewModel;
+import com.panda.solar.utils.AppContext;
+import com.panda.solar.utils.Constants;
 
 public class PandaFirebaseInstanceIDService extends FirebaseInstanceIdService {
 
-    private static final String TAG = "Registration";
-    private UserViewModel userViewModel;
+    private static final String TAG = "FCM Token Registration";
 
     @Override
     public void onTokenRefresh() {
@@ -29,14 +24,10 @@ public class PandaFirebaseInstanceIDService extends FirebaseInstanceIdService {
 
     public void sendRegistrationToken(String token){
 
-        userViewModel = ViewModelProviders.of((FragmentActivity) getApplicationContext()).get(UserViewModel.class);
-
-        LiveData<AndroidTokens> androidTokensLiveData = userViewModel.registerDevice(token);
-        androidTokensLiveData.observe((LifecycleOwner) this, new Observer<AndroidTokens>() {
-            @Override
-            public void onChanged(@Nullable AndroidTokens androidTokens) {
-                Log.d(TAG, "Token saved: "+ androidTokens.getToken());
-            }
-        });
+        SharedPreferences sharedPreferences = AppContext.getAppContext().getSharedPreferences(Constants.FCM_DEVICE_TOKEN, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Log.d(TAG, "Token saved: "+ token);
+        editor.putString(Constants.FCM_DEVICE_TOKEN, token);
+        editor.apply();
     }
 }

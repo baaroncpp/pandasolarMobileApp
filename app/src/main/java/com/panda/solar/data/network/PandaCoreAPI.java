@@ -54,7 +54,7 @@ public interface PandaCoreAPI {
     @POST("/token/get")
     Observable<NetworkResponse> login(@Body JsonObject body);
 
-    @POST("v1/android/token/{token}")
+    @POST("v1/android/fcm/{token}")
     Call<AndroidTokens> registerDevice(@Path("token")String deviceToken);
 
     @POST("token/refresh")

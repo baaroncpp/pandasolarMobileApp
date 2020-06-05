@@ -8,6 +8,13 @@
     tools:context="com.panda.solar.presentation.view.activities.HomeActivity">
     <!--tools:showIn="@layout/app_bar_home"-->
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+    </ScrollView>
+
 
 
     <ImageView

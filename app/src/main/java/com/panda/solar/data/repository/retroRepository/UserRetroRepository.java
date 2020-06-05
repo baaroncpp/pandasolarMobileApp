@@ -187,7 +187,13 @@ public class UserRetroRepository implements UserDAO{
                 if(!response.isSuccessful()){
                     NetworkResponse net = new NetworkResponse();
                     net.setCode(response.code());
-                    net.setBody(response.message());
+                    try {
+                        net.setBody(new JSONObject(response.errorBody().string()).getString("error"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     callBack.onError(net);
                     return;
                 }

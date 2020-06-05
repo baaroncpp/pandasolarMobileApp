@@ -73,8 +73,10 @@ public class Constants {
     public static final String PAYGO_MODEL = "paygo_product_object";
     public static final String LEASEOFFER_OBJECT= "lease_offer_object";
     public static final String CUSTOMER_ID = "customer_id";
+    public static final String FCM_DEVICE_TOKEN = "firebase_device_token";
 
-    public static final String BASE_URL = "http://10.42.0.1:8993";
+    public static final String BASE_URL = "http://40.89.167.141:8906";
+    //public static final String BASE_URL = "http://10.42.0.1:8993";
     public static final int CUSTOMER_REVIEW_CODE = 9;
     public static final int WRITE_STORAGE_PERMISSION_CODE = 10;
     public static final int CAMERA_PERMISSION_CODE = 11;

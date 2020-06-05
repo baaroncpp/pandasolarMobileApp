@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.panda.solar.Model.entities.User;
 import com.panda.solar.activities.R;
 import com.panda.solar.presentation.view.activities.HomeActivity;
+import com.panda.solar.presentation.view.activities.LoginActivity;
 import com.panda.solar.presentation.view.activities.SettingsActivity;
 import com.panda.solar.utils.Constants;
 import com.panda.solar.utils.Utils;
@@ -59,8 +60,12 @@ public class ProfileFragment extends Fragment {
                 if (item.getItemId() == R.id.appmenu_logout) {
                     Utils.logoutUtil(getActivity());
 
-                    startActivity(new Intent(getActivity(), HomeActivity.class));
+                    Intent intent = new Intent(getActivity(), LoginActivity.class);
+                    // FLAG_ACTIVITY_CLEAR_TOP:- clears all activities stacked on top of the current activity
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
                     getActivity().finish();
+
                 }else if(item.getItemId() == R.id.appmenu_settings){
                     startActivity(new Intent(getActivity(), SettingsActivity.class));
                 }
@@ -68,9 +73,8 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        init(view);
-
         userViewModel = ViewModelProviders.of(getActivity()).get(UserViewModel.class);
+        init(view);
 
         LiveData<User> liveUser = userViewModel.getUser();
         dialog.show();
@@ -78,9 +82,10 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onChanged(@Nullable User user) {
                 setProfileViews(user);
+                observeResponse();
             }
         });
-        observeResponse();
+
         return view;
     }
 
@@ -124,11 +129,14 @@ public class ProfileFragment extends Fragment {
         if(msg.equals(Constants.SUCCESS_RESPONSE)){
             dialog.dismiss();
         }else if(msg.equals(Constants.ERROR_RESPONSE)){
+            //startActivity(new Intent(getActivity(), HomeActivity.class));
+            //getActivity().finish();
             dialog.dismiss();
-            Toast.makeText(getContext(),"SOMETHING WENT WRONG !!!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(),"SOMETHING WENT WRONG !!!", Toast.LENGTH_SHORT).show();
         }else if(msg.equals(Constants.FAILURE_RESPONSE)){
+            startActivity(new Intent(getActivity(), HomeActivity.class));
             dialog.dismiss();
-            Toast.makeText(getContext(),"CONNECTION FAILURE", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(),"CONNECTION FAILURE", Toast.LENGTH_SHORT).show();
         }
     }
 

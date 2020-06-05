@@ -31,6 +31,7 @@ import com.panda.solar.activities.R;
 import com.panda.solar.presentation.view.activities.DirectSale;
 import com.panda.solar.presentation.view.activities.HomeActivity;
 import com.panda.solar.presentation.view.activities.LeaseOfferList;
+import com.panda.solar.presentation.view.activities.LoginActivity;
 import com.panda.solar.presentation.view.activities.PaymentsList;
 import com.panda.solar.presentation.view.activities.ProductListDashBoard;
 import com.panda.solar.presentation.view.activities.SalesList;
@@ -53,7 +54,7 @@ public class HomeFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.home_fragement, container, false);
 
@@ -66,7 +67,11 @@ public class HomeFragment extends Fragment {
                 if (item.getItemId() == R.id.appmenu_logout) {
                     Utils.logoutUtil(getActivity());
 
-                    startActivity(new Intent(getActivity(), HomeActivity.class));
+                    Intent intent = new Intent(getActivity(), LoginActivity.class);
+
+                    // FLAG_ACTIVITY_CLEAR_TOP:- clears all activities stacked on top of the current activity
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
                     getActivity().finish();
                 }else if(item.getItemId() == R.id.appmenu_settings){
                     startActivity(new Intent(getActivity(), SettingsActivity.class));

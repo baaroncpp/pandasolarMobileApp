@@ -77,6 +77,9 @@ public class Utils {
     }
 
 
+    public void clearPreferences(){
+
+    }
 
     public static File getDestinationFile(String fileName){
         String root = Environment.getExternalStorageDirectory().toString();
@@ -154,6 +157,7 @@ public class Utils {
         dialog = new ProgressDialog(context);
         dialog.setMessage("Please wait...");
         dialog.setCanceledOnTouchOutside(false);
+        dialog.setProgressStyle(R.style.AppCompatDialogStyle);
 
         return dialog;
     }
@@ -168,7 +172,7 @@ public class Utils {
     }
 
     public static String moneyFormatter(float amount){
-        return String.format("%,.2f", amount) + " UGX";
+        return String.format("%,.1f", amount) + " UGX";
     }
 
     public static boolean validatePhoneNumberInput(String phoneNumber){
