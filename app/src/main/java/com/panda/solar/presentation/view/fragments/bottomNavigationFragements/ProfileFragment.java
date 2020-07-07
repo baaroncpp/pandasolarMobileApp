@@ -4,12 +4,15 @@ import android.app.ProgressDialog;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +25,7 @@ import com.panda.solar.activities.R;
 import com.panda.solar.presentation.view.activities.HomeActivity;
 import com.panda.solar.presentation.view.activities.LoginActivity;
 import com.panda.solar.presentation.view.activities.SettingsActivity;
+import com.panda.solar.utils.AppContext;
 import com.panda.solar.utils.Constants;
 import com.panda.solar.utils.Utils;
 import com.panda.solar.viewModel.SaleViewModel;
@@ -35,7 +39,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ProfileFragment extends Fragment {
 
     private ProgressDialog dialog;
-    private UserViewModel userViewModel;
     private TextView username;
     private TextView location;
     private TextView email;
@@ -45,12 +48,17 @@ public class ProfileFragment extends Fragment {
     private TextView leaseSales;
     private CircleImageView profileView;
     private TextView userType;
+    private User fetchedUser;
+    private UserViewModel userViewModel;
+    //private Context context;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.profile_fragement, container, false);
         super.onViewCreated(view, savedInstanceState);
+
+        //context = AppContext.getAppContext();
 
         Toolbar toolbar = view.findViewById(R.id.home_toolbar_pro);
         toolbar.inflateMenu(R.menu.appmenu);
@@ -59,10 +67,13 @@ public class ProfileFragment extends Fragment {
             public boolean onMenuItemClick(MenuItem item) {
                 if (item.getItemId() == R.id.appmenu_logout) {
                     Utils.logoutUtil(getActivity());
+                    Utils.deleteCache(getActivity());
 
                     Intent intent = new Intent(getActivity(), LoginActivity.class);
                     // FLAG_ACTIVITY_CLEAR_TOP:- clears all activities stacked on top of the current activity
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                     getActivity().finish();
 
@@ -73,18 +84,20 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        userViewModel = ViewModelProviders.of(getActivity()).get(UserViewModel.class);
         init(view);
 
+        userViewModel = ViewModelProviders.of(getActivity()).get(UserViewModel.class);
         LiveData<User> liveUser = userViewModel.getUser();
         dialog.show();
         liveUser.observe(getActivity(), new Observer<User>() {
             @Override
             public void onChanged(@Nullable User user) {
-                setProfileViews(user);
+                fetchedUser = user;
+                Log.e("profileFragment", "test");
                 observeResponse();
             }
         });
+        //observeResponse();
 
         return view;
     }
@@ -127,7 +140,10 @@ public class ProfileFragment extends Fragment {
 
     public void handleResponse(String msg){
         if(msg.equals(Constants.SUCCESS_RESPONSE)){
-            dialog.dismiss();
+            if(fetchedUser != null){
+                setProfileViews(fetchedUser);
+                dialog.dismiss();
+            }
         }else if(msg.equals(Constants.ERROR_RESPONSE)){
             //startActivity(new Intent(getActivity(), HomeActivity.class));
             //getActivity().finish();

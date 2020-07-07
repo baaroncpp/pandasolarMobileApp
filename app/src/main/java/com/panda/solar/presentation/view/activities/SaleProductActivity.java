@@ -21,6 +21,7 @@ import com.panda.solar.utils.Constants;
 import com.panda.solar.utils.Utils;
 import com.panda.solar.viewModel.ProductViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SaleProductActivity extends AppCompatActivity {
@@ -33,6 +34,7 @@ public class SaleProductActivity extends AppCompatActivity {
     private LiveData<String> responseMessage;
     private ProgressDialog dialog;
     private TextView errorView;
+    private List<Product> nonleasable_product = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,11 +62,18 @@ public class SaleProductActivity extends AppCompatActivity {
 
     public void buildRecyclerView(final List<Product> products){
 
+        //filter to non lease products
+        for(Product object : products){
+            if(!object.getIsleasable()){
+                nonleasable_product.add(object);
+            }
+        }
+
         saleProductRecycler = findViewById(R.id.product_sale_recyclerview);
         layoutManager = new LinearLayoutManager(this);
         saleProductRecycler.setLayoutManager(layoutManager);
 
-        productAdapter = new ProductAdapter(products, Constants.PRODUCT_LIST_SALE, this);
+        productAdapter = new ProductAdapter(nonleasable_product, Constants.PRODUCT_LIST_SALE, this);
         saleProductRecycler.setAdapter(productAdapter);
 
         productAdapter.setOnItemClickListener(new ProductAdapter.OnItemClickListener() {
@@ -72,7 +81,7 @@ public class SaleProductActivity extends AppCompatActivity {
             public void onProductClick(int position) {
 
                 Intent resultIntent = new Intent();
-                resultIntent.putExtra(Constants.PRODUCT_RESULT, products.get(position));
+                resultIntent.putExtra(Constants.PRODUCT_RESULT, nonleasable_product.get(position));
                 setResult(RESULT_OK, resultIntent);
                 finish();
 

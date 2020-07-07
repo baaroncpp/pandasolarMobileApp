@@ -18,10 +18,14 @@ import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -32,13 +36,17 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.panda.solar.Model.entities.Customer;
+import com.panda.solar.Model.entities.DirectSaleModel;
 import com.panda.solar.Model.entities.LeaseSaleModel;
 import com.panda.solar.Model.entities.PayGoProduct;
 import com.panda.solar.activities.R;
 import com.panda.solar.data.network.NetworkResponse;
 import com.panda.solar.utils.Constants;
+import com.panda.solar.utils.InternetConnection;
 import com.panda.solar.utils.Utils;
 import com.panda.solar.viewModel.PayGoProductViewModel;
+
+import java.util.Date;
 
 public class LeaseSaleActivity extends AppCompatActivity {
 
@@ -61,14 +69,36 @@ public class LeaseSaleActivity extends AppCompatActivity {
     private double longitude;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private LiveData<Boolean> existsLive;
+    private Switch saleSwitch;
+    private TextView saleSwitchLabel;
+    private TextView saleSwitchPara;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lease_sale);
 
+        ActionBar actionBar = this.getSupportActionBar();
+
+        if(actionBar != null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
         init();
         getLastLocation();
+
+        saleSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    saleSwitchLabel.setText("Lease Sale");
+                    saleSwitchPara.setText(getResources().getString(R.string.lease_sale_para));
+                }else{
+                    saleSwitchLabel.setText("Direct Sale");
+                    saleSwitchPara.setText(getResources().getString(R.string.direct_sale_para));
+                }
+            }
+        });
 
         scanSerialNumberViewBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,23 +125,18 @@ public class LeaseSaleActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(validateCustomerBtn() && validateDescriptionField() && validateSerialEditView()){
 
-                    //getPayGoProduct(serialNumberView.getText().toString());
-
                     if(payGoProd == null) {
                         String sn = serialNumberView.getText().toString();
 
                         progressDialog.show();
                         getPayGoProduct(sn);
-                        //saleReview();
-                       /* productExists(sn);
 
-                        if(productExists){
+                    }else{
+                        if(saleSwitch.isChecked()){
                             saleReview();
                         }else{
-                            Toast.makeText(LeaseSaleActivity.this, "Product not registered by PANDASOLAR", Toast.LENGTH_SHORT).show();
-                        }*/
-                    }else{
-                        saleReview();
+                            directPayGo();
+                        }
                     }
                 }
             }
@@ -119,9 +144,33 @@ public class LeaseSaleActivity extends AppCompatActivity {
 
     }
 
+    public void directPayGo(){
+
+        Intent intent = new Intent(this, SaleReview.class);
+
+        DirectSaleModel directSaleModel = new DirectSaleModel();
+        directSaleModel.setAgentid(""/*Utils.getSharedPreference(Constants.USER_ID)*/);
+        directSaleModel.setCreatedon(new Date());
+        directSaleModel.setScannedserial(serialNumberView.getText().toString());
+        directSaleModel.setCustomerid(customerResult.getUserid());
+        directSaleModel.setDescription(leaseSaleDescriptionView.getText().toString());
+        directSaleModel.setLat((float)latitude);
+        directSaleModel.setLong_((float)longitude);
+        directSaleModel.setQuantity(1);
+        directSaleModel.setProductid(payGoProd.getLeaseOffer().getProduct().getId());
+
+        String customerName = customerResult.getUser().getFirstname()+" "+customerResult.getUser().getLastname();
+
+        intent.putExtra(Constants.CUSTOMER_NAME, customerName);
+        intent.putExtra(Constants.SALE_REVIEW, Constants.DIRECT_SALE_REVIEW);
+        intent.putExtra(Constants.DIRECT_SALE_OBJ, directSaleModel);
+        intent.putExtra(Constants.PROD_SALE_OBJ, payGoProd.getLeaseOffer().getProduct());
+        startActivity(intent);
+    }
+
     public void saleReview(){
         leaseSaleModel = new LeaseSaleModel();
-        //leaseSaleModel.setAgentid(Utils.getSharedPreference(Constants.USER_ID));
+        leaseSaleModel.setAgentid("");//change rxn
         leaseSaleModel.setCordlat((float)latitude);
         leaseSaleModel.setCordlong((float)longitude);
         leaseSaleModel.setCustomerid(customerResult.getUserid());
@@ -151,7 +200,11 @@ public class LeaseSaleActivity extends AppCompatActivity {
     public void handleResponse(String msg){
         if(msg.equals(Constants.SUCCESS_RESPONSE)){
             progressDialog.dismiss();
-            saleReview();
+            if(saleSwitch.isChecked()){
+                saleReview();
+            }else{
+                directPayGo();
+            }
         }else if(msg.equals(Constants.ERROR_RESPONSE)){
 
             LiveData<NetworkResponse> networkResponse = payGoProductViewModel.getNetworkResponse();
@@ -167,7 +220,6 @@ public class LeaseSaleActivity extends AppCompatActivity {
 
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            //finish();
                             dialog.dismiss();
                         }
                     });
@@ -193,7 +245,7 @@ public class LeaseSaleActivity extends AppCompatActivity {
                 getPayGoResponse();
             }
         });
-
+        //getPayGoResponse();
     }
 
    /* public boolean productExists(final String scannedSerial){
@@ -266,6 +318,9 @@ public class LeaseSaleActivity extends AppCompatActivity {
 
         payGoProductViewModel = ViewModelProviders.of(this).get(PayGoProductViewModel.class);
 
+        saleSwitchLabel = findViewById(R.id.switch_sale_title);
+        saleSwitchPara = findViewById(R.id.switch_sale_para);
+        saleSwitch = findViewById(R.id.saleSwitch);
         scanSerialNumberViewBtn = findViewById(R.id.scanner_button);
         serialNumberView = findViewById(R.id.lease_sale_serialnumber);
         leaseSaleDescriptionView = findViewById(R.id.lease_sale_description);
@@ -402,6 +457,14 @@ public class LeaseSaleActivity extends AppCompatActivity {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 getLastLocation();
             }
+        }
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        if(!InternetConnection.checkConnection(this)){
+            startActivity(new Intent(this, InternetError.class));
         }
     }
 }

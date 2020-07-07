@@ -6,6 +6,10 @@
         android:title="Logout"/>
 
     <item
+        android:id="@+id/appmenu_profile"
+        android:title="Profile"/>
+
+    <item
         android:id="@+id/appmenu_settings"
         android:title="Settings"/>
 

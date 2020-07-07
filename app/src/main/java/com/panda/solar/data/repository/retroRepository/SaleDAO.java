@@ -28,4 +28,6 @@ public interface SaleDAO {
 
     MutableLiveData<Map<String ,Integer>> customerSalesSum(ResponseCallBack callBack, String customerId);
 
+    MutableLiveData<Sale> makeNonPayGoSale(ResponseCallBack callBack, DirectSaleModel directSaleModel);
+
 }

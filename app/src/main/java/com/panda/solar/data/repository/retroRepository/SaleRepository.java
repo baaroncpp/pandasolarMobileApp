@@ -180,6 +180,7 @@ public class SaleRepository implements SaleDAO{
             @Override
             public void onResponse(Call<Sale> call, Response<Sale> response) {
                 if(!response.isSuccessful()){
+                    NetworkResponse netResponse = new NetworkResponse();
                     try {
                         netResponse.setBody(new JSONObject(response.errorBody().string()).getString("error"));
                     } catch (JSONException e) {
@@ -255,6 +256,40 @@ public class SaleRepository implements SaleDAO{
 
             @Override
             public void onFailure(Call<Map<String, Integer>> call, Throwable t) {
+                callBack.onFailure();
+                return;
+            }
+        });
+        return resultData;
+    }
+
+    @Override
+    public MutableLiveData<Sale> makeNonPayGoSale(final ResponseCallBack callBack, DirectSaleModel directSaleModel) {
+
+        final MutableLiveData<Sale> resultData = new MutableLiveData<>();
+        Call<Sale> call = pandaCoreAPI.makeNonPayGoSale(directSaleModel);
+
+        call.enqueue(new Callback<Sale>() {
+            @Override
+            public void onResponse(Call<Sale> call, Response<Sale> response) {
+                if(!response.isSuccessful()){
+                    try {
+                        netResponse.setBody(new JSONObject(response.errorBody().string()).getString("error"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    netResponse.setCode(response.code());
+                    callBack.onError(netResponse);
+                    return;
+                }
+                resultData.postValue(response.body());
+                callBack.onSuccess();
+            }
+
+            @Override
+            public void onFailure(Call<Sale> call, Throwable t) {
                 callBack.onFailure();
                 return;
             }

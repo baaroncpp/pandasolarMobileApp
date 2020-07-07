@@ -40,6 +40,7 @@ public class Constants {
 
     public final static String LEASE_SALE_REVIEW = "lease_sale_review";
     public final static String DIRECT_SALE_REVIEW = "direct_sale_review";
+    public final static String NON_PAYGO_SALE_REVIEW = "non_paygo_sale_review";
 
 
     public static final int ZBAR_SCANNER_REQUEST = 0;

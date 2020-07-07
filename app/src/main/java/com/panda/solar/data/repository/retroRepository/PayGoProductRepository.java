@@ -43,7 +43,13 @@ public class PayGoProductRepository implements PayGoProductDAO {
             @Override
             public void onResponse(Call<PayGoProduct> call, Response<PayGoProduct> response) {
                 if(!response.isSuccessful()){
-                    netResponse.setBody(response.message());
+                    try {
+                        netResponse.setBody(new JSONObject(response.errorBody().string()).getString("error"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     netResponse.setCode(response.code());
                     callBack.onError(netResponse);
                     return;
@@ -71,7 +77,13 @@ public class PayGoProductRepository implements PayGoProductDAO {
             @Override
             public void onResponse(Call<Boolean> call, Response<Boolean> response) {
                 if(!response.isSuccessful()){
-                    netResponse.setBody(response.message());
+                    try {
+                        netResponse.setBody(new JSONObject(response.errorBody().string()).getString("error"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     netResponse.setCode(response.code());
                     callBack.onError(netResponse);
                     return;

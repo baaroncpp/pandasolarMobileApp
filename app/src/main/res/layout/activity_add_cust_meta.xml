@@ -191,7 +191,6 @@
                                 android:id="@+id/customer_profile_view"
                                 android:layout_width="90dp"
                                 android:layout_height="match_parent"
-                                android:src="@drawable/aaron"
                                 android:scaleType="centerCrop"/>
 
                         </LinearLayout>
@@ -317,7 +316,6 @@
                                 android:id="@+id/cust_coi_image"
                                 android:layout_width="90dp"
                                 android:layout_height="match_parent"
-                                android:src="@drawable/aaron"
                                 android:scaleType="centerCrop"/>
 
                         </LinearLayout>
@@ -446,7 +444,6 @@
                                 android:id="@+id/cust_idImage_view"
                                 android:layout_width="90dp"
                                 android:layout_height="match_parent"
-                                android:src="@drawable/aaron"
                                 android:scaleType="centerCrop"/>
 
                         </LinearLayout>

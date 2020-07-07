@@ -118,6 +118,9 @@ public interface PandaCoreAPI {
     Call<List<StockProduct>> getStockValues();
 
     /*sales endpoint*/
+    @POST("v1/sales/add/nonpaygo")
+    Call<Sale> makeNonPayGoSale(@Body DirectSaleModel directSale);
+
     @POST("v1/sales/add/direct")
     Call<Sale> makeDirectSale(@Body DirectSaleModel directSale);
 

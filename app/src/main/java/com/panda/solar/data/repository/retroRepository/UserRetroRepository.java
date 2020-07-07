@@ -25,10 +25,9 @@ import retrofit2.Response;
 
 public class UserRetroRepository implements UserDAO{
 
-    private PandaCoreAPI pandaCoreAPI = RetroService.getPandaCoreAPI();
     private PandaCoreAPI loginAPI = LoginRetroService.getPandaCoreAPI();
+    private PandaCoreAPI pandaCoreAPI = RetroService.getPandaCoreAPI();
     private static UserRetroRepository instance;
-    NetworkResponse netResponse = new NetworkResponse();
 
     public static UserRetroRepository getInstance(){
         if(instance == null){
@@ -47,6 +46,7 @@ public class UserRetroRepository implements UserDAO{
             @Override
             public void onResponse(Call<Token> call, Response<Token> response) {
                 if(!response.isSuccessful()){
+                    NetworkResponse netResponse = new NetworkResponse();
                     netResponse.setBody(response.message());
                     netResponse.setCode(response.code());
                     callBack.onError(netResponse);
@@ -120,30 +120,33 @@ public class UserRetroRepository implements UserDAO{
     public MutableLiveData<User> getUser(final ResponseCallBack callBack) {
 
         Log.e("userRepository", "accessed");
-        final MutableLiveData<User> pandaUser = new MutableLiveData<>();
+        final MutableLiveData<User> dataResult = new MutableLiveData<>();
 
         Call<User> call = pandaCoreAPI.getUser();
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if(!response.isSuccessful()){
+                    Log.e("userRepository", "error");
                     NetworkResponse netRes = new NetworkResponse();
                     netRes.setBody(response.message());
                     netRes.setCode(response.code());
                     callBack.onError(netRes);
                     return;
                 }
+                Log.e("userRepository", "success");
                 callBack.onSuccess();
-                pandaUser.postValue(response.body());
+                dataResult.postValue(response.body());
             }
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
+                Log.e("userRepository", "failed");
                 callBack.onFailure();
                 return;
             }
         });
-        return pandaUser;
+        return dataResult;
     }
 
     @Override
@@ -234,6 +237,35 @@ public class UserRetroRepository implements UserDAO{
                 }
                 dataResult.postValue(response.body());
                 callBack.onSuccess();
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                callBack.onFailure();
+                return;
+            }
+        });
+        return dataResult;
+    }
+
+    @Override
+    public MutableLiveData<User> getAndroidUser(final ResponseCallBack callBack) {
+
+        final MutableLiveData<User> dataResult = new MutableLiveData<>();
+        Call<User> call = pandaCoreAPI.getUser();
+
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if(!response.isSuccessful()){
+                    NetworkResponse netRes = new NetworkResponse();
+                    netRes.setBody(response.message());
+                    netRes.setCode(response.code());
+                    callBack.onError(netRes);
+                    return;
+                }
+                callBack.onSuccess();
+                dataResult.postValue(response.body());
             }
 
             @Override

@@ -1,6 +1,5 @@
 package com.panda.solar.presentation.view.activities;
 
-import android.app.NotificationManager;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
@@ -24,6 +23,7 @@ import com.panda.solar.Model.entities.FileResponse;
 import com.panda.solar.activities.R;
 import com.panda.solar.utils.Constants;
 import com.panda.solar.utils.FileUtil;
+import com.panda.solar.utils.InternetConnection;
 import com.panda.solar.utils.Utils;
 import com.panda.solar.viewModel.UploadLinkViewModel;
 import com.squareup.picasso.Picasso;
@@ -62,7 +62,7 @@ public class AddCustMeta extends AppCompatActivity {
     private TextView profileFileName;
 
     private UploadLinkViewModel uploadLinkViewModel;
-    private LiveData<FileResponse> fileResponseLiveData;
+
     private Customer customer;
 
     private ProgressDialog dialog;
@@ -192,42 +192,6 @@ public class AddCustMeta extends AppCompatActivity {
 
     }
 
-/*
-    public void uploadFile(Uri uri, String upload){
-
-        String customerUploadType = "";
-        File file = null;
-
-        try {
-            file  = FileUtil.from(this, uri);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        if(upload.equals(Constants.CUSTOMER_PROFILE_PATH)){
-            customerUploadType = CustomerUploadType.PROFILE.name();
-        }else if(upload.equals(Constants.CUSTOMER_COI_PATH)){
-            customerUploadType = CustomerUploadType.CONSENT_FORM.name();
-        }else if(upload.equals(Constants.CUSTOMER_ID_PATH)){
-            customerUploadType = CustomerUploadType.ID_COPY.name();
-        }
-
-        RequestBody requestFile = RequestBody.create(MediaType.parse(getContentResolver().getType(uri)), file);
-        MultipartBody.Part fileBody = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
-
-        RequestBody uploadType = RequestBody.create(MultipartBody.FORM, customerUploadType);
-
-        dialog.show();
-        fileResponseLiveData = uploadLinkViewModel.uploadFile(customer.getUserid(), fileBody, uploadType);
-        fileResponseLiveData.observe(this, new Observer<FileResponse>() {
-            @Override
-            public void onChanged(@Nullable FileResponse fileResponse) {
-                observeResponse();
-            }
-        });
-    }
-*/
-
     public void observeResponse(){
 
             LiveData<String> responseMsg = uploadLinkViewModel.getResponseMessage();
@@ -242,6 +206,7 @@ public class AddCustMeta extends AppCompatActivity {
     public void handleResponse(String msg){
         if(msg.equals(Constants.SUCCESS_RESPONSE)){
             dialog.dismiss();
+            Toast.makeText(this,"UPLOADED SUCCESSFULLY", Toast.LENGTH_LONG).show();
         }else if(msg.equals(Constants.ERROR_RESPONSE)){
             dialog.dismiss();
             Toast.makeText(this,"SOMETHING WENT WRONG !!!", Toast.LENGTH_SHORT).show();
@@ -257,6 +222,7 @@ public class AddCustMeta extends AppCompatActivity {
         dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         dialog.setProgress(0);
         dialog.setMax(100);
+        dialog.setIndeterminate(true);
     }
 
     public void init(){
@@ -356,7 +322,6 @@ public class AddCustMeta extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-
             observeResponse();
         }
 
@@ -392,7 +357,7 @@ public class AddCustMeta extends AppCompatActivity {
             RequestBody uploadType = RequestBody.create(MultipartBody.FORM, customerUploadType);
 
             //dialog.show();
-            fileResponseLiveData = uploadLinkViewModel.uploadFile(customer.getUserid(), fileBody, uploadType);
+            LiveData<FileResponse> fileResponseLiveData = uploadLinkViewModel.uploadFile(customer.getUserid(), fileBody, uploadType);
             fileResponseLiveData.observe(AddCustMeta.this, new Observer<FileResponse>() {
                 @Override
                 public void onChanged(@Nullable FileResponse fileResponse) {
@@ -423,5 +388,19 @@ public class AddCustMeta extends AppCompatActivity {
         public void setIploadType(String uploadType) {
             this.uploadType = uploadType;
         }
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        if(!InternetConnection.checkConnection(this)){
+            startActivity(new Intent(this, InternetError.class));
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 }

@@ -25,7 +25,6 @@ import com.panda.solar.Model.entities.Token;
 
 import com.panda.solar.activities.R;
 
-import com.panda.solar.services.PandaFirebaseInstanceIDService;
 import com.panda.solar.utils.AppContext;
 import com.panda.solar.utils.Constants;
 import com.panda.solar.utils.InternetConnection;
@@ -78,6 +77,8 @@ public class LoginActivity extends AppCompatActivity{
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                userViewModel = ViewModelProviders.of(LoginActivity.this).get(UserViewModel.class);
+                tokenIsPresent();
                 loginUser();
             }
         });
@@ -169,7 +170,6 @@ public class LoginActivity extends AppCompatActivity{
                 @Override
                 public void onChanged(@Nullable Token t) {
                     isTokenStored = saveJWT(t);
-                    //observeResponse();
                 }
             });
 
@@ -223,6 +223,17 @@ public class LoginActivity extends AppCompatActivity{
         }else {
             return false;
         }
+    }
+
+    public void tokenIsPresent(){
+
+        if(sharedPreferences.contains(Constants.JWT_TOKEN)){
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.remove(Constants.JWT_TOKEN);
+            editor.clear();
+            editor.commit();
+        }
+
     }
 
 }

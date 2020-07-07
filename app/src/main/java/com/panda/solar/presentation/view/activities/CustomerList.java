@@ -27,6 +27,7 @@ import com.panda.solar.Model.entities.Customer;
 import com.panda.solar.activities.R;
 import com.panda.solar.presentation.adapters.CustomerListRecyclerViewAdapter;
 import com.panda.solar.utils.Constants;
+import com.panda.solar.utils.InternetConnection;
 import com.panda.solar.utils.Utils;
 import com.panda.solar.viewModel.CustomerViewModel;
 
@@ -186,8 +187,6 @@ public class CustomerList extends AppCompatActivity {
         return true;
     }
 
-
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -198,6 +197,14 @@ public class CustomerList extends AppCompatActivity {
             Toast.makeText(context, "Search clicked", Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        if(!InternetConnection.checkConnection(this)){
+            startActivity(new Intent(this, InternetError.class));
+        }
     }
 
 }

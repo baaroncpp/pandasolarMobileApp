@@ -21,6 +21,7 @@ import com.panda.solar.activities.R;
 
 import com.panda.solar.presentation.adapters.StockAdapter;
 import com.panda.solar.utils.Constants;
+import com.panda.solar.utils.InternetConnection;
 import com.panda.solar.utils.Utils;
 import com.panda.solar.viewModel.PayGoProductViewModel;
 
@@ -48,9 +49,7 @@ public class StockManagementActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-
         init();
-
 
         dialog.show();
         liveDataStockProduct = payGoProductViewModel.getStockValues();
@@ -116,6 +115,14 @@ public class StockManagementActivity extends AppCompatActivity {
         errorView = findViewById(R.id.stock_error_view);
         dialog = Utils.customerProgressBar(this);
         recyclerView = findViewById(R.id.stock_items_recycler);
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        if(!InternetConnection.checkConnection(this)){
+            startActivity(new Intent(this, InternetError.class));
+        }
     }
 
 }

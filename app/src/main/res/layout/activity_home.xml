@@ -14,24 +14,43 @@
         android:layout_height="match_parent"
         android:layout_above="@id/bottom_navigation_bar">
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center|bottom"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
-            android:backgroundTint="@color/colorPrimary"
-            android:clickable="true"
-            android:fontFamily="sans-serif-medium"
-            android:src="@drawable/ic_sell_panda"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:borderWidth="0dp" />
+
     </FrameLayout>
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:backgroundTint="@color/colorPrimary"
+        android:clickable="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="30dp"
+        android:fontFamily="sans-serif-medium"
+        android:src="@drawable/ic_sell_panda"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:elevation="9dp"
+        app:borderWidth="0dp"/>
+
+    <!--<android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|bottom"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="-25dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:clickable="true"
+        android:fontFamily="sans-serif-medium"
+        android:src="@drawable/ic_sell_panda"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:elevation="8dp"
+        app:borderWidth="0dp"/>
+-->
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/bottom_navigation_bar"

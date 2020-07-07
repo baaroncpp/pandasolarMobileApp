@@ -5,6 +5,8 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
 import android.support.v7.app.ActionBar;
@@ -20,6 +22,7 @@ import com.panda.solar.Model.entities.SaleModel;
 import com.panda.solar.activities.R;
 import com.panda.solar.data.network.NetworkResponse;
 import com.panda.solar.utils.Constants;
+import com.panda.solar.utils.InternetConnection;
 import com.panda.solar.utils.Utils;
 import com.panda.solar.viewModel.SaleViewModel;
 import com.squareup.picasso.Picasso;
@@ -44,7 +47,6 @@ public class SaleDetail extends AppCompatActivity {
     private SaleViewModel saleViewModel;
     private Sale saleResult;
     private ProgressDialog progressDialog;
-    private LiveData<String> responseMessageLive;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,13 +63,13 @@ public class SaleDetail extends AppCompatActivity {
         saleModel = getIntent().getExtras().getParcelable(Constants.SALE_OBJ);
         String createdon = getIntent().getStringExtra("saleDate");
 
-        //if(Utils.getSharedPreference(Constants.USER_ID).equalsIgnoreCase("ADMIN")){
-            if(saleModel.getSalestatus() == 2 || saleModel.getSaletype().equalsIgnoreCase("DIRECT")){
-                approveBtn.setVisibility(View.GONE);
-            }else{
-                approveBtn.setVisibility(View.VISIBLE);
-            }
-        //}else{approveBtn.setVisibility(View.GONE);}
+        if(saleModel.getSalestatus() == 2 ){
+            approveBtn.setVisibility(View.GONE);
+            saleStatus.setTextColor(getResources().getColor(R.color.lawn_green));
+        }else{
+            approveBtn.setVisibility(View.VISIBLE);
+            saleStatus.setTextColor(getResources().getColor(R.color.dark_grey));
+        }
 
         customerName.setText(saleModel.getCustomer().getUser().getFirstname()+" "+saleModel.getCustomer().getUser().getLastname());
         productName.setText(saleModel.getProduct().getName());
@@ -84,14 +86,12 @@ public class SaleDetail extends AppCompatActivity {
         approveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //saleViewModel = ViewModelProviders.of(SaleDetail.this).get(SaleViewModel.class);
                 progressDialog.show();
                 approveSale(saleModel.getId());
-                if(saleResult != null){
-                    saleStatus.setText(Utils.saleStatus(saleResult.getSalestatus()));
-                    //Toast.makeText(SaleDetail.this,"APPROVED SUCCESSFULLY", Toast.LENGTH_SHORT).show();
-                }
             }
         });
+
         observeResponse();
     }
 
@@ -101,14 +101,20 @@ public class SaleDetail extends AppCompatActivity {
         sale.observe(this, new Observer<Sale>() {
             @Override
             public void onChanged(@Nullable Sale sale) {
-                saleResult = sale;
+                saleStatus.setText(Utils.saleStatus(sale.getSalestatus()));
+                if(sale.getSalestatus() == 2){
+                    Toast.makeText(SaleDetail.this,"APPROVED SUCCESSFULLY", Toast.LENGTH_SHORT).show();
+                    saleStatus.setTextColor(getResources().getColor(R.color.lawn_green));
+                    approveBtn.setVisibility(View.GONE);
+                }else{
+
+                }
             }
         });
-
     }
 
     public void observeResponse(){
-        responseMessageLive = saleViewModel.getResponseMessage();
+        LiveData<String> responseMessageLive = saleViewModel.getResponseMessage();
         responseMessageLive.observe(this, new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
@@ -165,9 +171,17 @@ public class SaleDetail extends AppCompatActivity {
         saleType = findViewById(R.id.saledetail_type);
         saleStatus = findViewById(R.id.saledetail_status);
         customerLocation = findViewById(R.id.saledetail_customer_location);
-
         saleViewModel = ViewModelProviders.of(this).get(SaleViewModel.class);
+
         progressDialog = Utils.customerProgressBar(this);
 
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        if(!InternetConnection.checkConnection(this)){
+            startActivity(new Intent(this, InternetError.class));
+        }
     }
 }

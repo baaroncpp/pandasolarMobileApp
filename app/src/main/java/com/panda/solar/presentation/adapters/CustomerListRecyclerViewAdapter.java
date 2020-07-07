@@ -204,6 +204,13 @@ public class CustomerListRecyclerViewAdapter extends RecyclerView.Adapter<Custom
 
         customerViewHolder.customerName.setText(currentCustomer.getUser().getLastname()+", "+currentCustomer.getUser().getFirstname());
         customerViewHolder.customerAddress.setText(currentCustomer.getAddress());
+
+        if(currentCustomer.getUser().isIsapproved()){
+            customerViewHolder.activeCust.setImageResource(R.drawable.ic_approve_24dp);
+        }else{
+            customerViewHolder.activeCust.setImageResource(R.drawable.ic_pend_24dp);
+        }
+
         customerViewHolder.phoneNumber.setText("+"+ Utils.insertCharacterForEveryNDistance(3,currentCustomer.getUser().getPrimaryphone(), ' '));
 
         Picasso.with(context).load(currentCustomer.getProfilephotopath()).fit().centerCrop().placeholder(R.drawable.ic_default_profile).error(R.drawable.ic_default_profile).into(customerViewHolder.image);
@@ -224,6 +231,7 @@ public class CustomerListRecyclerViewAdapter extends RecyclerView.Adapter<Custom
         TextView customerName;
         TextView customerAddress;
         TextView phoneNumber;
+        ImageView activeCust;
 
         public CustomerViewHolder(@NonNull View itemView, final OnCustomerClickListener customerClickListener) {
             super(itemView);
@@ -231,6 +239,7 @@ public class CustomerListRecyclerViewAdapter extends RecyclerView.Adapter<Custom
             customerName = itemView.findViewById(R.id.customer_name);
             customerAddress = itemView.findViewById(R.id.customer_address);
             phoneNumber = itemView.findViewById(R.id.customer_phone_number);
+            activeCust = itemView.findViewById(R.id.active_customer);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +19,7 @@ import com.panda.solar.Model.entities.LeaseOffer;
 import com.panda.solar.activities.R;
 import com.panda.solar.presentation.adapters.LeaseOfferAdapter;
 import com.panda.solar.utils.Constants;
+import com.panda.solar.utils.InternetConnection;
 import com.panda.solar.utils.Utils;
 import com.panda.solar.viewModel.LeaseOfferViewModel;
 
@@ -101,5 +103,13 @@ public class LeaseOfferList extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         leaseOfferAdapter = new LeaseOfferAdapter(leaseOfferList);
         recyclerView.setAdapter(leaseOfferAdapter);
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        if(!InternetConnection.checkConnection(this)){
+            startActivity(new Intent(this, InternetError.class));
+        }
     }
 }

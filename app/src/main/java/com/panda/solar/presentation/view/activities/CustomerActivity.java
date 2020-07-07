@@ -1,5 +1,6 @@
 package com.panda.solar.presentation.view.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -9,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.panda.solar.activities.R;
+import com.panda.solar.utils.InternetConnection;
 
 public class CustomerActivity extends AppCompatActivity {
 
@@ -32,5 +34,13 @@ public class CustomerActivity extends AppCompatActivity {
             this.finish();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        if(!InternetConnection.checkConnection(this)){
+            startActivity(new Intent(this, InternetError.class));
+        }
     }
 }

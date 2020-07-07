@@ -8,7 +8,7 @@
     android:orientation="vertical"
     tools:context="com.panda.solar.presentation.view.activities.VillageList">
 
-    <android.support.design.widget.TextInputLayout
+    <!--<android.support.design.widget.TextInputLayout
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:inputType="text"
             android:textSize="14sp" />
-    </android.support.design.widget.TextInputLayout>
+    </android.support.design.widget.TextInputLayout>-->
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -39,6 +39,7 @@
             android:visibility="gone" />
 
         <android.support.v7.widget.RecyclerView
+            android:layout_marginTop="45dp"
             android:id="@+id/village_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent">

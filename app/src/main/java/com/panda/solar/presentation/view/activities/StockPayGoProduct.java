@@ -22,6 +22,7 @@ import com.panda.solar.Model.entities.PayGoProductModel;
 import com.panda.solar.Model.entities.Product;
 import com.panda.solar.activities.R;
 import com.panda.solar.utils.Constants;
+import com.panda.solar.utils.InternetConnection;
 import com.panda.solar.utils.Utils;
 import com.panda.solar.viewModel.LeaseOfferViewModel;
 import com.panda.solar.viewModel.ProductViewModel;
@@ -195,6 +196,14 @@ public class StockPayGoProduct extends AppCompatActivity {
             serialNumberWrapper.setBoxStrokeColor(getResources().getColor(R.color.dark_grey));
             serialNumberWrapper.setErrorEnabled(false);
             return true;
+        }
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        if(!InternetConnection.checkConnection(this)){
+            startActivity(new Intent(this, InternetError.class));
         }
     }
 }

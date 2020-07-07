@@ -5,6 +5,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
 import android.support.design.widget.TextInputEditText;
@@ -20,6 +21,7 @@ import com.panda.solar.Model.entities.User;
 import com.panda.solar.activities.R;
 import com.panda.solar.data.network.NetworkResponse;
 import com.panda.solar.utils.Constants;
+import com.panda.solar.utils.InternetConnection;
 import com.panda.solar.utils.Utils;
 import com.panda.solar.viewModel.UserViewModel;
 
@@ -206,5 +208,11 @@ public class ChangePassword extends AppCompatActivity {
         }
     }
 
-
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        if(!InternetConnection.checkConnection(this)){
+            startActivity(new Intent(this, InternetError.class));
+        }
+    }
 }

@@ -3,6 +3,7 @@ package com.panda.solar.viewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
+import android.util.Log;
 
 import com.panda.solar.Model.entities.AndroidTokens;
 import com.panda.solar.Model.entities.Login;
@@ -22,9 +23,8 @@ public class UserViewModel extends ViewModel {
     private MutableLiveData<String> responseMessage = new MutableLiveData<>();
     private MutableLiveData<NetworkResponse> networkResponse = new MutableLiveData<>();
 
-    public LiveData<User> getUser(){
-
-        return userDAO.getUser(new ResponseCallBack() {
+    public LiveData<User> getAndroidUser(){
+        return userDAO.getAndroidUser(new ResponseCallBack() {
             @Override
             public void onSuccess() {
                 responseMessage.postValue(Constants.SUCCESS_RESPONSE);
@@ -37,6 +37,30 @@ public class UserViewModel extends ViewModel {
 
             @Override
             public void onError(NetworkResponse response) {
+                responseMessage.postValue(Constants.ERROR_RESPONSE);
+                networkResponse.postValue(response);
+            }
+        });
+    }
+
+    public LiveData<User> getUser(){
+
+        return userDAO.getUser(new ResponseCallBack() {
+            @Override
+            public void onSuccess() {
+                Log.e("userViewModel", "success");
+                responseMessage.postValue(Constants.SUCCESS_RESPONSE);
+            }
+
+            @Override
+            public void onFailure() {
+                Log.e("userViewModel", "failure");
+                responseMessage.postValue(Constants.FAILURE_RESPONSE);
+            }
+
+            @Override
+            public void onError(NetworkResponse response) {
+                Log.e("userViewModel", "error");
                 responseMessage.postValue(Constants.ERROR_RESPONSE);
                 networkResponse.postValue(response);
             }

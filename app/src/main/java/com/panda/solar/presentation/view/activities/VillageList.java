@@ -13,7 +13,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Menu;
 import android.view.View;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,7 +32,7 @@ import java.util.List;
 public class VillageList extends AppCompatActivity {
 
     private RecyclerView recyclerView;
-    private TextInputEditText searchEditView;
+    //private TextInputEditText searchEditView;
     private VillageAdapter villageAdapter;
     private CustomerViewModel customerViewModel;
     private RecyclerView.LayoutManager layoutManager;
@@ -58,7 +60,7 @@ public class VillageList extends AppCompatActivity {
         });
         observeResponse();
 
-        searchEditView.addTextChangedListener(new TextWatcher() {
+        /*searchEditView.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -73,7 +75,29 @@ public class VillageList extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
                 filter(s.toString());
             }
+        });*/
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.village_search, menu);
+
+        SearchView searchView = (SearchView)menu.findItem(R.id.search_village_item).getActionView();
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                filter(newText);
+                return false;
+            }
         });
+
+        return true;
     }
 
     private void filter(String text){
@@ -149,7 +173,7 @@ public class VillageList extends AppCompatActivity {
 
     public void init(){
         recyclerView = findViewById(R.id.village_recycler_view);
-        searchEditView = findViewById(R.id.search_village);
+        //searchEditView = findViewById(R.id.search_village);
         dialog = Utils.customerProgressBar(this);
         customerViewModel = ViewModelProviders.of(this).get(CustomerViewModel.class);
         errorView = findViewById(R.id.villageList_error_view);

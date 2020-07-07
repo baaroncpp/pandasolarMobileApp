@@ -37,6 +37,7 @@ public class PayGoProductViewModel extends ViewModel {
             @Override
             public void onError(NetworkResponse response) {
                 responseMessage.postValue(Constants.ERROR_RESPONSE);
+                networkResponseMutableLiveData.postValue(response);
             }
         }, serial);
     }
@@ -96,6 +97,7 @@ public class PayGoProductViewModel extends ViewModel {
             @Override
             public void onError(NetworkResponse response) {
                 responseMessage.postValue(Constants.ERROR_RESPONSE);
+                networkResponseMutableLiveData.postValue(response);
             }
         });
     }

@@ -207,6 +207,7 @@ public class Utils {
     public static void logoutUtil(Context context){
         SharedPreferences sharedPreferences = AppContext.getAppContext().getSharedPreferences(Constants.SHARED_PREF, MODE_PRIVATE);
         SharedPreferences.Editor e = sharedPreferences.edit();
+        e.remove(Constants.JWT_TOKEN);
         e.clear();
         e.commit();
     }
@@ -222,7 +223,7 @@ public class Utils {
 
         editor.putString(Constants.USER_ID, user.getId());
         editor.putString(Constants.USER_TYPE, user.getUsertype());
-        editor.apply();
+        editor.commit();
     }
 
     public static void setUserDetails(Context context){
@@ -344,4 +345,30 @@ public class Utils {
         }
         return false;
     }
+
+    //clearing cache
+    public static void deleteCache(Context context) {
+        try {
+            File dir = context.getCacheDir();
+            deleteDir(dir);
+        } catch (Exception e) { e.printStackTrace();}
+    }
+
+    public static boolean deleteDir(File dir) {
+        if (dir != null && dir.isDirectory()) {
+            String[] children = dir.list();
+            for (int i = 0; i < children.length; i++) {
+                boolean success = deleteDir(new File(dir, children[i]));
+                if (!success) {
+                    return false;
+                }
+            }
+            return dir.delete();
+        } else if(dir!= null && dir.isFile()) {
+            return dir.delete();
+        } else {
+            return false;
+        }
+    }
+
 }

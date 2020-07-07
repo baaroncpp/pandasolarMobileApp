@@ -62,6 +62,12 @@ public class LeaseOfferAdapter extends RecyclerView.Adapter<LeaseOfferAdapter.Le
         leaseOfferViewHolder.leaseItemDeposit.setText(Utils.moneyFormatter(currentLeaseOffer.getIntialdeposit()));
         leaseOfferViewHolder.leaseItemPayments.setText(Utils.moneyFormatter(currentLeaseOffer.getRecurrentpaymentamount()));
         leaseOfferViewHolder.leaseDescription.setText(currentLeaseOffer.getDescription());
+
+        // Get mark up on sale
+        final float markup = currentLeaseOffer.getProduct().getUnitcostselling() * ((float) currentLeaseOffer.getPercentlease() / 100);
+        float totalAmount = currentLeaseOffer.getProduct().getUnitcostselling() + markup;
+
+        leaseOfferViewHolder.leaseItemCostLoan.setText(Utils.moneyFormatter(totalAmount));
     }
 
     @Override
@@ -78,6 +84,7 @@ public class LeaseOfferAdapter extends RecyclerView.Adapter<LeaseOfferAdapter.Le
         TextView leaseItemDeposit;
         TextView leaseItemPayments;
         TextView leaseDescription;
+        TextView leaseItemCostLoan;
 
         public LeaseOfferViewHolder(@NonNull View itemView, LeaseOfferOnClickListener leaseOfferOnClickListener) {
             super(itemView);
@@ -89,6 +96,7 @@ public class LeaseOfferAdapter extends RecyclerView.Adapter<LeaseOfferAdapter.Le
             leaseItemDeposit = itemView.findViewById(R.id.lease_initial_deposit);
             leaseItemPayments = itemView.findViewById(R.id.lease_recur_payment);
             leaseDescription = itemView.findViewById(R.id.lease_description);
+            leaseItemCostLoan = itemView.findViewById(R.id.lease_item_unitcost_loan);
         }
     }
 

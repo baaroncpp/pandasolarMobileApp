@@ -101,7 +101,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Lease Unit Cost"
+                    android:text="Unit Cost"
                     android:textSize="13sp"
                     android:textColor="@color/gradStart"
                     android:layout_marginLeft="48dp"/>
@@ -135,6 +135,50 @@
                     android:layout_marginLeft="48dp"
                     android:background="@color/grey"/>
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="8dp"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Unit Cost (LOAN)"
+                    android:textSize="13sp"
+                    android:textColor="@color/gradStart"
+                    android:layout_marginLeft="48dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:src="@mipmap/ic_panda_loan"
+                        android:layout_height="40dp"/>
+
+                    <TextView
+                        android:id="@+id/lease_item_unitcost_loan"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="2"
+                        android:gravity="center_vertical"
+                        android:fontFamily="sans-serif"
+                        android:textColor="#616161"
+                        android:textSize="18sp"
+                        android:layout_marginLeft="8dp"
+                        android:text="320,000 ugX"/>
+
+                </LinearLayout>
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="48dp"
+                    android:background="@color/grey"/>
+            </LinearLayout>
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -178,6 +222,7 @@
                     android:layout_marginLeft="48dp"
                     android:background="@color/grey"/>
             </LinearLayout>
+
 
             <LinearLayout
                 android:layout_width="match_parent"

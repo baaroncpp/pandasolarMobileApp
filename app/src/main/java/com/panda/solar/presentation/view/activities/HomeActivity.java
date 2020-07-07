@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -42,11 +43,14 @@ import com.panda.solar.presentation.view.fragments.bottomNavigationFragements.Se
 import com.panda.solar.services.UserDetailsService;
 import com.panda.solar.utils.AppContext;
 import com.panda.solar.utils.Constants;
+import com.panda.solar.utils.InternetConnection;
 import com.panda.solar.utils.ResponseCallBack;
 import com.panda.solar.utils.Utils;
 import com.panda.solar.viewModel.UserViewModel;
 
 import org.parceler.Parcels;
+
+import java.io.File;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, CompoundButton.OnCheckedChangeListener {
@@ -65,6 +69,7 @@ public class HomeActivity extends AppCompatActivity
     private UserViewModel userViewModel;
     private LiveData<String> responseMessage;
     private ProgressDialog dialog;
+    private User p_user;
 
     private static final String TAG = "FCM Token Registration";
     private UserDAO userDAO = PandaDAOFactory.getUserDAO();
@@ -82,6 +87,8 @@ public class HomeActivity extends AppCompatActivity
         user.observe(this, new Observer<User>() {
             @Override
             public void onChanged(@Nullable User user) {
+                p_user = new User();
+                p_user = user;
                 saveUserDetails(user);
             }
         });
@@ -204,7 +211,13 @@ public class HomeActivity extends AppCompatActivity
         }
     }
 
+    public User getUser(){
 
+        User user = new User();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("user", user);//putString("edttext", "From Activity");
+        return null;
+    }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener = new BottomNavigationView.OnNavigationItemSelectedListener(){
         @Override
@@ -227,6 +240,23 @@ public class HomeActivity extends AppCompatActivity
                     break;
 
                 case R.id.nav_profile:
+                    /*Bundle bundle = new Bundle();
+                    bundle.putParcelable("user", p_user);//putString("edttext", "From Activity");
+                    selectedFragment = new ProfileFragment();
+                    selectedFragment.setArguments(bundle);
+
+                    userViewModel = ViewModelProviders.of(HomeActivity.this).get(UserViewModel.class);
+                    LiveData<User> user = userViewModel.getUser();
+                    user.observe(HomeActivity.this, new Observer<User>() {
+                        @Override
+                        public void onChanged(@Nullable User user) {
+                            Bundle bundle = new Bundle();
+                            bundle.putParcelable("user", user);//putString("edttext", "From Activity");
+                            Fragment selectedFragment = new ProfileFragment();
+                            selectedFragment.setArguments(bundle);
+                        }
+                    });*/
+
                     selectedFragment = new ProfileFragment();
                     break;
             }
@@ -278,14 +308,16 @@ public class HomeActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         //int id = item.getItemId();
 
-        if (item.getItemId() == R.id.appmenu_logout) {
+        /*if (item.getItemId() == R.id.appmenu_logout) {
             Utils.logoutUtil(this);
 
             startActivity(new Intent(this, HomeActivity.class));
             finish();
         }else if(item.getItemId() == R.id.appmenu_settings){
             startActivity(new Intent(this, SettingsActivity.class));
-        }
+        } else if(item.getItemId() == R.id.appmenu_settings){
+            startActivity(new Intent(this, ProfileActivity.class));
+        }*/
 
         //noinspection SimplifiableIfStatement
         /*if (id == R.id.action_settings) {
@@ -347,6 +379,43 @@ public class HomeActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        try {
+            trimCache(this);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    public static void trimCache(Context context) {
+        try {
+            File dir = context.getCacheDir();
+            if (dir != null && dir.isDirectory()) {
+                deleteDir(dir);
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+    }
+
+    public static boolean deleteDir(File dir) {
+        if (dir != null && dir.isDirectory()) {
+            String[] children = dir.list();
+            for (int i = 0; i < children.length; i++) {
+                boolean success = deleteDir(new File(dir, children[i]));
+                if (!success) {
+                    return false;
+                }
+            }
+        }
+
+        // The directory is now empty so delete it
+        return dir.delete();
+    }
+
     public void saveUserDetails(User user){
         SharedPreferences sharedPreferences = AppContext.getAppContext().getSharedPreferences(Constants.SHARED_PREF, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -359,6 +428,14 @@ public class HomeActivity extends AppCompatActivity
     public static String getTokenSharedPreference(String val){
         SharedPreferences sharedPreferences = AppContext.getAppContext().getSharedPreferences(Constants.FCM_DEVICE_TOKEN, MODE_PRIVATE);
         return sharedPreferences.getString(val, null);
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        if(!InternetConnection.checkConnection(this)){
+            startActivity(new Intent(this, InternetError.class));
+        }
     }
 
 }

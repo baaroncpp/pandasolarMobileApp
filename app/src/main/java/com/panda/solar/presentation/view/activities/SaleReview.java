@@ -12,6 +12,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,14 +43,10 @@ public class SaleReview extends AppCompatActivity {
     private TextView productNmaeTitle;
     private MaterialButton makeSaleBtn;
     private SaleViewModel saleViewModel;
-    private LiveData<Sale> saleLiveData;
-    private LiveData<LeaseSale> leaseSaleLive;
-    private ProgressDialog dialog;
-    private SweetAlertDialog sweetAlertDialog;
-    private LiveData<String> liveResponseMsg;
     private LeaseSale leaseSaleResult;
     private ProgressDialog progressDialog;
     private Intent intent;
+    private LiveData<Sale> saleLiveData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +55,6 @@ public class SaleReview extends AppCompatActivity {
 
         saleViewModel = ViewModelProviders.of(this).get(SaleViewModel.class);
 
-        sweetAlertDialog = Utils.customSweetAlertDialog(this);
         progressDialog = Utils.customerProgressBar(this);
 
         init();
@@ -67,8 +64,11 @@ public class SaleReview extends AppCompatActivity {
             intent = new Intent(this, LeaseSale.class);
             leaseSale();
         }else if(saleCode.equals(Constants.DIRECT_SALE_REVIEW)){
-            intent = new Intent(this, DirectSale.class);
+            intent = new Intent(this, LeaseSale.class);
             directSale();
+        }else if(saleCode.equals(Constants.NON_PAYGO_SALE_REVIEW)){
+            intent = new Intent(this, DirectSale.class);
+            nonPayGoSale();
         }
     }
 
@@ -83,7 +83,13 @@ public class SaleReview extends AppCompatActivity {
         serialNumberText.setText(leaseSaleModel.getDeviceserial());
         productNameText.setText(payGoProduct.getLeaseOffer().getProduct().getName());
         customerNameText.setText(customer.getUser().getFirstname()+" "+customer.getUser().getLastname());
-        totalPriceText.setText(Utils.moneyFormatter(payGoProduct.getLeaseOffer().getProduct().getUnitcostselling()));
+        //totalPriceText.setText(Utils.moneyFormatter(payGoProduct.getLeaseOffer().getProduct().getUnitcostselling()));
+
+        // Get mark up on sale
+        final float markup = payGoProduct.getLeaseOffer().getProduct().getUnitcostselling() * ((float) payGoProduct.getLeaseOffer().getPercentlease() / 100);
+        float totalAmount = payGoProduct.getLeaseOffer().getProduct().getUnitcostselling() + markup;
+
+        totalPriceText.setText(Utils.moneyFormatter(totalAmount));
 
         makeSaleBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,12 +130,42 @@ public class SaleReview extends AppCompatActivity {
             public void onClick(View v) {
 
                 progressDialog.show();
-                LiveData<Sale> saleLiveData = saleViewModel.makeDirectPayGoSale(directSaleModel);
+                saleLiveData = saleViewModel.makeDirectPayGoSale(directSaleModel);
 
                 saleLiveData.observe(SaleReview.this, new Observer<Sale>() {
                     @Override
                     public void onChanged(@Nullable Sale sale) {
                         //observeResponse();
+                    }
+                });
+                observeResponse();
+            }
+        });
+    }
+
+    public void nonPayGoSale(){
+
+        String customerName = getIntent().getStringExtra(Constants.CUSTOMER_NAME);
+        Product saleProduct = getIntent().getExtras().getParcelable(Constants.PROD_SALE_OBJ);
+        final DirectSaleModel directSaleModel = getIntent().getExtras().getParcelable(Constants.DIRECT_SALE_OBJ);
+
+        productNmaeTitle.setText("Product Name");
+        saleTypeText.setText("Non PayGo Sale");
+        serialNumberText.setText(saleProduct.getSerialNumber());
+        productNameText.setText(saleProduct.getName());
+        customerNameText.setText(customerName);
+        totalPriceText.setText(Utils.moneyFormatter(saleProduct.getUnitcostselling()));
+
+        makeSaleBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                progressDialog.show();
+                saleLiveData = saleViewModel.makeNonPayGoSale(directSaleModel);
+                saleLiveData.observe(SaleReview.this, new Observer<Sale>() {
+                    @Override
+                    public void onChanged(@Nullable Sale sale) {
+
                     }
                 });
                 observeResponse();

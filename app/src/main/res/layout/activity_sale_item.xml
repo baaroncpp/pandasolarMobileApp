@@ -16,7 +16,6 @@
         android:layout_height="60dp"
         android:layout_margin="4dp"
         android:background="@drawable/circle"
-        android:src="@drawable/aaron"
         app:civ_border_color="@color/circleBorder"
         app:civ_border_width="4dp" />
 

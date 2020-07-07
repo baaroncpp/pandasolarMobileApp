@@ -6,21 +6,22 @@
     android:layout_height="wrap_content"
     android:layout_marginRight="12dp"
     android:layout_marginLeft="12dp"
-    android:layout_marginTop="12dp"
+    android:layout_marginTop="6dp"
+    android:layout_marginBottom="6dp"
     android:elevation="4dp"
     tools:context="com.panda.solar.presentation.view.activities.ProductItem">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginBottom="5dp">
 
         <ImageView
             android:id="@+id/productimage_item_dash"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/aaron"/>
+            android:scaleType="centerCrop"/>
 
         <TextView
             android:id="@+id/product_title"
@@ -28,6 +29,8 @@
             android:layout_height="wrap_content"
             android:text="Boom X 16 Watts"
             android:textSize="16sp"
+            android:textColor="@color/dark_grey"
+            android:textStyle="bold"
             android:fontFamily="sans-serif-light"
             android:layout_marginTop="8dp"
             android:layout_marginLeft="16dp"/>
@@ -42,6 +45,22 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:text="Boom X is a panda product with 4 lamps, one solar panel, one radio, a phone charger and disco lights"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Features:"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="5dp"
+            android:fontFamily="sans-serif-light"
+            android:textStyle="bold"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:orientation="vertical"
+            android:id="@+id/product_equipement_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="26dp"/>
 
         <View
             android:layout_width="wrap_content"
@@ -67,10 +86,11 @@
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:src="@drawable/ic_pro_available_24dp"/>
+                    android:src="@drawable/ic_sun_solid"/>
 
                 <TextView
                     android:id="@+id/product_leasable"
+                    android:layout_marginLeft="5dp"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
@@ -89,10 +109,11 @@
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:src="@drawable/ic_pro_available_24dp"/>
+                    android:src="@drawable/ic_approve_24dp"/>
 
                 <TextView
                     android:id="@+id/product_available"
+                    android:layout_marginLeft="5dp"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"

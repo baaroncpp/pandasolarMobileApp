@@ -15,8 +15,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Menu;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +26,7 @@ import com.panda.solar.Model.entities.Customer;
 import com.panda.solar.activities.R;
 import com.panda.solar.presentation.adapters.CustomerAdapter;
 import com.panda.solar.utils.Constants;
+import com.panda.solar.utils.InternetConnection;
 import com.panda.solar.utils.Utils;
 import com.panda.solar.viewModel.CustomerViewModel;
 
@@ -40,7 +43,7 @@ public class SaleCustomerActivity extends AppCompatActivity {
     private LiveData<String> responseMessage;
     private TextView errorView;
     private ProgressDialog progressDialog;
-    private TextInputEditText customerSearch;
+    //private TextInputEditText customerSearch;
     private ArrayList<Customer> filteredCustomer;
     private List<Customer> customers2;
 
@@ -49,9 +52,11 @@ public class SaleCustomerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sale_customer);
 
+        saleCustomerRecycler = findViewById(R.id.sale_customer_recycler);
+        errorView = findViewById(R.id.sale_customer_error_view);
         filteredCustomer = new ArrayList<>();
         customers2 = new ArrayList<>();
-        customerSearch = findViewById(R.id.search_cust_sale);
+        //customerSearch = findViewById(R.id.search_cust_sale);
         progressDialog = Utils.customerProgressBar(this);
         customerViewModel = ViewModelProviders.of(this).get(CustomerViewModel.class);
         customerList = customerViewModel.getCustomers(0, 10, "createdon", "DESC");
@@ -66,7 +71,7 @@ public class SaleCustomerActivity extends AppCompatActivity {
         });
         observeResponse();
 
-        customerSearch.addTextChangedListener(new TextWatcher() {
+       /* customerSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -81,7 +86,7 @@ public class SaleCustomerActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
                 filter(s.toString());
             }
-        });
+        });*/
     }
 
     public void observeResponse(){
@@ -113,11 +118,11 @@ public class SaleCustomerActivity extends AppCompatActivity {
             errorView.setText("NO CONNECTION");
 
             Toast.makeText(this,"CONNECTION FAILURE", Toast.LENGTH_SHORT).show();
-        }else{
+        }/*else{
             errorView.setVisibility(View.VISIBLE);
             errorView.setText("NO DATA AVAILABLE");
             saleCustomerRecycler.setVisibility(View.GONE);
-        }
+        }*/
     }
 
     private void filter(String text){
@@ -138,7 +143,7 @@ public class SaleCustomerActivity extends AppCompatActivity {
 
     public void buildRecyclerView(final List<Customer> customers){
 
-        saleCustomerRecycler = findViewById(R.id.sale_customer_recycler);
+        //saleCustomerRecycler = findViewById(R.id.sale_customer_recycler);
         layoutManager = new LinearLayoutManager(this);
         saleCustomerRecycler.setLayoutManager(layoutManager);
 
@@ -160,5 +165,35 @@ public class SaleCustomerActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        if(!InternetConnection.checkConnection(this)){
+            startActivity(new Intent(this, InternetError.class));
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.sale_customer_search, menu);
+
+        SearchView searchView = (SearchView)menu.findItem(R.id.search_customer_sale).getActionView();
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                filter(newText);
+                return false;
+            }
+        });
+
+        return true;
     }
 }

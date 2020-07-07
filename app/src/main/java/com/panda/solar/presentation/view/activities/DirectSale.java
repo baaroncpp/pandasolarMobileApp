@@ -31,10 +31,12 @@ import com.panda.solar.Model.entities.DirectSaleModel;
 import com.panda.solar.Model.entities.Product;
 import com.panda.solar.activities.R;
 import com.panda.solar.utils.Constants;
+import com.panda.solar.utils.InternetConnection;
 import com.panda.solar.utils.Utils;
 
 import java.util.Date;
 
+//CHANGED TO NON PAYGO SALE
 public class DirectSale extends AppCompatActivity {
 
     private MaterialButton productButtonView;
@@ -90,17 +92,18 @@ public class DirectSale extends AppCompatActivity {
                     directSaleModel = new DirectSaleModel();
                     directSaleModel.setAgentid(""/*Utils.getSharedPreference(Constants.USER_ID)*/);
                     directSaleModel.setCreatedon(new Date());
-                    directSaleModel.setScannedserial(productResult.getSerialNumber());
+                    directSaleModel.setScannedserial("NON_PAYGO_PRODUCT");
                     directSaleModel.setCustomerid(customerResult.getUserid());
                     directSaleModel.setDescription(directSaledescription.getText().toString());
                     directSaleModel.setLat((float)latitude);
                     directSaleModel.setLong_((float)longitude);
                     directSaleModel.setQuantity(1);
+                    directSaleModel.setProductid(productResult.getId());
 
                     customerName = customerResult.getUser().getFirstname()+" "+customerResult.getUser().getLastname();
 
                     intent.putExtra(Constants.CUSTOMER_NAME, customerName);
-                    intent.putExtra(Constants.SALE_REVIEW, Constants.DIRECT_SALE_REVIEW);
+                    intent.putExtra(Constants.SALE_REVIEW, Constants.NON_PAYGO_SALE_REVIEW);
                     intent.putExtra(Constants.DIRECT_SALE_OBJ, directSaleModel);
                     intent.putExtra(Constants.PROD_SALE_OBJ, productResult);
                     startActivity(intent);
@@ -316,6 +319,14 @@ public class DirectSale extends AppCompatActivity {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 getLastLocation();
             }
+        }
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        if(!InternetConnection.checkConnection(this)){
+            startActivity(new Intent(this, InternetError.class));
         }
     }
 }

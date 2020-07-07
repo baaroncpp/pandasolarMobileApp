@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.panda.solar.Model.entities.Customer;
 import com.panda.solar.activities.R;
 import com.panda.solar.utils.Constants;
+import com.panda.solar.utils.InternetConnection;
 import com.panda.solar.viewModel.SaleViewModel;
 import com.squareup.picasso.Picasso;
 
@@ -79,6 +80,14 @@ public class CustomerDetails extends AppCompatActivity {
                 directSales.setText(stringIntegerMap.get("DIRECT").toString()+" direct sales");
             }
         });
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        if(!InternetConnection.checkConnection(this)){
+            startActivity(new Intent(this, InternetError.class));
+        }
     }
 
 }

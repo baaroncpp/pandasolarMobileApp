@@ -42,7 +42,7 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="direct_sale">Direct Sale</string>
+    <string name="direct_sale">Non PayGo Sale</string>
     <string name="ok">Ok</string>
     <string name="cancel">Cancel</string>
     <string name="choose_sale_type">Choose Sale Type</string>
@@ -66,7 +66,7 @@
     <string name="products">Products</string>
     <string name="initial_deposit">Initial Deposit</string>
     <string name="payment_plan">Payment Plan</string>
-    <string name="asset_financing">Asset Financing</string>
+    <string name="asset_financing">PayGo Sale</string>
     <string name="national_id_upload">Upload a picture of the national ID</string>
     <string name="upload">Upload</string>
     <string name="camera">Camera</string>
@@ -105,5 +105,8 @@
     <string name="reset_password">Reset Password</string>
 
     <string name="internet_error">You don"'"t seem to be connected to the internet. Please check your connection and try again or exit and try again later</string>
+    <string name="direct_sale_para">PayGo product sale, the entire unit payment is made once and completed, Once the unit is approved, the unit is unlocked</string>
+    <string name="lease_sale_para">PayGo product sale, the unit is sold on lease and recurrent payments are made until the unit is cleared over time</string>
+
 
 </resources>

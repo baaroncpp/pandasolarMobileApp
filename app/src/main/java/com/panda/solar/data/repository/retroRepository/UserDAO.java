@@ -30,4 +30,6 @@ public interface UserDAO {
 
     MutableLiveData<User> changePassword(ResponseCallBack callBack, String oldPassword, String newPassword);
 
+    MutableLiveData<User> getAndroidUser(ResponseCallBack callBack);
+
 }

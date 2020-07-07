@@ -23,6 +23,7 @@ import com.panda.solar.Model.entities.User;
 import com.panda.solar.activities.R;
 import com.panda.solar.presentation.adapters.SalesAdapter;
 import com.panda.solar.utils.Constants;
+import com.panda.solar.utils.InternetConnection;
 import com.panda.solar.utils.Utils;
 import com.panda.solar.viewModel.SaleViewModel;
 import com.panda.solar.viewModel.UserViewModel;
@@ -216,5 +217,13 @@ public class SalesList extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        if(!InternetConnection.checkConnection(this)){
+            startActivity(new Intent(this, InternetError.class));
+        }
     }
 }
