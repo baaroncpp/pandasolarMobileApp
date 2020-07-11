@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    tools:context="com.panda.solar.presentation.view.activities.PaymentsReportActivity">
+
+    <!-- <com.github.mikephil.charting.charts.LineChart
+         android:layout_width="match_parent"
+         android:layout_height="300sp"
+         android:id="@+id/payments_line_chart"/>-->
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/chart_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="16dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RadioGroup
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="end"
+                        android:layout_marginRight="16dp"
+                        android:orientation="horizontal">
+                        <RadioButton android:id="@+id/radio_pirates"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Week"/>
+                        <RadioButton android:id="@+id/radio_ninjas"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Month"/>
+                    </RadioGroup>
+
+                </LinearLayout>
+
+                <com.github.mikephil.charting.charts.LineChart
+                    android:layout_marginTop="30dp"
+                    android:id="@+id/payments_line_chart"
+                    android:layout_width="match_parent"
+                    android:layout_height="200sp" />
+
+            </android.support.v7.widget.CardView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/today_payments"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/chart_card"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="4"
+                        android:fontFamily="sans-serif-light"
+                        android:text="Today Payments"
+                        android:textColor="@color/dark_grey"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="sans-serif-light"
+                        android:gravity="end"
+                        android:text="17"
+                        android:textColor="@color/dark_grey"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/recent_payments_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/today_payments"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="sans-serif-light"
+                    android:text="Recent Payments"
+                    android:textColor="@color/dark_grey"
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
+
+                <View
+                    android:id="@+id/recent_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="1dp"
+                    android:layout_below="@+id/recent_payments_label"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@color/colorPrimary" />
+
+                <TextView
+                    android:id="@+id/report_payment_error_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/recent_view"
+                    android:text="No payments"
+                    android:visibility="gone" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recent_payments_recycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/recent_view">
+
+                </android.support.v7.widget.RecyclerView>
+
+                <android.support.design.button.MaterialButton
+                    android:id="@+id/more_payments_btn"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/recent_payments_recycler"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="18dp"
+                    android:text="more payments..."
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="13sp"
+                    app:cornerRadius="25dp"
+                    app:iconTint="@color/colorPrimary"
+                    app:strokeColor="@color/colorPrimary"
+                    app:strokeWidth="2dp" />
+
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

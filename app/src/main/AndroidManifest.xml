@@ -24,10 +24,17 @@
         android:roundIcon="@drawable/panda_icon_circle"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.panda.solar.presentation.view.activities.ProfileActivity"
-                  android:label=""
-                  android:parentActivityName="com.panda.solar.presentation.view.activities.HomeActivity"
-                  android:theme="@style/AppTheme.ActionBar.Transparent"></activity>
+        <activity android:name="com.panda.solar.presentation.view.activities.SaleStatistics"></activity>
+        <activity
+            android:name="com.panda.solar.presentation.view.activities.PaymentsReportActivity"
+            android:label=""
+            android:parentActivityName="com.panda.solar.presentation.view.activities.HomeActivity"
+            android:theme="@style/AppTheme.ActionBar.Transparent" />
+        <activity
+            android:name="com.panda.solar.presentation.view.activities.ProfileActivity"
+            android:label=""
+            android:parentActivityName="com.panda.solar.presentation.view.activities.HomeActivity"
+            android:theme="@style/AppTheme.ActionBar.Transparent" />
         <activity
             android:name="com.panda.solar.presentation.view.activities.InternetError"
             android:theme="@style/AppFormTheme" />
@@ -158,9 +165,9 @@
         <activity
             android:name="com.panda.solar.presentation.view.activities.LeaseSaleActivity"
             android:configChanges="orientation"
-            android:screenOrientation="portrait"
             android:label=""
             android:parentActivityName="com.panda.solar.presentation.view.activities.HomeActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.ActionBar.Transparent" />
         <activity
             android:name="com.panda.solar.presentation.view.activities.SaleCustomerActivity"
@@ -180,17 +187,17 @@
         <activity
             android:name="com.panda.solar.presentation.view.activities.DirectSale"
             android:configChanges="orientation"
-            android:screenOrientation="portrait"
             android:label=""
             android:parentActivityName="com.panda.solar.presentation.view.activities.HomeActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.ActionBar.Transparent" />
         <activity
             android:name="com.panda.solar.presentation.view.activities.AddCustomer"
             android:configChanges="orientation"
-            android:screenOrientation="portrait"
             android:label=""
             android:parentActivityName="com.panda.solar.presentation.view.activities.CustomerList"
-            android:theme="@style/AppTheme.ActionBar.Transparent"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.ActionBar.Transparent" />
         <activity
             android:name="com.panda.solar.presentation.view.activities.SplashScreenActivity"
             android:configChanges="orientation"

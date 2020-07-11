@@ -379,17 +379,6 @@ public class HomeActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        try {
-            trimCache(this);
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
-
     public static void trimCache(Context context) {
         try {
             File dir = context.getCacheDir();

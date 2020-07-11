@@ -20,6 +20,7 @@ import com.panda.solar.Model.entities.Product;
 import com.panda.solar.Model.entities.Sale;
 import com.panda.solar.Model.entities.SaleList;
 import com.panda.solar.Model.entities.SaleModel;
+import com.panda.solar.Model.entities.SaleStatisticsModel;
 import com.panda.solar.Model.entities.StockProduct;
 import com.panda.solar.Model.entities.Token;
 import com.panda.solar.Model.entities.UploadLinks;
@@ -182,4 +183,9 @@ public interface PandaCoreAPI {
 
     @GET("v1/region/village/get/all")
     Call<List<Village>> getAllVillages();
+
+    //Reports
+    @GET("v1/reports/salestatistics/{id}")
+    Call<SaleStatisticsModel> getSaleStatistic(@Path("id") String id);
+
 }

@@ -87,7 +87,7 @@ public class PaymentsList extends AppCompatActivity {
             //errorView.setVisibility(View.GONE);
             layoutManager = new LinearLayoutManager(this);
             recyclerView.setLayoutManager(layoutManager);
-            paymentsAdapter = new PaymentsAdapter(leasePayments);
+            paymentsAdapter = new PaymentsAdapter(leasePayments, Constants.DASH_PAYMENTS, this);
             recyclerView.setAdapter(paymentsAdapter);
 
         }else{

@@ -101,7 +101,7 @@
     <string name="pref_sale_notification_key">show_sale_notifications</string>
     <string name="pref_payment_notification_key">show_payment_notifications</string>
 
-    <string name="url_about_us">https://www.google.com</string>
+    <string name="url_about_us">http://pandasolar.emfsuganda.com/play.php</string>
     <string name="reset_password">Reset Password</string>
 
     <string name="internet_error">You don"'"t seem to be connected to the internet. Please check your connection and try again or exit and try again later</string>
