@@ -3,11 +3,14 @@ package com.panda.solar.viewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
+
+import com.panda.solar.Model.entities.DeviceToken;
 import com.panda.solar.Model.entities.DirectSaleModel;
 import com.panda.solar.Model.entities.LeaseSale;
 import com.panda.solar.Model.entities.LeaseSaleModel;
 import com.panda.solar.Model.entities.Sale;
 import com.panda.solar.Model.entities.SaleModel;
+import com.panda.solar.data.network.NetworkCallback;
 import com.panda.solar.data.network.NetworkResponse;
 import com.panda.solar.data.repository.PandaDAOFactory;
 import com.panda.solar.data.repository.retroRepository.SaleDAO;
@@ -181,6 +184,26 @@ public class SaleViewModel extends ViewModel {
                 networkResponse.postValue(response);
             }
         }, directSaleModel);
+    }
+
+    public LiveData<DeviceToken> resendToken(String leasePaymentId){
+        return saleDAO.resendDeviceToken(new ResponseCallBack() {
+            @Override
+            public void onSuccess() {
+                responseMessage.postValue(Constants.SUCCESS_RESPONSE);
+            }
+
+            @Override
+            public void onFailure() {
+                responseMessage.postValue(Constants.FAILURE_RESPONSE);
+            }
+
+            @Override
+            public void onError(NetworkResponse response) {
+                responseMessage.postValue(Constants.ERROR_RESPONSE);
+                networkResponse.postValue(response);
+            }
+        }, leasePaymentId);
     }
 
     public LiveData<String> getResponseMessage(){

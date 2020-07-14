@@ -86,5 +86,7 @@ public class Constants {
     public static final int READ_STORAGE_PERMISSION_CODE = 12;
     public static final int LOCATION_PERMISSION_CODE = 13;
     public static final int VILLAGE_OBJECT_CODE = 14;
+    public static final String SALE_PAYMENTS = "sale_payments";
+    public static final String LEASE_ID = "lease_id";
 }
 

@@ -6,6 +6,7 @@ import com.panda.solar.Model.entities.CustList;
 import com.panda.solar.Model.entities.Customer;
 import com.panda.solar.Model.entities.CustomerMeta;
 import com.panda.solar.Model.entities.CustomerModel;
+import com.panda.solar.Model.entities.DeviceToken;
 import com.panda.solar.Model.entities.DirectSaleModel;
 import com.panda.solar.Model.entities.FileResponse;
 import com.panda.solar.Model.entities.LeaseOffer;
@@ -167,6 +168,10 @@ public interface PandaCoreAPI {
 
     @GET("v1/sales/customer/salesum/{id}")
     Call<Map<String, Integer>> customerSaleSum(@Path("id") String customerId);
+
+    //device token
+    @GET("v1/tokens/resend/{id}")
+    Call<DeviceToken> resendDeviceToken(@Path("id") String id);
 
 
     /*Lease offer*/

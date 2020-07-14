@@ -7,12 +7,15 @@ public class SaleStatisticsModel {
 	private CustomerMeta customer;
 	private List<LeasePayment> payments;
 	private TotalLeasePayments totalLeasePayments;
+	private Lease lease;
 
 	public SaleStatisticsModel() {}
 
 	public Sale getSale() {
 		return sale;
 	}
+
+	public Lease getLease(){return lease;}
 
 	public CustomerMeta getCustomer() {
 		return customer;
@@ -40,5 +43,9 @@ public class SaleStatisticsModel {
 
 	public void setTotalLeasePayments(TotalLeasePayments totalLeasePayments) {
 		this.totalLeasePayments = totalLeasePayments;
+	}
+
+	public void setLease(Lease lease){
+		this.lease = lease;
 	}
 }

@@ -2,6 +2,7 @@ package com.panda.solar.data.repository.retroRepository;
 
 import android.arch.lifecycle.MutableLiveData;
 
+import com.panda.solar.Model.entities.DeviceToken;
 import com.panda.solar.Model.entities.DirectSaleModel;
 import com.panda.solar.Model.entities.LeaseSale;
 import com.panda.solar.Model.entities.LeaseSaleModel;
@@ -29,5 +30,7 @@ public interface SaleDAO {
     MutableLiveData<Map<String ,Integer>> customerSalesSum(ResponseCallBack callBack, String customerId);
 
     MutableLiveData<Sale> makeNonPayGoSale(ResponseCallBack callBack, DirectSaleModel directSaleModel);
+
+    MutableLiveData<DeviceToken> resendDeviceToken(ResponseCallBack callBack, String leasePaymentId);
 
 }

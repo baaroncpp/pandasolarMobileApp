@@ -1,22 +1,194 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.panda.solar.presentation.view.activities.SaleStatistics">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.github.mikephil.charting.charts.PieChart
-            android:id="@+id/sale_stat_chart"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="250sp"/>
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/sale_stat_chart"
+                android:layout_width="match_parent"
+                android:layout_height="250sp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginLeft="8dp"/>
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                android:layout_marginRight="8dp"
+                app:cardCornerRadius="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="97"
+                        android:orientation="vertical"
+                        android:padding="8dp">
+
+                        <TextView
+                            android:id="@+id/sale_stat_customer"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Customer Name"
+                            android:fontFamily="sans-serif-light"
+                            android:textSize="16sp"/>
+
+                        <View
+                            android:layout_width="wrap_content"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="5dp"
+                            android:background="@color/colorPrimary" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="60"
+                                android:fontFamily="sans-serif-light"
+                                android:text="Serial Number"
+                                android:textStyle="bold"
+                                android:textColor="@color/dark_grey"
+                                android:textSize="14sp" />
+
+                            <TextView
+                                android:id="@+id/sale_stat_device_serial"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="8dp"
+                                android:layout_weight="40"
+                                android:fontFamily="sans-serif-light"
+                                android:gravity="end"
+                                android:text="Amount"
+                                android:textColor="@color/dark_grey"
+                                android:textSize="14sp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="60"
+                                android:fontFamily="sans-serif-light"
+                                android:text="Sold on"
+                                android:textStyle="bold"
+                                android:textColor="@color/dark_grey"
+                                android:textSize="14sp" />
+
+                            <TextView
+                                android:id="@+id/sale_stat_sold_on"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="8dp"
+                                android:layout_weight="40"
+                                android:fontFamily="sans-serif-light"
+                                android:gravity="end"
+                                android:text="date"
+                                android:textColor="@color/dark_grey"
+                                android:textSize="14sp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="60"
+                                android:fontFamily="sans-serif-light"
+                                android:text="Expected Completion"
+                                android:textStyle="bold"
+                                android:textColor="@color/dark_grey"
+                                android:textSize="14sp" />
+
+                            <TextView
+                                android:id="@+id/sale_stat_expected_completion"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="8dp"
+                                android:layout_weight="40"
+                                android:fontFamily="sans-serif-light"
+                                android:gravity="end"
+                                android:text="date"
+                                android:textColor="@color/dark_grey"
+                                android:textSize="14sp" />
+
+                        </LinearLayout>
+
+                        <!--<android.support.design.button.MaterialButton
+                            android:id="@+id/report_payment_item_btn"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="sale details"
+                            android:textAllCaps="false"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="12sp"
+                            app:cornerRadius="25dp"
+                            app:iconTint="@color/colorPrimary"
+                            app:strokeColor="@color/colorPrimary"
+                            app:strokeWidth="2dp"/>-->
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3"
+                        android:background="@color/grey">
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/sale_stat_recycler"
+                android:layout_margin="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            </android.support.v7.widget.RecyclerView>
+
+        </LinearLayout>
+
 
     </ScrollView>
 
 
 
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>

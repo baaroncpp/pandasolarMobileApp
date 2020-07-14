@@ -2,6 +2,8 @@ package com.panda.solar.data.repository.retroRepository;
 
 import android.arch.lifecycle.MutableLiveData;
 import android.util.Log;
+
+import com.panda.solar.Model.entities.DeviceToken;
 import com.panda.solar.Model.entities.DirectSaleModel;
 import com.panda.solar.Model.entities.LeaseSale;
 import com.panda.solar.Model.entities.LeaseSaleModel;
@@ -295,5 +297,39 @@ public class SaleRepository implements SaleDAO{
             }
         });
         return resultData;
+    }
+
+    @Override
+    public MutableLiveData<DeviceToken> resendDeviceToken(final ResponseCallBack callBack, String leasePaymentId) {
+
+        final MutableLiveData<DeviceToken> dataResult = new MutableLiveData<>();
+        Call<DeviceToken> call = pandaCoreAPI.resendDeviceToken(leasePaymentId);
+
+        call.enqueue(new Callback<DeviceToken>() {
+            @Override
+            public void onResponse(Call<DeviceToken> call, Response<DeviceToken> response) {
+                if(!response.isSuccessful()){
+                    try {
+                        netResponse.setBody(new JSONObject(response.errorBody().string()).getString("error"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    netResponse.setCode(response.code());
+                    callBack.onError(netResponse);
+                    return;
+                }
+                dataResult.postValue(response.body());
+                callBack.onSuccess();
+            }
+
+            @Override
+            public void onFailure(Call<DeviceToken> call, Throwable t) {
+                callBack.onFailure();
+                return;
+            }
+        });
+        return dataResult;
     }
 }

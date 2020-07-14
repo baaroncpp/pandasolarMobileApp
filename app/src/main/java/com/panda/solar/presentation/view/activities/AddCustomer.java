@@ -127,9 +127,29 @@ public class AddCustomer extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if(validateFirstName() && validateLastName() && validateOtherName() && validateGender()
+                /*if(validateFirstName() && validateLastName() && validateOtherName() && validateGender()
                    && validateDOB() && validateEmail() && validatePrimaryPhone() && validateIdType() && validateIdNumber()
-                   && validateAddress() && validateVillage() && validateSecPrimaryPhone() && validateSecEmail()){
+                   && validateAddress() && validateVillage() && validateSecPrimaryPhone() && validateSecEmail()){*/
+
+                if(validateFirstName() && validateLastName() && validateGender()
+                   && validateDOB() && validatePrimaryPhone() && validateIdType() && validateIdNumber()
+                   && validateAddress() && validateVillage() && validateSecPrimaryPhone() ){
+
+                    String inputText = email.getText().toString();
+                    String inputText2 = secEmail.getText().toString();
+                    String inputText3 = otherName.getText().toString();
+
+                    if(!inputText.isEmpty()){
+                        validateEmail();
+                    }
+
+                    if(!inputText2.isEmpty()){
+                        validateSecEmail();
+                    }
+
+                    if(!inputText3.isEmpty()){
+                        validateOtherName();
+                    }
 
                     Intent intent = new Intent(AddCustomer.this, ReviewCustomer.class);
                     intent.putExtra(Constants.CUSTOMER_MODEL_OBJECT, createCustomerUser());
@@ -317,21 +337,6 @@ public class AddCustomer extends AppCompatActivity {
     }
 
     public void initSpinner(){
-        /*List<String> villageNames = new ArrayList<>();
-        villageNames.add("Choose Village");
-        villageNames.add("Ntinda");
-
-        if(!villages.isEmpty()){
-            for(Village object : villages){
-                villageNames.add(object.getName());
-            }
-        }
-
-        villageNames.add("Other");
-
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, villageNames);
-        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        village.setAdapter(arrayAdapter);*/
 
         List<String> idTypes = new ArrayList<>();
         idTypes.add("Select ID Type");

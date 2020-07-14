@@ -24,12 +24,15 @@
         android:roundIcon="@drawable/panda_icon_circle"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.panda.solar.presentation.view.activities.SaleStatistics"></activity>
+        <activity android:name="com.panda.solar.presentation.view.activities.SaleStatistics"
+                  android:label="Sale Statistics"
+                  android:parentActivityName="com.panda.solar.presentation.view.activities.PaymentsReportActivity"
+                  android:theme="@style/AppThemeMaterial"></activity>
         <activity
             android:name="com.panda.solar.presentation.view.activities.PaymentsReportActivity"
-            android:label=""
+            android:label="Statistics"
             android:parentActivityName="com.panda.solar.presentation.view.activities.HomeActivity"
-            android:theme="@style/AppTheme.ActionBar.Transparent" />
+            android:theme="@style/AppThemeMaterial"/>
         <activity
             android:name="com.panda.solar.presentation.view.activities.ProfileActivity"
             android:label=""

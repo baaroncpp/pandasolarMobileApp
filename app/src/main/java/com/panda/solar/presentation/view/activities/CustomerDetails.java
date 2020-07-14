@@ -38,7 +38,7 @@ public class CustomerDetails extends AppCompatActivity {
         setContentView(R.layout.customer_details);
 
         initializeActivity();
-         final Customer customer = getIntent().getExtras().getParcelable(Constants.CUSTOMER_OBJECT);
+        final Customer customer = getIntent().getExtras().getParcelable(Constants.CUSTOMER_OBJECT);
 
         customerName.setText(customer.getUser().getLastname()+", "+customer.getUser().getFirstname());
         customerPhone.setText(customer.getUser().getPrimaryphone());

@@ -1,9 +1,10 @@
 package com.panda.solar.data.repository.retroRepository;
 
+import android.arch.lifecycle.MutableLiveData;
 import com.panda.solar.Model.entities.SaleStatisticsModel;
 import com.panda.solar.utils.ResponseCallBack;
 
 public interface ReportsDAO {
 
-    SaleStatisticsModel getSaleStatistic(ResponseCallBack callBack, String id);
+    MutableLiveData<SaleStatisticsModel> getSaleStatistic(ResponseCallBack callBack, String id);
 }

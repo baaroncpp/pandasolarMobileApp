@@ -1,6 +1,7 @@
 package com.panda.solar.data.repository.retroRepository;
 
 import android.arch.lifecycle.MutableLiveData;
+import android.util.Log;
 
 import com.panda.solar.Model.entities.SaleStatisticsModel;
 import com.panda.solar.data.network.NetworkResponse;
@@ -30,7 +31,7 @@ public class ReportsRepository implements ReportsDAO {
     }
 
     @Override
-    public SaleStatisticsModel getSaleStatistic(final ResponseCallBack callBack, String id) {
+    public MutableLiveData<SaleStatisticsModel> getSaleStatistic(final ResponseCallBack callBack, String id) {
 
         final MutableLiveData<SaleStatisticsModel> dataResult = new MutableLiveData<>();
         Call<SaleStatisticsModel> call = pandaCoreAPI.getSaleStatistic(id);
@@ -48,19 +49,22 @@ public class ReportsRepository implements ReportsDAO {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+                    Log.e("err","stai");
                     callBack.onError(networkResponse);
                     return;
                 }
+                Log.e("suc","stai");
                 dataResult.postValue(response.body());
                 callBack.onSuccess();
             }
 
             @Override
             public void onFailure(Call<SaleStatisticsModel> call, Throwable t) {
+                Log.e("fail","stai");
                 callBack.onFailure();
                 return;
             }
         });
-        return null;
+        return dataResult;
     }
 }
