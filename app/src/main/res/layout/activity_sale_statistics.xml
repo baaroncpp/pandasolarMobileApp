@@ -83,7 +83,7 @@
                                 android:layout_weight="40"
                                 android:fontFamily="sans-serif-light"
                                 android:gravity="end"
-                                android:text="Amount"
+                                android:text=""
                                 android:textColor="@color/dark_grey"
                                 android:textSize="14sp" />
 
@@ -112,7 +112,7 @@
                                 android:layout_weight="40"
                                 android:fontFamily="sans-serif-light"
                                 android:gravity="end"
-                                android:text="date"
+                                android:text=""
                                 android:textColor="@color/dark_grey"
                                 android:textSize="14sp" />
 
@@ -141,7 +141,7 @@
                                 android:layout_weight="40"
                                 android:fontFamily="sans-serif-light"
                                 android:gravity="end"
-                                android:text="date"
+                                android:text=""
                                 android:textColor="@color/dark_grey"
                                 android:textSize="14sp" />
 

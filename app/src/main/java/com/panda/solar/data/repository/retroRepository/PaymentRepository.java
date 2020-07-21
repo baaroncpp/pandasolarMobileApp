@@ -5,11 +5,16 @@ import android.util.Log;
 
 import com.panda.solar.Model.entities.LeasePayment;
 import com.panda.solar.Model.entities.PaymentList;
+import com.panda.solar.Model.entities.PaymentStatisticModel;
 import com.panda.solar.data.network.NetworkResponse;
 import com.panda.solar.data.network.PandaCoreAPI;
 import com.panda.solar.data.network.RetroService;
 import com.panda.solar.utils.ResponseCallBack;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.List;
 
 import retrofit2.Call;
@@ -80,6 +85,39 @@ public class PaymentRepository implements PaymentDAO {
 
             @Override
             public void onFailure(Call<List<LeasePayment>> call, Throwable t) {
+                callBack.onFailure();
+                return;
+            }
+        });
+        return dataResult;
+    }
+
+    @Override
+    public MutableLiveData<PaymentStatisticModel> getPaymentStatistic(final ResponseCallBack callBack) {
+
+        final MutableLiveData<PaymentStatisticModel> dataResult =  new MutableLiveData<>();
+        Call<PaymentStatisticModel> call = pandaCoreAPI.getPaymentStatistic();
+
+        call.enqueue(new Callback<PaymentStatisticModel>() {
+            @Override
+            public void onResponse(Call<PaymentStatisticModel> call, Response<PaymentStatisticModel> response) {
+                if(!response.isSuccessful()){
+                    try {
+                        netResponse.setBody(new JSONObject(response.errorBody().string()).getString("error"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    callBack.onError(netResponse);
+                    return;
+                }
+                dataResult.postValue(response.body());
+                callBack.onSuccess();
+            }
+
+            @Override
+            public void onFailure(Call<PaymentStatisticModel> call, Throwable t) {
                 callBack.onFailure();
                 return;
             }

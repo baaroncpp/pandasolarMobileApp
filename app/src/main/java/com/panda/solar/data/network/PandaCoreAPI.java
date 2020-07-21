@@ -17,6 +17,7 @@ import com.panda.solar.Model.entities.Login;
 import com.panda.solar.Model.entities.PayGoProduct;
 import com.panda.solar.Model.entities.PayGoProductModel;
 import com.panda.solar.Model.entities.PaymentList;
+import com.panda.solar.Model.entities.PaymentStatisticModel;
 import com.panda.solar.Model.entities.Product;
 import com.panda.solar.Model.entities.Sale;
 import com.panda.solar.Model.entities.SaleList;
@@ -192,5 +193,8 @@ public interface PandaCoreAPI {
     //Reports
     @GET("v1/reports/salestatistics/{id}")
     Call<SaleStatisticsModel> getSaleStatistic(@Path("id") String id);
+
+    @GET("v1/reports/paymentstatistics")
+    Call<PaymentStatisticModel> getPaymentStatistic();
 
 }

@@ -123,6 +123,7 @@ public class SaleStatistics extends AppCompatActivity {
         float paidPercentage = 0;
 
         float paidAmount = lease.getTotalleasevalue() - (tlp.getTotalamountowed() + tlp.getResidueamount());
+
         float owedAmount = tlp.getTotalamountowed();
 
         float unitCostAmount = lease.getTotalleasevalue();

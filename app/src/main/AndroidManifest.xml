@@ -133,7 +133,7 @@
         <activity android:name="com.panda.solar.presentation.view.activities.PaymentListItem" />
         <activity
             android:name="com.panda.solar.presentation.view.activities.PaymentsList"
-            android:label="Customer Lease Payments"
+            android:label="PayGo Payments"
             android:parentActivityName="com.panda.solar.presentation.view.activities.HomeActivity"
             android:theme="@style/AppThemeMaterial" />
         <activity

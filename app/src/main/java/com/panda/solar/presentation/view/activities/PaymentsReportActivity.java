@@ -22,13 +22,19 @@ import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.panda.solar.Model.entities.KeyValueModel;
 import com.panda.solar.Model.entities.LeasePayment;
+import com.panda.solar.Model.entities.PaymentStatisticModel;
 import com.panda.solar.activities.R;
 import com.panda.solar.presentation.adapters.PaymentsAdapter;
 import com.panda.solar.utils.Constants;
+import com.panda.solar.utils.Utils;
 import com.panda.solar.viewModel.PaymentViewModel;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 public class PaymentsReportActivity extends AppCompatActivity {
@@ -43,6 +49,12 @@ public class PaymentsReportActivity extends AppCompatActivity {
     private AppCompatRadioButton weekBtn;
     private AppCompatRadioButton monthBtn;
     private RadioGroup paymentRadioGroup;
+    private TextView dailyPaymentView;
+    private List<KeyValueModel> dailyPayments;
+    private List<KeyValueModel> monthlyPayments;
+    private Long dailyPayment;
+    private String[] months = new String[12];
+    private String[] days = new String[7];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,20 +69,35 @@ public class PaymentsReportActivity extends AppCompatActivity {
         init();
         weekBtn.setChecked(true);
 
+        morePaymentsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(PaymentsReportActivity.this, PaymentsList.class);
+                startActivity(intent);
+            }
+        });
+
+        //get paymentStatistics
+        LiveData<PaymentStatisticModel> paymentStatisticModelLiveData = paymentViewModel.getPaymentStatistics();
+        paymentStatisticModelLiveData.observe(this, new Observer<PaymentStatisticModel>() {
+            @Override
+            public void onChanged(@Nullable PaymentStatisticModel paymentStatisticModel) {
+                dailyPayment = paymentStatisticModel.getDailyPayments();
+                dailyPayments.addAll(paymentStatisticModel.getWeeklyPayments());
+                monthlyPayments.addAll(paymentStatisticModel.getMonthlyPayments());
+                dailyPaymentView.setText(paymentStatisticModel.getDailyPayments().toString());
+                Collections.reverse(dailyPayments);
+                Collections.reverse(monthlyPayments);
+                paymentChart();
+            }
+        });
+
         paymentChart();
 
         paymentRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 paymentChart();
-            }
-        });
-
-        morePaymentsBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(PaymentsReportActivity.this, PaymentsList.class);
-                startActivity(intent);
             }
         });
 
@@ -93,6 +120,10 @@ public class PaymentsReportActivity extends AppCompatActivity {
         weekBtn = findViewById(R.id.payment_week_btn);
         monthBtn = findViewById(R.id.payment_month_btn);
         paymentRadioGroup = findViewById(R.id.payment_stat_radio_group);
+        dailyPaymentView = findViewById(R.id.daily_paymments_view);
+        dailyPayments = new ArrayList<>();
+        monthlyPayments = new ArrayList<>();
+        dailyPayment = (long)0;
     }
 
     public void paymentChart(){
@@ -108,10 +139,12 @@ public class PaymentsReportActivity extends AppCompatActivity {
                 getResources().getColor(R.color.light_yellow),getResources().getColor(R.color.light_yellow) ,getResources().getColor(R.color.light_yellow2),
                 getResources().getColor(R.color.light_yellow1), getResources().getColor(R.color.orange)};
 
-        final String[] months = new String[]{"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Aug","Sept","Oct","Nov","Dec"};
-        final String[] days = new String[]{"Mon", "Tue", "Wed", "Thur", "Fri", "Sat", "Sun"};
+        //final String[] months = new String[]{"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Aug","Sept","Oct","Nov","Dec"};
+        //final String[] days = new String[]{"Mon", "Tue", "Wed", "Thur", "Fri", "Sat", "Sun"};
 
-        BarDataSet barDataSet = new BarDataSet(getData(), "Payments");
+
+
+        BarDataSet barDataSet = new BarDataSet(getData(), "Payments"+ getGraphDate());
         barDataSet.setColors(colors);
         IndexAxisValueFormatter formatter = null;
 
@@ -141,33 +174,28 @@ public class PaymentsReportActivity extends AppCompatActivity {
         paymentBarChart.invalidate();
         paymentBarChart.getAxisLeft().setDrawGridLines(false);
         paymentBarChart.getXAxis().setDrawGridLines(false);
+        paymentBarChart.invalidate();
     }
 
     private ArrayList getData(){
 
+        int count = 0;
         ArrayList<BarEntry> entries = new ArrayList<>();
 
         if(weekBtn.isChecked()){
-            entries.add(new BarEntry(0f, 30f));
-            entries.add(new BarEntry(1f, 80f));
-            entries.add(new BarEntry(2f, 60f));
-            entries.add(new BarEntry(3f, 50f));
-            entries.add(new BarEntry(4f, 70f));
-            entries.add(new BarEntry(5f, 60f));
-            entries.add(new BarEntry(6f, 40f));
+
+            for(KeyValueModel obj : dailyPayments){
+                entries.add(new BarEntry(count, obj.getValue()));
+                days[count] = obj.getName();
+                count = count + 1;
+            }
         }else if(monthBtn.isChecked()){
-            entries.add(new BarEntry(0f, 30f));
-            entries.add(new BarEntry(1f, 80f));
-            entries.add(new BarEntry(2f, 60f));
-            entries.add(new BarEntry(3f, 50f));
-            entries.add(new BarEntry(4f, 70f));
-            entries.add(new BarEntry(5f, 60f));
-            entries.add(new BarEntry(6f, 40f));
-            entries.add(new BarEntry(7f, 90f));
-            entries.add(new BarEntry(8f, 20f));
-            entries.add(new BarEntry(9f, 30f));
-            entries.add(new BarEntry(10f, 75f));
-            entries.add(new BarEntry(11f, 30f));
+
+            for(KeyValueModel obj : monthlyPayments){
+                entries.add(new BarEntry(count, obj.getValue()));
+                months[count] = obj.getName();
+                count = count + 1;
+            }
         }
 
         return entries;
@@ -185,6 +213,20 @@ public class PaymentsReportActivity extends AppCompatActivity {
             reportPaymentsRecycler.setVisibility(View.GONE);
             errorView.setVisibility(View.VISIBLE);
             errorView.setText("No Payments");
+        }
+
+    }
+
+    public String getGraphDate(){
+
+        if(weekBtn.isChecked()){
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.DAY_OF_MONTH, -6);
+            return " from "+ Utils.readableDate(cal.getTime())+" to Date";
+        }else{
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.MONTH, -11);
+            return " from "+ Utils.readableDate(cal.getTime())+" to Date";
         }
 
     }

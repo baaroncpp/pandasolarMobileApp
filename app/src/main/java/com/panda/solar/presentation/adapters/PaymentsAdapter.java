@@ -83,7 +83,7 @@ public class PaymentsAdapter extends RecyclerView.Adapter<PaymentsAdapter.Paymen
         if(paymentType.equals(Constants.DASH_PAYMENTS)){
             paymentViewHolder.paymentPayeeNumber.setText("+"+Utils.insertCharacterForEveryNDistance(3, currentPayment.getPayeemobilenumber(),' '));
             paymentViewHolder.paymentPayee.setText(currentPayment.getPayeename());
-            paymentViewHolder.paymentChannel.setText(currentPayment.getPaymentchannel());
+            //paymentViewHolder.paymentChannel.setText(currentPayment.getPaymentchannel());
             paymentViewHolder.paymentAmount.setText(Utils.moneyFormatter(currentPayment.getAmount()));
             paymentViewHolder.paymentDate.setText(Utils.readableDate(currentPayment.getCreatedon()));
 
@@ -109,7 +109,28 @@ public class PaymentsAdapter extends RecyclerView.Adapter<PaymentsAdapter.Paymen
             paymentViewHolder.resendTokenBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    resendToken(currentPayment.getId());
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setTitle("Resend PayGo Token");
+                    builder.setMessage("Are you sure");
+                    builder.setCancelable(false);
+                    builder.setPositiveButton("Ok", new DialogInterface.OnClickListener(){
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            resendToken(currentPayment.getId());
+                            dialog.dismiss();
+                        }
+                    });
+                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+
+                    AlertDialog alert = builder.create();
+                    alert.show();
                 }
             });
         }
@@ -124,7 +145,7 @@ public class PaymentsAdapter extends RecyclerView.Adapter<PaymentsAdapter.Paymen
     public static class PaymentViewHolder extends RecyclerView.ViewHolder{
 
         TextView paymentDate;
-        TextView paymentChannel;
+        //TextView paymentChannel;
         TextView paymentAmount;
         TextView paymentPayee;
         TextView paymentPayeeNumber;
@@ -147,7 +168,7 @@ public class PaymentsAdapter extends RecyclerView.Adapter<PaymentsAdapter.Paymen
             if(paymentType.equals(Constants.DASH_PAYMENTS)){
                 paymentDate = itemView.findViewById(R.id.payment_item_date);
                 paymentAmount = itemView.findViewById(R.id.payment_item_amount);
-                paymentChannel = itemView.findViewById(R.id.payment_item_channel);
+                //paymentChannel = itemView.findViewById(R.id.payment_item_channel);
                 paymentPayee = itemView.findViewById(R.id.payment_item_payee);
                 paymentPayeeNumber = itemView.findViewById(R.id.payment_item_payee_number);
                 paymentView = itemView.findViewById(R.id.payment_item_hor_view);
