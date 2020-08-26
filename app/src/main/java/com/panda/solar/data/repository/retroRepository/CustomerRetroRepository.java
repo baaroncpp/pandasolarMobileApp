@@ -3,7 +3,6 @@ package com.panda.solar.data.repository.retroRepository;
 import android.arch.lifecycle.MutableLiveData;
 import android.util.Log;
 
-import com.panda.solar.Model.entities.CustList;
 import com.panda.solar.Model.entities.Customer;
 import com.panda.solar.Model.entities.CustomerMeta;
 import com.panda.solar.Model.entities.CustomerModel;

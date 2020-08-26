@@ -16,6 +16,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
@@ -23,6 +24,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Window;
 import android.view.WindowManager;
@@ -34,6 +36,7 @@ import com.panda.solar.presentation.view.activities.HomeActivity;
 import com.panda.solar.viewModel.UserViewModel;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -210,6 +213,12 @@ public class Utils {
         e.remove(Constants.JWT_TOKEN);
         e.clear();
         e.commit();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            context.deleteSharedPreferences(Constants.SHARED_PREF);
+        } else {
+            Log.e("LOGOUT", "Cannot delete files in shared pref directory");
+        }
     }
 
     public static boolean isSharedPreferenceSet(Context context){
