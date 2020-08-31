@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.panda.solar.activities.com.panda.solar.presentation.view.activities.LoginActivity"
+    tools:context="com.panda.solar.presentation.view.activities.LoginActivity"
     tools:showIn="@layout/activity_login">
 
     <LinearLayout
@@ -18,15 +18,32 @@
         <ImageView
             android:layout_width="@dimen/login_panda_icon_image_size"
             android:layout_height="@dimen/login_panda_icon_image_size"
-            android:src="@drawable/ic_panda_soloar"
+            android:layout_marginTop="50dp"
+            android:src="@drawable/panda_icon_circle"
             android:layout_gravity="center"
             />
+
+        <TextView
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-light"
+            android:textSize="30sp"
+            android:text="Panda Solar"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textSize="16sp"
+            android:text="Lighten Up"/>
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
-            android:gravity="center"
-            >
+            android:layout_marginTop="80dp"
+            android:gravity="center">
 
             <EditText
                 android:id="@+id/login_phone_number"
@@ -47,7 +64,7 @@
                 android:layout_marginTop="@dimen/layout_margin"
                 android:layout_below= "@id/login_phone_number"
                 android:background="@drawable/edit_text_3px"
-                android:inputType="numberPassword"
+                android:inputType="textPassword"
                 android:hint="@string/password" />
 
         </RelativeLayout>
@@ -60,9 +77,9 @@
             android:background="@drawable/generic_button_bg"
             android:text="@string/login"
             android:textColor="@color/white"
-            android:id="@+id/login_button"
-
-            />
+            android:clickable="true"
+            android:focusable="true"
+            android:id="@+id/login_button"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

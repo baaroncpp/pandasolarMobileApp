@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:clickable="true"
+    android:focusable="true"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_marginLeft="8dp"
+    tools:context="com.panda.solar.presentation.view.activities.SaleItem">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/sale_item_agent_pic"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_margin="4dp"
+        android:background="@drawable/circle"
+        app:civ_border_color="@color/circleBorder"
+        app:civ_border_width="4dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_marginTop="4dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="5dp"
+            android:paddingTop="5dp"
+            android:paddingRight="8dp">
+
+            <TextView
+                android:id="@+id/sale_prod_name"
+                android:maxLines="1"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="wrap_content"
+                android:text="product Name"
+                android:fontFamily="sans-serif"
+                android:textSize="18sp"
+                android:textColor="@color/dark_grey"/>
+
+            <TextView
+                android:id="@+id/sale_date"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="2 March 2020"
+                android:fontFamily="sans-serif-light"
+                android:gravity="end"
+                android:textSize="12sp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="5dp"
+            android:paddingRight="8dp">
+
+            <TextView
+                android:id="@+id/sale_agent_name"
+                android:layout_gravity="top"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Agent Name"
+                android:maxLines="1"
+                android:fontFamily="sans-serif"
+                android:textSize="15sp"/>
+
+            <TextView
+                android:id="@+id/sale_detail"
+                android:layout_gravity="top"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="- lease sale ..."
+                android:fontFamily="sans-serif-light"
+                android:textSize="15sp"/>
+
+            <TextView
+                android:id="@+id/sale_status"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/lawn_green"
+                android:text="APPROVED"
+                android:fontFamily="sans-serif"
+                android:gravity="end"
+                android:textSize="13sp"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="8dp"
+            android:background="@color/grey"/>
+
+    </LinearLayout>
+
+</LinearLayout>

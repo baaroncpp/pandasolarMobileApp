@@ -1,30 +1,38 @@
 package com.panda.solar.presentation.view.activities;
 
-import android.app.Dialog;
+import android.Manifest;
+import android.app.ProgressDialog;
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.JsonObject;
 import com.panda.solar.Model.entities.Login;
 import com.panda.solar.Model.entities.Token;
+
 import com.panda.solar.activities.R;
-import com.panda.solar.data.network.NetworkCallback;
-import com.panda.solar.data.network.NetworkResponse;
-import com.panda.solar.data.network.RetrofitHelper;
-import com.panda.solar.data.repository.retroRepository.LoginRepository;
+
+import com.panda.solar.utils.AppContext;
+import com.panda.solar.utils.Constants;
+import com.panda.solar.utils.InternetConnection;
 import com.panda.solar.utils.Utils;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener, TextWatcher, NetworkCallback {
+import com.panda.solar.viewModel.UserViewModel;
+
+public class LoginActivity extends AppCompatActivity{
 
     private Button loginButton;
     private EditText loginPhoneNumberEditTxt;
@@ -34,19 +42,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private String phoneNumber;
     private String password;
 
-    private Dialog dialog;
+    private ProgressDialog progressDialog;
+    private UserViewModel userViewModel;
 
-    private LoginRepository loginRepository;
-    private Token token;
-    private String bad_request;
-    private String connection_fail;
-    public static final String SHARED_PREF = "shared_pref";
-    public static final String JWT_TOKEN = "jwt_token";
+    private SharedPreferences sharedPreferences;
+    private boolean isTokenStored;
+    private boolean instanseState;
+    private String responseString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -54,78 +62,143 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             getSupportActionBar().hide();
         }
 
-        loginButton = (Button)findViewById(R.id.login_button);
-        loginPhoneNumberEditTxt = (EditText)findViewById(R.id.login_phone_number);
-        loginPasswordEditTxt = (EditText)findViewById(R.id.login_password);
-        forgotPasswordTextView = (TextView)findViewById(R.id.forgot_password_text);
+        if(!InternetConnection.checkConnection(this)){
+            startActivity(new Intent(this, InternetError.class));
+        }
 
-        loginPasswordEditTxt.addTextChangedListener(this);
-        loginPasswordEditTxt.addTextChangedListener(this);
+        int ALL_PERMISSIONS = 101;
+        final String[] permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION ,Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
 
-        loginButton.setOnClickListener(this);
-        forgotPasswordTextView.setOnClickListener(this);
+        ActivityCompat.requestPermissions(this, permissions, ALL_PERMISSIONS);
 
+        init();
+        observeResponse();
 
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                userViewModel = ViewModelProviders.of(LoginActivity.this).get(UserViewModel.class);
+                tokenIsPresent();
+                loginUser();
+            }
+        });
 
     }
 
     @Override
-    public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.login_button:
-                loginUser();
-                //startActivity(new Intent(this,HomeActivity.class));
-                break;
-            case R.id.forgot_password_text:
-                startActivity(new Intent(this, ForgotPasswordActivity.class));
-                break;
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+        homeIntent.addCategory( Intent.CATEGORY_HOME );
+        homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(homeIntent);
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        if(!InternetConnection.checkConnection(this)){
+            startActivity(new Intent(this, InternetError.class));
+        }
+    }
+
+    public void init(){
+
+        progressDialog = Utils.customerProgressBar(this);
+
+        loginButton = findViewById(R.id.login_button);
+        loginPhoneNumberEditTxt = findViewById(R.id.login_phone_number);
+        loginPasswordEditTxt = findViewById(R.id.login_password);
+        forgotPasswordTextView = findViewById(R.id.forgot_password_text);
+
+        sharedPreferences = AppContext.getAppContext().getSharedPreferences(Constants.SHARED_PREF, MODE_PRIVATE);
+        userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
+        instanseState = false;
+    }
+
+    public void checkAppPermissions(){
+
+        if(!(ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)){
+            Utils.appPermissions(this, Constants.READ_STORAGE_PERMISSION_CODE);
         }
 
+        if(!(ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)){
+            Utils.appPermissions(this, Constants.WRITE_STORAGE_PERMISSION_CODE);
+        }
 
+        if(!(ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)){
+            Utils.appPermissions(this, Constants.CAMERA_PERMISSION_CODE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if(requestCode == Constants.WRITE_STORAGE_PERMISSION_CODE){
+            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                Toast.makeText(this,"Write Permission Granted", Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(this,"Permission Denied", Toast.LENGTH_SHORT).show();
+            }
+        }else if(requestCode == Constants.READ_STORAGE_PERMISSION_CODE){
+            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                Toast.makeText(this,"Read Permission Granted", Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(this,"Permission Denied", Toast.LENGTH_SHORT).show();
+            }
+        }else if(requestCode == Constants.CAMERA_PERMISSION_CODE){
+            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                Toast.makeText(this,"Camera Permission Granted", Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(this,"Permission Denied", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     private void loginUser(){
-
         phoneNumber = loginPhoneNumberEditTxt.getText().toString().trim();
         password = loginPasswordEditTxt.getText().toString().trim();
 
-        Login log = new Login(phoneNumber, password);
-
         if(validInputs()){
-            JsonObject object = new JsonObject();
-            object.addProperty("username", loginPhoneNumberEditTxt.getText().toString().trim());
-            object.addProperty("password", loginPasswordEditTxt.getText().toString().trim());
 
-            dialog = new Utils().getDialog(this);
-            showProgressDialog(dialog);
+            Login log = new Login(phoneNumber, password);
 
-            loginRepository = new LoginRepository();
-            token = loginRepository.userLogin(log);
-            bad_request = LoginRepository.getBad_request();
-            connection_fail = LoginRepository.getConnection_fail();
+            LiveData<Token> liveToken = userViewModel.authenticateUser(log);
+            progressDialog.show();
+            liveToken.observe(this, new Observer<Token>() {
+                @Override
+                public void onChanged(@Nullable Token t) {
+                    isTokenStored = saveJWT(t);
+                }
+            });
 
-            dismissProgressDialog(dialog);
-
-            if(token != null && bad_request.isEmpty() && connection_fail.isEmpty()){
-                //pass token to DB
-                saveJWT(token);
-
-                startActivity(new Intent(this,HomeActivity.class));
-            }else if(!bad_request.isEmpty()){
-                Toast.makeText(this,bad_request, Toast.LENGTH_LONG).show();
-            }else if(!connection_fail.isEmpty()){
-                Toast.makeText(this,connection_fail, Toast.LENGTH_LONG).show();
-            }
-
-
-            //new RetrofitHelper().login(object, this);
         }
+    }
 
-        loginRepository = new LoginRepository();
-        token = loginRepository.userLogin(log);
-        bad_request = LoginRepository.getBad_request();
-        connection_fail = LoginRepository.getConnection_fail();
+    public void observeResponse(){
+        final LiveData<String> responseMessage = userViewModel.getResponseMessage();
+        responseMessage.observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable String s) {
+                responseString = s;
+                handleResponse(s);
+            }
+        });
+    }
 
+
+    public void handleResponse(String msg){
+        if(msg.equals(Constants.SUCCESS_RESPONSE) /*&& isTokenStored*/){
+            startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+            progressDialog.dismiss();
+        }else if(msg.equals(Constants.ERROR_RESPONSE)){
+            progressDialog.dismiss();
+            Toast.makeText(this,"BAD CREDENTIALS TRY AGAIN", Toast.LENGTH_LONG).show();
+        }else if(msg.equals(Constants.FAILURE_RESPONSE)){
+            progressDialog.dismiss();
+            Toast.makeText(this,"CONNECTION FAILURE", Toast.LENGTH_LONG).show();
+        }
     }
 
     private boolean validInputs(){
@@ -139,52 +212,28 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         return true;
     }
 
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    public boolean saveJWT(Token token){
 
-    }
+        if(token != null){
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString(Constants.JWT_TOKEN, token.getToken());
+            editor.commit();
 
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-    }
-
-    @Override
-    public void afterTextChanged(Editable s) {
-        if(s.hashCode() == loginPhoneNumberEditTxt.getText().hashCode()){
-            loginPhoneNumberEditTxt.setError(null);
-        }
-        else if(s.hashCode() == loginPasswordEditTxt.getText().hashCode()){
-            loginPasswordEditTxt.setError(null);
+            return true;
+        }else {
+            return false;
         }
     }
 
+    public void tokenIsPresent(){
 
-    @Override
-    public void onCallback(NetworkResponse networkResponse) {
-
-    }
-
-    public void showProgressDialog(Dialog dialog){
-
-        if(dialog != null && !dialog.isShowing()){
-            dialog.show();
+        if(sharedPreferences.contains(Constants.JWT_TOKEN)){
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.remove(Constants.JWT_TOKEN);
+            editor.clear();
+            editor.commit();
         }
+
     }
 
-    public void dismissProgressDialog(Dialog dialog){
-
-        if(dialog != null && dialog.isShowing()){
-            dialog.dismiss();
-        }
-    }
-
-    public void saveJWT(Token token){
-        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREF, MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-
-        editor.putString(JWT_TOKEN, token.getToken());
-        editor.apply();
-        //Toast.makeText(this, token.getToken(), Toast.LENGTH_LONG).show();
-    }
 }

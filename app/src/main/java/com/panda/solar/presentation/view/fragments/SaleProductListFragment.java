@@ -34,6 +34,7 @@ public class SaleProductListFragment extends Fragment implements SaleProductAdap
     private RecyclerView recyclerView;
     private AppCompatCheckBox directSaleCheckBox;
     private AppCompatCheckBox assetFinancingCheckbox;
+    private Intent saleTypeIntent;
 
     public SaleProductListFragment() {
         // Required empty public constructor
@@ -121,20 +122,20 @@ public class SaleProductListFragment extends Fragment implements SaleProductAdap
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                Intent intent = new Intent(getActivity(), DirectAssetFinancingActivity.class);
+
                 Bundle bundle = new Bundle();
                 bundle.putParcelable(Constants.SALE_PRODCUT, Parcels.wrap(saleProduct));
                 if(assetFinancingCheckbox.isChecked()){
-
-                    bundle.putString(Constants.SALE_TYPE, Constants.ASSET_FINANCING);
-                    intent.putExtra(Constants.SALE_TYPE, Constants.ASSET_FINANCING);
+                    saleTypeIntent = new Intent(getActivity(), DirectAssetFinancingActivity.class);
+                    //bundle.putString(Constants.SALE_TYPE, Constants.ASSET_FINANCING);
+                    //intent.putExtra(Constants.SALE_TYPE, Constants.ASSET_FINANCING);
                 }else if(directSaleCheckBox.isChecked()){
-                    bundle.putString(Constants.SALE_TYPE, Constants.DIRECT_SALE);
-                    intent.putExtra(Constants.SALE_TYPE, Constants.DIRECT_SALE);
+                    //bundle.putString(Constants.SALE_TYPE, Constants.DIRECT_SALE);
+                    //intent.putExtra(Constants.SALE_TYPE, Constants.DIRECT_SALE);
                 }
 
                 if(assetFinancingCheckbox.isChecked() || directSaleCheckBox.isChecked()){
-                    startActivity(intent);
+                    startActivity(saleTypeIntent);
                     /*SaleCustomerDetailFragment saleCustomerDetailFragment = SaleCustomerDetailFragment.getInstance();
                     saleCustomerDetailFragment.setArguments(bundle);
 

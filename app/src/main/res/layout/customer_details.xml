@@ -3,17 +3,32 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:fitsSystemWindows="true"
+    tools:openDrawer="start"
     android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:elevation="2dp"
+            android:src="@drawable/ic_attach_file"
+            android:layout_gravity="end"/>
+
+    </LinearLayout>
+
+
+
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="210dp"
-        android:background="@color/colorPrimary" />
+        android:background="@color/colorPrimary"/>
 
-      <include
-         layout="@layout/toolbar_layout"
-         android:id="@+id/toolbar"
-         />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,56 +37,31 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="2"
-            android:orientation="horizontal"
-            android:paddingLeft="10dp"
-            android:paddingTop="70dp">
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
 
-            <RelativeLayout
-                android:layout_width="88dp"
-                android:layout_height="88dp">
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profile_customer_details"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_margin="4dp"
+                android:background="@drawable/circle"
+                app:civ_border_color="@color/circleBorder"
+                app:civ_border_width="4dp" />
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/profile_customer"
-                    android:layout_width="90dp"
-                    android:layout_height="90dp"
-                    android:src="@drawable/images"
-                    app:civ_border_width="2dp"
-                    app:civ_border_color="#FFFFFF"/>
+            <TextView
+                android:id="@+id/cust_detail_name"
+                android:layout_width="wrap_content"
+                android:layout_height="80dp"
+                android:layout_marginLeft="8dp"
+                android:fontFamily="sans-serif"
+                android:gravity="center"
+                android:text="Customer Name"
+                android:textColor="@color/grey"
+                android:textSize="20sp" />
 
-            </RelativeLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="88dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:gravity="bottom"
-                    android:text="Bukenya Aaron"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="#ffffff"
-                    android:layout_marginLeft="16dp"
-                    android:id="@+id/cutomer_name"/>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:gravity="top"
-                    android:text="Panda Solar Customer"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    android:textColor="#ffffff"
-                    android:layout_marginLeft="16dp"
-                    />
-
-            </LinearLayout>
 
         </LinearLayout>
 
@@ -84,22 +74,23 @@
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp">
+                android:layout_margin="18dp"
+                app:cardCornerRadius="5dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:paddingBottom="20dp">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:layout_marginLeft="8dp"
+                        android:fontFamily="sans-serif-light"
                         android:gravity="center_vertical"
                         android:text="Customer Information"
-                        android:textStyle="bold"
-                        android:textColor="#616161"
+                        android:textColor="@color/dark_grey"
                         android:textSize="16sp" />
 
                     <View
@@ -107,7 +98,7 @@
                         android:layout_height="1dp"
                         android:layout_marginLeft="8dp"
                         android:layout_marginRight="8dp"
-                        android:background="@android:color/darker_gray" />
+                        android:background="@color/grey" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -123,19 +114,20 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="0"
-                                android:src="@drawable/ic_local_phone_black_24dp"/>
+                                android:src="@drawable/ic_local_phone_black_24dp" />
 
                         </RelativeLayout>
 
                         <TextView
+                            android:id="@+id/cust_detail_phone"
                             android:layout_width="1dp"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
+                            android:fontFamily="sans-serif"
                             android:gravity="center_vertical"
-                            android:textSize="14sp"
-                            android:textColor="#616161"
                             android:text="+256 773 039 553"
-                            android:id="@+id/cutomer_phone"/>
+                            android:textColor="@color/dark_grey"
+                            android:textSize="14sp" />
 
                     </LinearLayout>
 
@@ -153,20 +145,21 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="0"
-                                android:src="@drawable/ic_mail_black_24dp"/>
+                                android:src="@drawable/ic_mail_black_24dp" />
 
                         </RelativeLayout>
 
 
                         <TextView
+                            android:id="@+id/cust_detail_email"
                             android:layout_width="1dp"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
+                            android:fontFamily="sans-serif"
                             android:gravity="center_vertical"
-                            android:textSize="14sp"
-                            android:textColor="#616161"
                             android:text="baaronlubega1@gmail.com"
-                            android:id="@+id/cutomer_email"/>
+                            android:textColor="@color/dark_grey"
+                            android:textSize="14sp" />
 
                     </LinearLayout>
 
@@ -184,21 +177,21 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="0"
-                                android:src="@drawable/ic_location_on_black_24dp"/>
+                                android:src="@drawable/ic_location_on_black_24dp" />
 
                         </RelativeLayout>
 
 
-
                         <TextView
+                            android:id="@+id/cust_detail_location"
                             android:layout_width="1dp"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
+                            android:fontFamily="sans-serif"
                             android:gravity="center_vertical"
-                            android:textSize="14sp"
-                            android:textColor="#616161"
                             android:text="Ntinda, PandaSolar"
-                            android:id="@+id/cutomer_location"/>
+                            android:textColor="@color/dark_grey"
+                            android:textSize="14sp" />
 
                     </LinearLayout>
 
@@ -208,42 +201,131 @@
 
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:layout_marginLeft="18dp"
+                android:layout_marginRight="18dp"
+                app:cardCornerRadius="5dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:paddingBottom="20dp">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:layout_marginLeft="8dp"
+                        android:fontFamily="sans-serif-light"
                         android:gravity="center_vertical"
-                        android:text="Recent Purchases"
-                        android:textStyle="bold"
-                        android:textSize="16sp"
-                        android:textColor="#616161"
-                        />
+                        android:text="Sales"
+                        android:textColor="@color/dark_grey"
+                        android:textSize="16sp" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_marginLeft="8dp"
                         android:layout_marginRight="8dp"
-                        android:background="@android:color/darker_gray"
-                        />
+                        android:background="@color/grey" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:orientation="horizontal">
+
+                        <RelativeLayout
+                            android:layout_width="50dp"
+                            android:layout_height="40dp"
+                            android:gravity="center">
+
+                            <ImageView
+                                android:layout_width="15dp"
+                                android:layout_height="15dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_dot_circle_solid"/>
 
 
-                        />
+                            <!--<ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0"
+                                android:src="@drawable/ic_local_phone_black_24dp" />
+-->
+                        </RelativeLayout>
+
+                        <TextView
+                            android:id="@+id/customer_leasesales_sum"
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:fontFamily="sans-serif"
+                            android:gravity="center_vertical"
+                            android:text="0 lease sales"
+                            android:textColor="@color/dark_grey"
+                            android:textSize="14sp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:orientation="horizontal">
+
+                        <RelativeLayout
+                            android:layout_width="50dp"
+                            android:layout_height="40dp"
+                            android:gravity="center">
+
+                            <!--<ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0"
+                                android:src="@drawable/ic_mail_black_24dp" /> -->
+
+                            <ImageView
+                                android:layout_width="15dp"
+                                android:layout_height="15dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_dot_circle_solid2"/>
+
+                        </RelativeLayout>
+
+
+                        <TextView
+                            android:id="@+id/customer_directsales_sum"
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:fontFamily="sans-serif"
+                            android:gravity="center_vertical"
+                            android:text="0 direct sales"
+                            android:textColor="@color/dark_grey"
+                            android:textSize="14sp" />
+
+                    </LinearLayout>
+
+
 
                 </LinearLayout>
 
             </android.support.v7.widget.CardView>
+
+            <android.support.design.button.MaterialButton
+                android:id="@+id/cust_files_btn"
+                app:cornerRadius="25dp"
+                android:layout_margin="18dp"
+                android:layout_width="match_parent"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_height="60dp"
+                app:icon="@drawable/ic_attach_file_yellow"
+                app:iconTint="@color/colorPrimary"
+                android:textSize="14sp"
+                android:textColor="@color/colorPrimary"
+                app:strokeWidth="2dp"
+                app:strokeColor="@color/colorPrimary"
+                android:text="Customer Files"/>
 
 
         </LinearLayout>

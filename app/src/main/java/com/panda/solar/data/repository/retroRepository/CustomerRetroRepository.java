@@ -2,88 +2,121 @@ package com.panda.solar.data.repository.retroRepository;
 
 import android.arch.lifecycle.MutableLiveData;
 import android.util.Log;
+
 import com.panda.solar.Model.entities.Customer;
-import com.panda.solar.Model.entities.User;
+import com.panda.solar.Model.entities.CustomerMeta;
+import com.panda.solar.Model.entities.CustomerModel;
+import com.panda.solar.Model.entities.Village;
+import com.panda.solar.data.network.NetworkResponse;
 import com.panda.solar.data.network.PandaCoreAPI;
 import com.panda.solar.data.network.RetroService;
+import com.panda.solar.utils.ResponseCallBack;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import java.util.ArrayList;
+
+import java.io.IOException;
 import java.util.List;
 
 public class CustomerRetroRepository implements CustomerDAO {
 
     private PandaCoreAPI pandaCoreAPI = RetroService.getPandaCoreAPI();
-    MutableLiveData<List<Customer>> liveCustomers = new MutableLiveData<>();
+    NetworkResponse netResponse = new NetworkResponse();
 
-    public List<Customer> getCustomers(){
+    @Override
+    public MutableLiveData<List<Customer>> getCustomers(final ResponseCallBack callBack, int page, int size, String sortby, String sortorder){
 
-        Call<List<Customer>> call = pandaCoreAPI.getCustomers();
-        final List<Customer> customers = new ArrayList<>();
+        Call<List<Customer>> call = pandaCoreAPI.getAllCustomers(page, size, sortby, sortorder);
+        final MutableLiveData<List<Customer>> customers = new MutableLiveData<>();
 
         call.enqueue(new Callback<List<Customer>>() {
             @Override
             public void onResponse(Call<List<Customer>> call, Response<List<Customer>> response) {
                 if(!response.isSuccessful()){
+                    netResponse.setBody(response.message());
+                    netResponse.setCode(response.code());
+                    callBack.onError(netResponse);
                     Log.e("REQUEST NOT SUCCESSFULL","customer not fetched");
                     return;
                 }
-
-                //customers.addAll(response.body());
-                customers.addAll(cust());
-                liveCustomers.setValue(customers);
+                callBack.onSuccess();
+                Log.e("YES CONNECTION","successful");
+                customers.postValue(response.body());
             }
 
             @Override
             public void onFailure(Call<List<Customer>> call, Throwable t) {
+                callBack.onFailure();
                 Log.e("NO CONNECTION",t.getMessage());
-                customers.addAll(cust());
                 return;
             }
         });
-
         return customers;
     }
 
-    public List<Customer> cust(){
-        List<Customer> c = new ArrayList<>();
+    @Override
+    public MutableLiveData<List<Village>> getAllVillages(final ResponseCallBack callBack) {
 
-        for(int i = 0; i < 20; i++){
-            User user = new User();
-            Customer cu = new Customer();
+        final MutableLiveData<List<Village>> dataResult = new MutableLiveData<>();
+        Call<List<Village>> call = pandaCoreAPI.getAllVillages();
 
-            user.setEmail("baaronlubega1@gmail.com");
-            user.setFirstname("Lady");
-            user.setLastname("Leah");
-            user.setPrimaryphone("256 773 039 553");
+        call.enqueue(new Callback<List<Village>>() {
+            @Override
+            public void onResponse(Call<List<Village>> call, Response<List<Village>> response) {
+                if(!response.isSuccessful()){
+                    NetworkResponse networkResponse = new NetworkResponse();
+                    callBack.onError(networkResponse);
+                    return;
+                }
+                callBack.onSuccess();
+                dataResult.postValue(response.body());
+            }
 
-            cu.setAddress("Ndinda");
-            cu.setUser(user);
-
-            c.add(cu);
-
-
-            User use = new User();
-            Customer cur = new Customer();
-
-            use.setEmail("emma@yahoo.com");
-            use.setFirstname("tim");
-            use.setLastname("Senugwawo");
-            use.setPrimaryphone("256 705 051 895");
-
-            cur.setAddress("Bweyogere");
-            cur.setUser(use);
-
-            c.add(cur);
-        }
-        return c;
+            @Override
+            public void onFailure(Call<List<Village>> call, Throwable t) {
+                callBack.onFailure();
+                return;
+            }
+        });
+        return dataResult;
     }
 
-
     @Override
-    public Customer addCustomer(Customer customer) {
-        return null;
+    public MutableLiveData<CustomerMeta> addCustomer(final ResponseCallBack callBack, CustomerModel customer) {
+
+        final MutableLiveData<CustomerMeta> resultData = new MutableLiveData<>();
+        Call<CustomerMeta> call = pandaCoreAPI.addCustomer(customer);
+
+        call.enqueue(new Callback<CustomerMeta>() {
+            @Override
+            public void onResponse(Call<CustomerMeta> call, Response<CustomerMeta> response) {
+                if(!response.isSuccessful()){
+                    try {
+                        netResponse.setBody(new JSONObject(response.errorBody().string()).getString("error"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    netResponse.setCode(response.code());
+                    callBack.onError(netResponse);
+                    return;
+                }
+                resultData.postValue(response.body());
+                callBack.onSuccess();
+            }
+
+            @Override
+            public void onFailure(Call<CustomerMeta> call, Throwable t) {
+                callBack.onFailure();
+                return;
+            }
+        });
+        return resultData;
     }
 
     @Override
@@ -96,32 +129,4 @@ public class CustomerRetroRepository implements CustomerDAO {
         return null;
     }
 
-    /*@Override
-    public List<Customer> getCustomers() {
-
-        Call<List<Customer>> call = pandaCoreAPI.getCustomers();
-        final List<Customer> customers = new ArrayList<>();
-
-        call.enqueue(new Callback<List<Customer>>() {
-            @Override
-            public void onResponse(Call<List<Customer>> call, Response<List<Customer>> response) {
-                if(!response.isSuccessful()){
-                    Log.e("REQUEST NOT SUCCESSFULL","customer not fetched");
-                    return;
-                }
-
-                //customers.addAll(response.body());
-                //customers.addAll(cust());
-            }
-
-            @Override
-            public void onFailure(Call<List<Customer>> call, Throwable t) {
-                Log.e("NO CONNECTION",t.getMessage());
-                customers.addAll(cust());
-                return;
-            }
-        });
-
-        return customers;
-    }*/
 }

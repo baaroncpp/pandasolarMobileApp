@@ -234,5 +234,4 @@ public class LocationUpdateService extends Service {
         return false;
     }
 
-
 }

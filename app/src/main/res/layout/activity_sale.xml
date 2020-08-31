@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.panda.solar.activities.com.panda.solar.presentation.view.activities.SaleActivity">
+    tools:context="com.panda.solar.presentation.view.activities.SaleActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"

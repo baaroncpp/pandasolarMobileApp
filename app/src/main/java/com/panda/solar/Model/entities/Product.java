@@ -23,6 +23,7 @@ public class Product implements Parcelable {
         super();
     }
 
+
     public Product(String id, String name, String serialNumber, String[] equipmentlist, float unitcostselling, String description, String thumbnail, Boolean isActive, Boolean isleasable, Boolean usestoken, Date createdon) {
         this.id = id;
         this.name = name;
@@ -120,6 +121,18 @@ public class Product implements Parcelable {
 
     public void setUnitcostselling(float unitcostselling) {
         this.unitcostselling = unitcostselling;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setIsleasable(Boolean isleasable) {
+        this.isleasable = isleasable;
+    }
+
+    public void setSerialNumber(String serialNumber) {
+        this.serialNumber = serialNumber;
     }
 
     @Override

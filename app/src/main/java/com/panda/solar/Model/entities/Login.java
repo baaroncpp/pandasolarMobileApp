@@ -1,5 +1,7 @@
 package com.panda.solar.Model.entities;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Login {
 
     private String username;

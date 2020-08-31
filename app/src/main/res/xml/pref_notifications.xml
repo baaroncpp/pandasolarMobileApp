@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <CheckBoxPreference
+        android:defaultValue="@bool/pref_sale_notification_default"
+        android:key="@string/pref_sale_notification_key"
+        android:summaryOff="Sale Notifications Off"
+        android:summaryOn="Sale Notifications On"
+        android:title="Show Sale Notifications"
+        android:icon="@drawable/ic_notifications"/>
+
+    <CheckBoxPreference
+        android:defaultValue="@bool/pref_payment_notification_default"
+        android:key="@string/pref_payment_notification_key"
+        android:summaryOff="Payment Notifications Off"
+        android:summaryOn="Payment Notifications On"
+        android:title="Show Payment Notifications"
+        android:icon="@drawable/ic_notifications"/>
+
+    <PreferenceCategory
+        android:key="account_category"
+        android:title="Account"
+        android:summary="Account settings">
+
+        <Preference
+            android:key="password"
+            android:title="Password"
+            android:summary="Change Password"
+            android:icon="@drawable/ic_lock">
+
+            <intent
+                android:action="com.panda.solar.presentation.view.activities.ChangePassword"/>
+
+        </Preference>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="help_category"
+        android:title="Help"
+        android:summary="App Info, About Us, Contact Us">
+
+        <Preference
+            android:key="contact_us"
+            android:title="Contact Us"
+            android:icon="@drawable/ic_help_outline_yellow">
+
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="@string/url_about_us" />
+
+        </Preference>
+
+        <Preference
+            android:key="terms_conditions"
+            android:title="Terms and Conditions"
+            android:icon="@drawable/ic_terms">
+
+            <intent
+                android:action="com.panda.solar.presentation.view.activities.TermsAndConditions"/>
+        </Preference>
+
+
+        <Preference
+            android:key="app_info"
+            android:title="App Info"
+            android:icon="@drawable/ic_app_info">
+
+            <intent
+                android:action="com.panda.solar.presentation.view.activities.AppInfo"/>
+
+        </Preference>
+
+
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
+    tools:context="com.panda.solar.presentation.view.activities.PaymentListItem">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingTop="8dp">
+
+        <TextView
+            android:id="@+id/payment_item_payee"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="15sp"
+            android:fontFamily="sans-serif-light"
+            android:text="Customer name"/>
+
+        <TextView
+            android:id="@+id/payment_item_payee_number"
+            android:textColor="@color/dark_grey"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="18sp"
+            android:fontFamily="sans-serif-light"
+            android:gravity="end"
+            android:text="0705 051895"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp">
+
+        <TextView
+            android:id="@+id/payment_item_amount"
+            android:layout_width="0dp"
+            android:textStyle="bold"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="15sp"
+            android:fontFamily="sans-serif-light"
+            android:text=""/>
+
+        <TextView
+            android:id="@+id/payment_item_channel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="14sp"
+            android:fontFamily="sans-serif-light"
+            android:gravity="end"
+            android:text="MTN"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingRight="8dp">
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_weight="8"
+        android:layout_height="wrap_content"
+        android:id="@+id/payment_item_date"
+        android:textColor="@color/dark_grey"
+        android:layout_gravity="center_vertical"
+        android:textSize="16sp"
+        android:layout_marginLeft="8dp"
+        android:fontFamily="sans-serif-light"
+        android:gravity="end"
+        android:text=""/>
+
+    <!--<android.support.design.button.MaterialButton
+        android:id="@+id/payment_item_btn"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:textAlignment="center"
+        android:text="Sale Details"
+        android:textAllCaps="false"
+        android:textColor="@color/colorPrimary"
+        android:textSize="13sp"
+        app:cornerRadius="25dp"
+        app:iconTint="@color/colorPrimary"
+        app:strokeColor="@color/colorPrimary"
+        app:strokeWidth="2dp"
+        android:layout_gravity="end" />-->
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/payment_item_hor_view"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:layout_marginTop="5dp"
+        android:background="@color/colorPrimary"/>
+
+</LinearLayout>

@@ -26,7 +26,6 @@ public class Customer implements Parcelable {
 
     public Customer(){super();}
 
-
     protected Customer(Parcel in) {
         userid = in.readString();
         user = in.readParcelable(User.class.getClassLoader());

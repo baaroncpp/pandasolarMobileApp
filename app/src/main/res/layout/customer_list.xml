@@ -6,20 +6,30 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <TextView
+            android:visibility="gone"
+            android:id="@+id/customer_error_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="error!!!"
+            android:textSize="18sp"
+            android:fontFamily="sans-serif"
+            android:layout_centerInParent="true"/>
 
         <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/customer_list_recycler"
-            android:paddingTop="16dp">
+            android:paddingTop="0dp">
 
         </android.support.v7.widget.RecyclerView>
 
         <android.support.design.widget.FloatingActionButton
+            android:id="@+id/register_customer_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -29,7 +39,7 @@
             android:backgroundTint="@color/colorPrimary"
             android:clickable="true"
             android:fontFamily="sans-serif-medium"
-            android:src="@drawable/ic_add_black_24dp"
+            android:src="@drawable/ic_add_customer"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
 

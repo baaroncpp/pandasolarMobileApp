@@ -1,25 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.panda.solar.activities.com.panda.solar.presentation.view.activities.StockManagementActivity">
+    android:orientation="vertical"
+    tools:context="com.panda.solar.presentation.view.activities.StockManagementActivity">
 
-    <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            android:layout_height="match_parent">
 
-    </android.support.design.widget.AppBarLayout>
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/stock_error_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="error!!!"
+                android:textSize="18sp"
+                android:fontFamily="sans-serif"
+                android:layout_centerInParent="true"/>
 
-    <include layout="@layout/content_stock_management" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-</android.support.design.widget.CoordinatorLayout>
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/stock_items_recycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                </android.support.v7.widget.RecyclerView>
+
+            </LinearLayout>
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/stock_fab_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+
+                android:layout_marginEnd="30dp"
+                android:layout_marginBottom="30dp"
+                android:backgroundTint="@color/colorPrimary"
+                android:clickable="true"
+                android:fontFamily="sans-serif-medium"
+                android:src="@drawable/ic_add_stock"
+                android:layout_centerInParent="true"
+                android:layout_alignParentBottom="true"
+
+                android:textColor="#000"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:borderWidth="0dp" />
+
+        </RelativeLayout>
+
+
+
+
+</LinearLayout>
